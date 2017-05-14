@@ -47,7 +47,8 @@ class SynchronizerHandlerTest extends WebTestCase
         $branchSynchronID = 1;
         $userEmail = 'mapoukacyr@yahoo.fr';
 
-        $stransaction = $this->em->getRepository('TransactionBundle:STransaction')->find(5);
+        $stransaction = $this->em->getRepository('TransactionBundle:STransaction')->find(1);
+	$old = $stransaction->getIdSynchrone();
         $stransactionsTab[] = $stransaction;
         //$st = $this->em->getRepository('TransactionBundle:STransaction')->find(1);
 
@@ -68,7 +69,7 @@ class SynchronizerHandlerTest extends WebTestCase
                                 'total' => $totalPrice,
                                 'date_time' => $dateTime);
 
-            set_time_limit(30);
+            //set_time_limit(30);
             $response = $this->client->post('http://localhost/BeezyManager2/web/app_dev.php/synchronizers',
                 ['json' => $outPutData]);
 
@@ -77,21 +78,14 @@ class SynchronizerHandlerTest extends WebTestCase
             $this->assertEquals($response->getStatusCode(), 200);
 
             //$this->assertEquals($data['st_synchrone_id'], 2);
-            $this->assertTrue(is_int($data['st_synchrone_id']));
+            $this->assertEquals($data['st_synchrone_id'], $old);
             //remove the iD from DataBase
             $_ST = $this->em->getRepository('TransactionBundle:STransaction')
                 ->findOneBy(array('idSynchrone' => $data['st_synchrone_id']));
 
             $this->em->remove($_ST);
             $this->em->flush();
-
-
         }
-
-        //$outPut = $response->getBody()->getContents();
-        //$tab = json_decode($outPut, true);
-        //$this->assertEquals($tab['synchronized'], true);
-
 
     }
 }
