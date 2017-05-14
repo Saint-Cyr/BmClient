@@ -3,6 +3,7 @@
 namespace TransactionBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * STransaction
@@ -32,6 +33,13 @@ class STransaction
      * @ORM\JoinColumn(nullable=true)
      */
     private $user;
+
+    /**
+     * @var int
+     * @ORM\Column(name="idSynchrone", type="integer", nullable=true, unique=true)
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $idSynchrone;
     
     /**
      * @var \DateTime
@@ -43,7 +51,7 @@ class STransaction
     /**
      * @var float
      *
-     * @ORM\Column(name="totalAmount", type="float")
+     * @ORM\Column(name="totalAmount", type="float", nullable=true)
      */
     private $totalAmount;
     
@@ -59,9 +67,6 @@ class STransaction
      */
     private $sales;
     
-    /**
-     * @ORM\Column(name="oneTime", type="boolean", nullable=true) 
-     */
     private $oneTime;
 
     /**
@@ -81,6 +86,32 @@ class STransaction
     
     public function __toString() {
         return 'STransaction object: '.$this->getId();
+    }
+    
+    /**
+     * @Assert\IsTrue(message = "Sale is not valid")
+     */
+    public function isSaleValid()
+    {
+        $response = true;
+        
+        foreach($this->getSales() as $sale){
+            
+            foreach ($sale->getProduct()->getStocks() as $stock){
+                
+                if((!$stock->isTracked() && $sale->getQuantity()) ||
+                    (!$stock->isTracked() && !$sale->getAmount())  ||
+                    ($stock->isTracked() && !$sale->getQuantity())) 
+                    //($stock->isTracked() && $sale->getAmount()))
+                    {
+                    $response = false;
+               
+                }
+            }
+            
+        }
+        
+        return $response;
     }
 
     /**
@@ -128,14 +159,23 @@ class STransaction
      */
     public function getTotalAmount()
     {
-        return $this->totalAmount;
+        $totalAmount = null;
+        
+        foreach ($this->getSales() as $sale){
+            
+            $totalAmount = $totalAmount + $sale->getAmount();
+        }
+        
+        return $totalAmount;
     }
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->setCreatedAt(new \DateTime("now"));
+        $dateTime = new \DateTime("now");
+        $dateTime->format("Y-m-d");
+        $this->setCreatedAt($dateTime);
         $this->sales = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -177,7 +217,7 @@ class STransaction
      * Set profit
      *
      * @param float $profit
-     *
+     * @deprecated since version 1.0_alpha
      * @return STransaction
      */
     public function setProfit()
@@ -203,7 +243,13 @@ class STransaction
      */
     public function getProfit()
     {
-        return $this->profit;
+        $profit = null;
+        
+        foreach ($this->getSales() as $sale){
+            $profit = $profit + $sale->getProfit();
+        }
+        
+        return $profit;
     }
 
     /**
@@ -252,5 +298,53 @@ class STransaction
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set oneTime
+     *
+     * @param boolean $oneTime
+     *
+     * @return STransaction
+     */
+    public function setOneTime($oneTime)
+    {
+        $this->oneTime = $oneTime;
+
+        return $this;
+    }
+
+    /**
+     * Get oneTime
+     *
+     * @return boolean
+     */
+    public function getOneTime()
+    {
+        return $this->oneTime;
+    }
+
+    /**
+     * Set idSynchrone
+     *
+     * @param integer $idSynchrone
+     *
+     * @return STransaction
+     */
+    public function setIdSynchrone($idSynchrone)
+    {
+        $this->idSynchrone = $idSynchrone;
+
+        return $this;
+    }
+
+    /**
+     * Get idSynchrone
+     *
+     * @return integer
+     */
+    public function getIdSynchrone()
+    {
+        return $this->idSynchrone;
     }
 }

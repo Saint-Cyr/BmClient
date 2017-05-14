@@ -36,8 +36,10 @@ class STransactionAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
+            ->add('id')
             ->add('branch')
-            //->add('sales')
+            ->add('idSynchrone')
+            ->add('sales')
             ->add('totalAmount')
             ->add('user.name', null, array('label' => 'Seller'));
             if($this->isGranted('ROLE_SUPER_ADMIN')){
@@ -177,6 +179,7 @@ class STransactionAdmin extends AbstractAdmin
     
     public function preValidate($object) {
         parent::preValidate($object);
+        $object->setIdSynchrone(true);
         
         foreach ($object->getSales() as $sale){
             

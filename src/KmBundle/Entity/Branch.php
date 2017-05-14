@@ -20,6 +20,13 @@ class Branch
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var int
+     * @ORM\Column(name="idSynchrone", type="integer", nullable=true, unique=true)
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $idSynchrone;
     
     /**
      * @var float
@@ -412,5 +419,29 @@ class Branch
     public function getFlyBalanceAmount()
     {
         return $this->flyBalanceAmount;
+    }
+
+    /**
+     * Set idSynchrone
+     *
+     * @param integer $idSynchrone
+     *
+     * @return Branch
+     */
+    public function setIdSynchrone($idSynchrone)
+    {
+        $this->idSynchrone = $idSynchrone;
+
+        return $this;
+    }
+
+    /**
+     * Get idSynchrone
+     *
+     * @return integer
+     */
+    public function getIdSynchrone()
+    {
+        return $this->idSynchrone;
     }
 }

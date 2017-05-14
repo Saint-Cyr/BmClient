@@ -33,6 +33,13 @@ class STransaction
      * @ORM\JoinColumn(nullable=true)
      */
     private $user;
+
+    /**
+     * @var int
+     * @ORM\Column(name="idSynchrone", type="string", nullable=true, unique=true)
+     *
+     */
+    private $idSynchrone;
     
     /**
      * @var \DateTime
@@ -315,5 +322,42 @@ class STransaction
     public function getOneTime()
     {
         return $this->oneTime;
+    }
+
+    /**
+     * Set idSynchrone
+     *
+     * @param integer $idSynchrone
+     *
+     * @return STransaction
+     */
+    public function setIdSynchrone($idSynchrone = null)
+    {
+
+        $length = 10;
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+
+
+
+        $this->idSynchrone = $randomString;
+        //$this->idSynchrone = $this->getId().$this->getBranch()->getId();
+        //$this->idSynchrone = rand(0, 999999);
+
+        return $this;
+    }
+
+    /**
+     * Get idSynchrone
+     *
+     * @return integer
+     */
+    public function getIdSynchrone()
+    {
+        return $this->idSynchrone;
     }
 }

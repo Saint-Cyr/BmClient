@@ -6,6 +6,10 @@ services:
     km.stock_handler:
         class: KmBundle\Service\StockHandler
         arguments: ["@doctrine.orm.entity_manager"]
+
+    km.synchronizer_handler:
+            class: KmBundle\Service\SynchronizerHandler
+            arguments: ["@guzzle.client.api_crm"]
         
     km.report_handler:
         class: KmBundle\Service\ReportHandler

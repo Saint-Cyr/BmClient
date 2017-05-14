@@ -84,26 +84,31 @@ TransactionBundle\Entity\STransaction:
         totalAmount: 900.50
         branch: '@branch1'
         createdAt: <(new \DateTime('01-10-2014'))>
+        idSynchrone: null
         
     stransaction2:
         totalAmount: 900.50
         branch: '@branch1'
         createdAt: <(new \DateTime('01-10-2014'))>
+        idSynchrone: null
 
     stransaction3:
         totalAmount: 100
         branch: '@branch1'
         createdAt: <(new \DateTime('now'))>
+        idSynchrone: null
 
     stransaction4:
         totalAmount: 200
         branch: '@branch2'
         createdAt: <(new \DateTime('now'))>
+        idSynchrone: null
 
     stransaction5:
         totalAmount: 200
         branch: '@branch2'
         createdAt: <(new \DateTime('now'))>
+        idSynchrone: null
         
 TransactionBundle\Entity\Sale:
     sale1:

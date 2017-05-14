@@ -36,7 +36,8 @@
         "symfony/assetic-bundle": "^2.8",
         "qandidate/symfony-json-request-transformer": "^1.2",
         "knplabs/knp-time-bundle": "^1.7",
-        "snilius/twig-sort-by-field": "^0.1.5"
+        "snilius/twig-sort-by-field": "^0.1.5",
+        "eightpoints/guzzle-bundle": "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

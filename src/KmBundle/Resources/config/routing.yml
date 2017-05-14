@@ -1,3 +1,7 @@
+km_synchronizer:
+    path:  /synchronizer
+    defaults: { _controller: KmBundle:Default:synchronizer }
+
 km_homepage:
     path:     /generate_barcode/{barcode}
     defaults: { _controller: KmBundle:Default:index }

@@ -41,7 +41,7 @@ class InitFixturesTest extends WebTestCase
         //$this->Init();
     }
 
-    
+
     public function Init()
     {
         //Step 1: drop the DB.

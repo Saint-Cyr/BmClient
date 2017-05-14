@@ -45,6 +45,7 @@ class BranchAdmin extends AbstractAdmin
     {
         $formMapper
             ->add('name')
+            ->add('idSynchrone')
              
         ;
     }
