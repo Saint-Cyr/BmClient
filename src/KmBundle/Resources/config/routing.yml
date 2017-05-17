@@ -14,7 +14,7 @@ km_dashboard:
     path:    /report
     defaults: { _controller: KmBundle:Default:dashboard }
     
-km_documentation:
+km_front:
     path:    /
     defaults: { _controller: KmBundle:Default:front }
     

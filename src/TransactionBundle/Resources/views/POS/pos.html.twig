@@ -384,10 +384,13 @@ app.controller('POSController', function ($scope, $http)
 
             <div class="col-sm-6" onclick="document.getElementById('barcodeId').focus(); document.getElementById('barcodeId').value = ''; return false;">
                   <span ng-model="focusImage">
-                      <i class="fa fa-cog {{ focusImage }} fa-5x fa-fw" aria-hidden="true"></i>
+                      <i class="fa fa-cog {{ focusImage }} fa-3x fa-fw" aria-hidden="true"></i>
                   </span>
         {% endverbatim %}
-                <a href="" ><img src="{{ asset('barecode.jpg') }}" width="125" for="barcodeId"/></a>
+                <!-- Barcode Scanner 2 icon by Icons8 -->
+<img class="icon icons8-Barcode-Scanner-2" width="80" height="80" 
+     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAEh0lEQVRoQ92Zi3ETMRCGkwqACjgqIFTApQKgAo4KCBVgKiBUgFMBoQJMBUAFOB1ABfB/jJbZW+veduTJzuycJOuk/fd9yenJHaHTO4Lj5LaAnElhT8W1uBIz97TVBIa+i3+lOWu/01qvzg8JBIGfiZuM4HMcAXCA/CC+jgccAshLXfI8sd2HVrkcRssI5AnQMIS17qc5a4wfh/1vNL/0a/sCwuWvk/BcbHTlAARZJk8BhYLei7fiR/sCwsFov0nas3N/JG2hfdxh3/QnHdgywlSLoG3z+9pJeJM0j7nR1iFpEZCc63i/3wm+AyKZBQQLfBJ77X/VfJ0scAjXGdLBLCAITBwYNRp8PpDvDwGw32cBsZfiJZbTSaMwcYGlboNmAUHge+J3YtyMWIFZyxGADBxPkkCsGUvA1nr5i5j49Gl+sEXZ6AVaixdiH9CV5jAHA4xxLFpeYLMaTyrznNiiTq0SAM648BcMpV9efCvGIoyHyCxmIHk+DC9RJJuhg9zvnPFRXKc1rMFaSxlDQKikZC383w6aIMP/rbwLo5QpZ3E/ILwb7ViDW4aAgPxnQv9gDoKg2bFnITgAAAKRKXFd5DkXb6IsQ0DYbwFPb7NdCCabccKZ3gq4USMmPnvfHQOEQ2hLXonXC4EQ7Gg2p1WsQEOI4BAuCCiLhcVAOBgzIwRglqRTU0rMgnW6o9ITK6zEl0Fpi4Fw3kZMGoa2YgQi+0wFhYA+C2IF5pZKsQKK445IewHChVwG+2LIhYAEGEIM1QeExLooYZ3GlZ5dVvBg9gLEH4jfwrU41giAYSVjgFHdWYd4h8rMuqVUvl84z/b4u/yY37nvSTq/tW9MsHcdzPpZEg4B4a7Wpe+MsQVyo0Nw79npt0+I+FuVwAGQMYzmY/uCFdZistTYAsl+OvFsl7HUIlNAxr2A/SbeiqlRQ0R8AjxrwWMAYgCIG4stwDHGcpZAao2JL9aJkxaVAlIla+B2CNvVOQPCt0aWuVhrZcgSQBAezeJaPj4ABzdiYsHIy4g1AB0L6mDTGC24jzlxAQhoLTZ3smJInfHkgVzqB75LdgK+hEW2EiTWn6ggczeeBpo9WAugO5muBBDTKq051qiSsBYnaBuw1gEgvBF7+RSAWrJHIBZMfmNsDcbsiRr281oTYgRh1+KN2LKTVXuLIZpU9ngiyCm8rQpfAghCASK6l6VfXMmymXcrA3OtAZ8VrT9klwKCoFiGHstnKBOWGOC3VopNP670pGNuffKWAmICAwY3soyFBbAWsdNF/h3G/6g0EGTobc8zaLKtTWkgJlROqT1G2QVfEgggcCviJfsnnh4kO1YsBQThqQc8+wK7C8vRAFlLQrJVrNx97mS/VUkJN3oyLhrsWAMhsp+tA2jq5JKtNqWUa1kXey6hNmPM4PasND6aOmLCAAgwucLXhc+651YrX6JpRECCHEvQKE4BY241+f8jE60+aTvpFzA0gIChd+pzM8BbM3kU3yMerbfMWC2Q6bBMyx1LuVYUmphpxH0fXLgTne9FLqaOBchYa3TuuzNA/gLi6ENCbbhYCgAAAABJRU5ErkJggg==">
+               
             </div>
                 {% verbatim %}
             <div class="col-sm-6">
@@ -478,9 +481,10 @@ app.controller('POSController', function ($scope, $http)
             <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
                 <div style="float:left; font-size: 120%; position: relative; top:-10px"> 
                     <a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out" aria-hidden="true" style="color: #320070;"></i></a>   
-                    <a href="{{ path('transaction_pos2') }}"><i class="fa fa-bars" aria-hidden="true" style="color: #320070; margin-left: 6px;"></i></a>  
+                    <a href="{{ path('km_front') }}"><i class="fa fa-bars" aria-hidden="true" style="color: #320070; margin-left: 6px;"></i></a>  
                     <a href="#"><i class="fa fa-question-circle" aria-hidden="true" style="color: #320070; margin-left: 6px;"></i></a>
-                    <img src="{{ asset('SR_Blink.gif') }}" width="20" style="margin-left:500px;"/>
+                    <img src="{{ asset('yello2.gif') }}" width="20" style="margin-left:500px;"/>
+                    <i class="fa fa-refresh fa-spin fa-2x fa-fw"></i>
                 </div>
                 <div style="float:right; font-size: 80%; position: relative; top:-10px">
                     <a href="#" style="color: #320070;">© 2017 - Saint-Cyr MAPOUKA</a>

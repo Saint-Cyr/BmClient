@@ -128,7 +128,7 @@ function isEmpty(obj) {
       $scope.gif = 'gif1.gif';
       //Data containing the response from the server
       var outPut = $http.post('http://localhost/BeezyManager/web/app_dev.php/sales/transactions', data);
-      alert( "successfull message: " + JSON.stringify({data: data}));
+      //alert( "successfull message: " + JSON.stringify({data: data}));
       //When successfull response comes from the server
       outPut.success(function(data, status, headers, config){
           alert(data);
@@ -426,7 +426,7 @@ function isEmpty(obj) {
             <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
                 <div style="float:left; font-size: 120%; position: relative; top:-10px"> 
                     <a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out" aria-hidden="true" style="color: #320070;"></i></a>   
-                    <a href="{{ path('transaction_pos_barcode') }}"><i class="fa fa-barcode" aria-hidden="true" style="color: #320070; margin-left: 6px;"></i></a>  
+                    <a href="{{ path('km_front') }}"><i class="fa fa-bars" aria-hidden="true" style="color: #320070; margin-left: 6px;"></i></a>  
                     <a href="#"><i class="fa fa-question-circle" aria-hidden="true" style="color: #320070; margin-left: 6px;"></i></a>
                 </div>
                 <div style="float:right; font-size: 80%; position: relative; top:-10px">
