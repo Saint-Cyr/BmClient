@@ -27,6 +27,21 @@
 
 var app = angular.module('myApp', []);
 
+app.run(function($window, $rootScope) {
+      $rootScope.online = navigator.onLine;
+      $window.addEventListener("offline", function() {
+        $rootScope.$apply(function() {
+          $rootScope.online = false;
+        });
+      }, false);
+
+      $window.addEventListener("online", function() {
+        $rootScope.$apply(function() {
+          $rootScope.online = true;
+        });
+      }, false);
+});
+
 app.controller('POSController', function ($scope, $http)
 {
     $scope.fileName = 'KINGMANAGER/web/1.jpg';
@@ -56,6 +71,27 @@ app.controller('POSController', function ($scope, $http)
     if (newValue)
       addSale(newValue);
   });
+  
+  
+    $scope.$watch('online', function(newStatus) { 
+        if(newStatus){
+           //alert('You are online');
+           //window.location.reload();
+           setInterval(function(){    
+                var outPut = $http.post('http://localhost/BeezyManager/web/app_dev.php/synchronizer');
+                //When successfull response comes from the server
+                outPut.success(function(data, status, headers, config){
+                    if(data.sleep){
+                        //alert('response of server is ...');
+                        //requestServer = false;
+                    }
+                });
+                
+           }, 120000);
+        }else{
+            //window.location.reload();
+        }
+    });
   
   function addSale(barcode) {
     var item = data[barcode];
@@ -483,8 +519,12 @@ app.controller('POSController', function ($scope, $http)
                     <a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out" aria-hidden="true" style="color: #320070;"></i></a>   
                     <a href="{{ path('km_front') }}"><i class="fa fa-bars" aria-hidden="true" style="color: #320070; margin-left: 6px;"></i></a>  
                     <a href="#"><i class="fa fa-question-circle" aria-hidden="true" style="color: #320070; margin-left: 6px;"></i></a>
-                    <img src="{{ asset('yello2.gif') }}" width="20" style="margin-left:500px;"/>
-                    <i class="fa fa-refresh fa-spin fa-2x fa-fw"></i>
+                    
+                    <img ng-show="online" src="{{ asset('green.gif') }}" width="20" style="margin-left:500px;"/>
+                    <img ng-hide="online" src="{{ asset('red.gif') }}" width="20" style="margin-left:500px;"/>
+                    {% verbatim %}
+                        <i class="fa fa-refresh fa-spin fa-2x fa-fw"></i>
+                    {% endverbatim %}
                 </div>
                 <div style="float:right; font-size: 80%; position: relative; top:-10px">
                     <a href="#" style="color: #320070;">© 2017 - Saint-Cyr MAPOUKA</a>

@@ -344,9 +344,7 @@ class STransaction
 
 
 
-        $this->idSynchrone = $randomString;
-        //$this->idSynchrone = $this->getId().$this->getBranch()->getId();
-        //$this->idSynchrone = rand(0, 999999);
+        $this->idSynchrone = md5(uniqid(rand(), true));
 
         return $this;
     }

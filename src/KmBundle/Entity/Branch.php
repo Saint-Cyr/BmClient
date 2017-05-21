@@ -23,7 +23,7 @@ class Branch
 
     /**
      * @var int
-     * @ORM\Column(name="idSynchrone", type="integer", nullable=true, unique=true)
+     * @ORM\Column(name="idSynchrone", type="string", nullable=true, unique=true)
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idSynchrone;

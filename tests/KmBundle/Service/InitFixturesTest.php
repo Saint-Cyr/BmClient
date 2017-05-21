@@ -3,7 +3,7 @@
 /*
  * This file is part of Components of BeezyManager project
  * By contributor S@int-Cyr MAPOUKA
- * (c) TinzapaTech <mapoukacyr@yahoo.fr>
+ * (c) StCyrLabs <mapoukacyr@yahoo.fr>
  * For the full copyrght and license information, please view the LICENSE
  * file that was distributed with this source code
  */
@@ -22,8 +22,6 @@ class InitFixturesTest extends WebTestCase
 {
     private $em;
     private $application;
-    private $saleHandler;
-
 
     public function setUp()
     {
@@ -32,7 +30,6 @@ class InitFixturesTest extends WebTestCase
         
         $this->application = new Application(static::$kernel);
         $this->em = $this->application->getKernel()->getContainer()->get('doctrine.orm.entity_manager');
-        $this->saleHandler = $this->application->getKernel()->getContainer()->get('transaction.sale_handler');
     }
     
     public function testInit()
@@ -40,7 +37,6 @@ class InitFixturesTest extends WebTestCase
         $this->assertTrue(true);
         //$this->Init();
     }
-
 
     public function Init()
     {

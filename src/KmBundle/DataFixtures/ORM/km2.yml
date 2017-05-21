@@ -75,9 +75,11 @@ TransactionBundle\Entity\Product:
 KmBundle\Entity\Branch:
     branch1:
         name: BATA
+        idSynchrone: qwerty1
         
     branch2:
         name: VALLEY
+        idSynchrone: qwerty2
         
 TransactionBundle\Entity\STransaction:
     stransaction1:
