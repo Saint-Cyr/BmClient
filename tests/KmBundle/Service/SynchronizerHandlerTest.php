@@ -104,14 +104,15 @@ class SynchronizerHandlerTest extends WebTestCase
         }
     }
     
-    public function testLoadCache()
+    public function testDownloadCache()
     {
-        $response = $this->client->get('http://localhost/BeezyManager2/web/app_dev.php/caches',
-                ['json' => []]);
+        //Case of BATA ( branch_id = 1)
+        $response = $this->client->post('http://localhost/BeezyManager2/web/app_dev.php/caches',
+                ['json' => ['branch_id' => 1]]);
         
         $data = json_decode($response->getBody()->getContents(), true);
         //Make sure the number of the products is right.
-        $this->assertEquals(count($data['products']), 11);
+        $this->assertEquals(count($data['products']), 4);
         //Test the presence of the each product with theire respective properties
         $this->assertEquals($data['products'][0]['name'], 'CD Simple');
         $this->assertEquals($data['products'][0]['barcode'], '2002256910205');
@@ -121,11 +122,51 @@ class SynchronizerHandlerTest extends WebTestCase
         $this->assertEquals($data['products'][0]['id'], 1);
         //Make sure all the product has been loaded.
         $this->assertEquals($data['products'][1]['name'], 'DVD');
+        //Check whether there products in DB in order to prapare response accordintly
+        $products = $this->em->getRepository('TransactionBundle:Product')->findAll();
+        
+        if(count($products) > 0){
+            $resp = false;
+        }else{
+            $resp = true;
+        }
         
         //Test the downloadCache() methode it self
-        $r = $this->synchronizerHandler->downloadCache();
-        //$products = $this->em->getRepository('TransactionBundle:Product')->findAll();
-        //$this->assertEquals(count($products), 11);
+        $r = $this->synchronizerHandler->downloadCache(1);
+        $this->assertEquals($r['status'], $resp);
+        //In the case request has been sent to the server ($r['status'] == true), then 
+        //make sure the server has sent the branch_id back in order for the client to create
+        //and persist it in the cache because when creating users, it have to be linked to them
+        //also when a user is creating  STransaction, it also have to be linked to it
         
+        $this->assertEquals($data['branch']['name'], 'BATA');
+        $this->assertEquals($data['branch']['id'], 1);
+        
+         
+        //Test users
+        $this->assertCount(3, $data['users']);
+        //Test the presence of the each user with theire respective properties
+        $this->assertEquals($data['users'][0]['username'], 'super-admin');
+        $this->assertEquals($data['users'][1]['email'], 'admin@domain.com');
+        $this->assertEquals($data['users'][1]['roles'], array('ROLE_ADMIN'));
+        //Make sure the API work in branch context (Case of VALLEY)
+        $response = $this->client->post('http://localhost/BeezyManager2/web/app_dev.php/caches',
+                ['json' => ['branch_id' => 2]]);
+        
+        $data = json_decode($response->getBody()->getContents(), true);
+        //Only one user at VALLEY according to the fixture
+        $this->assertCount(1, $data['users']);
+        //Make sure the error message is right when sending a wrong branchId via the API
+        $response = $this->client->post('http://localhost/BeezyManager2/web/app_dev.php/caches',
+                ['json' => ['branch_id' => 3]]);
+        
+        $data = json_decode($response->getBody()->getContents(), true);
+        $this->assertFalse($data['status']);
+        $this->assertEquals($data['message'], 'branch not found');
+        
+        //Test the download method
+        $data = $this->synchronizerHandler->downloadCache(20);
+        //When sending wrong branch_id, the server responde ['status'] => false
+        $this->assertFalse($data['status']);
     }
 }

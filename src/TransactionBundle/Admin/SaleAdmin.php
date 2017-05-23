@@ -53,7 +53,7 @@ class SaleAdmin extends AbstractAdmin
         $formMapper
             ->add('product')
             ->add('quantity', 'integer', array('required' => false))
-            ->add('amount', null, array('required' => false, 'label' => 'Amount (only valid for untracked stock)'))
+            //->add('amount', null, array('required' => false, 'label' => 'Amount (only valid for untracked stock)'))
         ;
     }
 

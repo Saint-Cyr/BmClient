@@ -2,12 +2,6 @@ services:
     transaction.sale_handler:
         class: TransactionBundle\Service\SaleHandler
         arguments: ["@doctrine.orm.entity_manager", "@km.stock_handler", "@security.token_storage"]
-        
-    transaction.admin.stock:
-        class: TransactionBundle\Admin\StockAdmin
-        arguments: [~, TransactionBundle\Entity\Stock, TransactionBundle:StockAdmin]
-        tags:
-            - { name: sonata.admin, manager_type: orm, group: Transaction, label: Stock }
             
     transaction.admin.product:
         class: TransactionBundle\Admin\ProductAdmin
@@ -32,9 +26,3 @@ services:
         arguments: [~, TransactionBundle\Entity\Category, SonataAdminBundle:CRUD]
         tags:
             - { name: sonata.admin, manager_type: orm, group: Transaction, label: Category }
-
-    transaction.admin.report:
-        class: TransactionBundle\Admin\ReportAdmin
-        arguments: [~, TransactionBundle\Entity\Report, TransactionBundle:ReportAdmin]
-        tags:
-            - { name: sonata.admin, manager_type: orm, group: Transaction, label: Report }

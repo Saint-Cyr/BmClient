@@ -31,12 +31,7 @@ app.controller('POSController', function ($scope, $http) {
     
     $scope.food = {
       {% for p in products %}
-            {% for stock in app.user.branch.stocks %}
-                {# Rember only product that have stock value can be sold on POS2 #}
-                        {% if stock.product.id == p.id and stock.tracked %}
-                            {{ p.id }} : {count: 1, id: {{ p.id }}, detail: "{{ p.name|slice(0, 24)|e('js')|raw }}", price: {{ p.unitPrice }} },
-                        {% endif %}
-            {% endfor %} 
+           {{ p.id }} : {count: 1, id: {{ p.id }}, detail: "{{ p.name|slice(0, 24)|e('js')|raw }}", price: {{ p.unitPrice }} },
       {% endfor %}
     };
     

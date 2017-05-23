@@ -11,19 +11,9 @@ services:
             class: KmBundle\Service\SynchronizerHandler
             arguments: ["@guzzle.client.api_crm", "@doctrine.orm.entity_manager"]
         
-    km.report_handler:
-        class: KmBundle\Service\ReportHandler
-        arguments: ["@doctrine.orm.entity_manager"]
-        
     km.statistic_handler:
         class: KmBundle\Service\StatisticHandler
         arguments: ["@doctrine.orm.entity_manager"]
-
-    km.admin.expenditure:
-        class: KmBundle\Admin\ExpenditureAdmin
-        arguments: [~, KmBundle\Entity\Expenditure, SonataAdminBundle:CRUD]
-        tags:
-            - { name: sonata.admin, manager_type: orm, group: Admin, label: Expenditure }
 
     km.admin.branch:
         class: KmBundle\Admin\BranchAdmin

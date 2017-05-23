@@ -82,51 +82,8 @@ class STransactionAdmin extends AbstractAdmin
                 'sortable' => 'position',
             ))
         ->end()
-        ->with('Other', array('class' => 'col-md-4'))
-              ->add('branch')
-              ->add('user', null, array('label' => 'Seller'))
-              ->add('createdAt', 'sonata_type_datetime_picker', array(
-                      'dp_side_by_side'  => true,
-                      'dp_use_current'   => false,
-                      'dp_use_seconds'   => false,
-              ))
-        ->end()
-        ;
         
-        /*$formMapper
-        ->with('Products', array('class' => 'col-md-6'))
-            ->add('sales', 'sonata_type_collection', array(
-                'type_options' => array(
-                    'delete' => false,
-                    'delete_options' => array(
-                        'type' => 'hidden',
-                        'type_options' => array(
-                            'mapped' => false,
-                            'required' => false,
-                        )
-                    )
-                )
-            ), array(
-                'edit' => 'inline',
-                'inline' => 'table',
-                'sortable' => 'position',
-            ))
-        ->end()
-        ->with('Other', array('class' => 'col-md-4'))
-              ->add('totalAmount', null, array('label' => 'Total Cash'))
-              ->add('branch')
-              ->add('createdAt', 'sonata_type_datetime_picker', array(
-                      'dp_side_by_side'  => true,
-                      'dp_use_current'   => false,
-                      'dp_use_seconds'   => false,
-              ))
-        ->end()
-        ->with('Transaction Type', array('class' => 'col-md-2'))
-             ->add('oneTime', 'sonata_type_choice_field_mask', array('choices' => array('yes' => 'Yes', 'no' => 'no'),
-                                                                      'map' => array('Yes' => array('totalAmount'),
-                                                                                     'No' => array('no'))))
-        ->end()
-        ;*/
+        ;
     }
     
     public function getBatchActions()
@@ -182,13 +139,7 @@ class STransactionAdmin extends AbstractAdmin
         $object->setIdSynchrone(true);
         
         foreach ($object->getSales() as $sale){
-            
-            foreach ($sale->getProduct()->getStocks() as $stock){
-                
-                if($stock->isTracked()){
-                    $sale->setAmount(null);
-                }    
-            }
+            $sale->setAmount(null);    
             
         }
     }

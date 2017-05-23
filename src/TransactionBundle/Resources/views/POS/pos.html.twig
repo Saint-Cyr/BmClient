@@ -50,12 +50,8 @@ app.controller('POSController', function ($scope, $http)
     
     var data = {
         {% for p in products %}
-            {% for stock in app.user.branch.stocks %}
-                        {% if stock.product.id == p.id and stock.tracked %}
-                            "{{ p.barcode }}" : {count: 1, detail: "{{ p.name|slice(0, 24)|e('js')|raw }}", id: {{ p.id }}, price: {{ p.unitPrice }} },
-                        {% endif %}
-            {% endfor %} 
-      {% endfor %}
+            "{{ p.barcode }}" : {count: 1, detail: "{{ p.name|slice(0, 24)|e('js')|raw }}", id: {{ p.id }}, price: {{ p.unitPrice }} },
+        {% endfor %}
   };
     
     $scope.itemsCnt = 1;
@@ -396,7 +392,7 @@ app.controller('POSController', function ($scope, $http)
         <!-- /.navbar-collapse -->
         <!-- Navbar Right Menu -->
         
-        {{ render(controller('KmBundle:Default:stockUpdate')) }}
+        {#{ render(controller('KmBundle:Default:stockUpdate')) }#}
         <!-- /.navbar-custom-menu -->
       </div>
       <!-- /.container-fluid -->

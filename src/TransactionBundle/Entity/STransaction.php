@@ -93,7 +93,8 @@ class STransaction
      */
     public function isSaleValid()
     {
-        $response = true;
+        return true;
+        /*$response = true;
         
         foreach($this->getSales() as $sale){
             
@@ -109,7 +110,7 @@ class STransaction
                 }
             }
             
-        }
+        }*/
         
         return $response;
     }
@@ -341,8 +342,6 @@ class STransaction
         for ($i = 0; $i < $length; $i++) {
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
-
-
 
         $this->idSynchrone = md5(uniqid(rand(), true));
 

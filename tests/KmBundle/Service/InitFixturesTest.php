@@ -35,7 +35,7 @@ class InitFixturesTest extends WebTestCase
     public function testInit()
     {
         $this->assertTrue(true);
-        //$this->Init();
+        $this->Init();
     }
 
     public function Init()
@@ -79,7 +79,7 @@ class InitFixturesTest extends WebTestCase
         $executor->execute( 
                             $this->em,
                             $loaderGenerator->generate($loader, $fixtureLoader, $kernel->getBundles(), 'test'),
-                            $fixtureFinder->resolveFixtures($kernel, array('@KmBundle/DataFixtures/ORM/km2.yml')),
+                            $fixtureFinder->resolveFixtures($kernel, array('@KmBundle/DataFixtures/ORM/client.yml')),
                             false,
                             false
                           );
@@ -95,5 +95,7 @@ class InitFixturesTest extends WebTestCase
     public function testDummy()
     {
         $this->assertTrue(true);
+        
     }
+    
 }

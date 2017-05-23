@@ -36,6 +36,13 @@ class Branch
     private $flySaleAmount;
     
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="onlineId", type="integer", nullable=true)
+     */
+    private $onlineId;
+    
+    /**
      * @var float
      *
      * @ORM\Column(name="flyProfitAmount", type="float", nullable=true)
@@ -67,11 +74,6 @@ class Branch
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="TransactionBundle\Entity\Stock", mappedBy="branch")
-     */
-    private $stocks;
 
     /**
      * @var \DateTime
@@ -84,11 +86,6 @@ class Branch
      * @ORM\OneToMany(targetEntity="TransactionBundle\Entity\STransaction", mappedBy="branch")
      */
     private $stransactions;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="KmBundle\Entity\Expenditure", mappedBy="branch")
-     */
-    private $expenditures;
 
     public function __construct() {
         $this->setCreatedAt(new \DateTime("now"));
@@ -191,90 +188,6 @@ class Branch
     }
 
     /**
-     * Add expenditure
-     *
-     * @param \KmBundle\Entity\Expenditure $expenditure
-     *
-     * @return Branch
-     */
-    public function addExpenditure(\KmBundle\Entity\Expenditure $expenditure)
-    {
-        $this->expenditures[] = $expenditure;
-
-        return $this;
-    }
-
-    /**
-     * Remove expenditure
-     *
-     * @param \KmBundle\Entity\Expenditure $expenditure
-     */
-    public function removeExpenditure(\KmBundle\Entity\Expenditure $expenditure)
-    {
-        $this->expenditures->removeElement($expenditure);
-    }
-
-    /**
-     * Get expenditures
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getExpenditures()
-    {
-        return $this->expenditures;
-    }
-
-    /**
-     * Get expenditure value
-     * @return integer
-     */
-    public function getExpendituresAmount()
-    {
-        //Get all the expenditure related to the given branch
-        $expenditures = $this->getExpenditures();
-        $total = 0.00;
-        foreach ($expenditures as $exp){
-            $total = $total + $exp->getAmount();
-        }
-
-        return $total;
-    }
-
-    /**
-     * Add stock
-     *
-     * @param \TransactionBundle\Entity\Stock $stock
-     *
-     * @return Branch
-     */
-    public function addStock(\TransactionBundle\Entity\Stock $stock)
-    {
-        $this->stocks[] = $stock;
-
-        return $this;
-    }
-
-    /**
-     * Remove stock
-     *
-     * @param \TransactionBundle\Entity\Stock $stock
-     */
-    public function removeStock(\TransactionBundle\Entity\Stock $stock)
-    {
-        $this->stocks->removeElement($stock);
-    }
-
-    /**
-     * Get stocks
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getStocks()
-    {
-        return $this->stocks;
-    }
-
-    /**
      * Add user
      *
      * @param \UserBundle\Entity\User $user
@@ -306,23 +219,6 @@ class Branch
     public function getUsers()
     {
         return $this->users;
-    }
-    
-    /**
-     * 
-     * @return list of stocks in alert zone
-     */
-    public function getAlertStocks()
-    {
-        $alertLevels = array();
-        
-        foreach($this->getStocks() as $stock){
-            if($stock->getAlertLevel() >= $stock->getValue() && $stock->isTracked()){
-                $alertLevels[] = $stock;
-            }
-        }
-        
-        return $alertLevels;
     }
 
     /**
@@ -443,5 +339,29 @@ class Branch
     public function getIdSynchrone()
     {
         return $this->idSynchrone;
+    }
+
+    /**
+     * Set onlineId
+     *
+     * @param integer $onlineId
+     *
+     * @return Branch
+     */
+    public function setOnlineId($onlineId)
+    {
+        $this->onlineId = $onlineId;
+
+        return $this;
+    }
+
+    /**
+     * Get onlineId
+     *
+     * @return integer
+     */
+    public function getOnlineId()
+    {
+        return $this->onlineId;
     }
 }

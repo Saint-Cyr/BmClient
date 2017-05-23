@@ -28,7 +28,6 @@ class STransactionTest extends WebTestCase
         $this->em = $this->application->getKernel()->getContainer()->get('doctrine.orm.entity_manager');
         $this->saleHandler = $this->application->getKernel()->getContainer()->get('transaction.sale_handler');
     }
-
     
     public function testGetProfit()
     {
