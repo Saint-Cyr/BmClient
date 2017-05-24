@@ -2,11 +2,11 @@ services:
 #    user.example:
 #        class: UserBundle\Example
 #        arguments: ["@service_id", "plain_value", %parameter%]
-    user.admin.user:
-        class: UserBundle\Admin\UserAdmin
-        arguments: [~, UserBundle\Entity\User, UserBundle:UserAdmin, "@fos_user.user_manager"]
-        tags:
-            - { name: sonata.admin, manager_type: orm, group: Security, label: User }
+#    user.admin.user:
+#        class: UserBundle\Admin\UserAdmin
+#        arguments: [~, UserBundle\Entity\User, UserBundle:UserAdmin, "@fos_user.user_manager"]
+#        tags:
+#            - { name: sonata.admin, manager_type: orm, group: Security, label: User }
             
     user.admin_show_filter:
         class: UserBundle\Event\UserCustomAction

@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * STransaction
  *
  * @ORM\Table(name="s_transaction")
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="TransactionBundle\Repository\STransactionRepository")
  */
 class STransaction
@@ -331,6 +332,7 @@ class STransaction
      * @param integer $idSynchrone
      *
      * @return STransaction
+     * @ORM\PrePersist()
      */
     public function setIdSynchrone($idSynchrone = null)
     {

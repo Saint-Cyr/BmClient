@@ -10,13 +10,13 @@ class SaleHandler
 {
     //To store the entity manager
     private $em;
-    private $stockHandler;
+    //private $stockHandler;
     private $tokenStorage;
     
-    public function __construct($em, $stockHandler, $tokenStorage) 
+    public function __construct($em, $tokenStorage) 
     {
         $this->em = $em;
-        $this->stockHandler = $stockHandler;
+        //$this->stockHandler = $stockHandler;
         $this->tokenStorage = $tokenStorage;
     }
     
@@ -39,13 +39,16 @@ class SaleHandler
             $sale->setProduct($product);
             $sale->setProfit();
             //Call the stocktHandler service to update the stock
-            $this->stockHandler->updateStock($branch, $product, $s['orderedItemCnt'], true);
+            //This is call is deprecated and generate error since stock management is no more supportated on client side
+//            $this->stockHandler->updateStock($branch, $product, $s['orderedItemCnt'], true);
             //Set the quantity
             $sale->setQuantity($s['orderedItemCnt']);
             $sale->setAmount($s['totalPrice']);
             $sale->setStransaction($stransaction);
             $this->em->persist($sale);
         }
+        //Generate idSynchrone here
+        
         //Persist its in DB.
         $this->em->persist($stransaction);
         $this->em->flush();

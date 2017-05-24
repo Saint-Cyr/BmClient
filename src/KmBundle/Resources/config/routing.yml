@@ -1,30 +1,10 @@
 km_synchronizer:
     path:  /synchronizer
     defaults: { _controller: KmBundle:Default:synchronizer }
-
-km_homepage:
-    path:     /generate_barcode/{barcode}
-    defaults: { _controller: KmBundle:Default:index }
-    
-km_barecode_test:
-    path:     /barcode_test
-    defaults: { _controller: KmBundle:Default:BarcodeTest }
-    
-km_dashboard:
-    path:    /report
-    defaults: { _controller: KmBundle:Default:dashboard }
     
 km_front:
     path:    /
     defaults: { _controller: KmBundle:Default:front }
-    
-km_report_a:
-    path:    /report_a
-    defaults: { _controller: KmBundle:Default:reportA }
-    
-km_report_b:
-    path:    /report_b
-    defaults: { _controller: KmBundle:Default:reportB }
     
 km_validate_update_stock:
     path: /validate_update_stock/{update}
@@ -34,3 +14,7 @@ sales:
   type: rest
   resource:     "TransactionBundle:Api"
   prefix:  api
+  
+km_homepage:
+    path: /generate_barcode/{barcode}
+    defaults: { _controller: KmBundle:Default:index }

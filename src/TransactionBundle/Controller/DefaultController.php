@@ -38,16 +38,21 @@ class DefaultController extends Controller
     
     public function posAction()
     {
+        //get the serverurl
+        $localhost = $this->getParameter('localhost');
         //Get the entity manager
         $em = $this->getDoctrine()->getManager();
         //Get the list of all the products
         $products = $em->getRepository('TransactionBundle:Product')->findAll();
         
-        return $this->render('TransactionBundle:POS:pos.html.twig', array('products' => $products));
+        return $this->render('TransactionBundle:POS:pos.html.twig', array('products' => $products,
+                                                                          'localhost' => $localhost));
     }
     
     public function pos2Action()
     {
+        //get the serverurl
+        $localhost = $this->getParameter('localhost');
         //Get the entity manager
         $em = $this->getDoctrine()->getManager();
         //Get the list of all the products
@@ -56,7 +61,8 @@ class DefaultController extends Controller
         $categories = $em->getRepository('TransactionBundle:Category')->findAll();
 
         return $this->render('TransactionBundle:POS:pos2.html.twig', array('categories' => $categories,
-                                                                           'products' => $products));
+                                                                           'products' => $products,
+                                                                            'localhost' => $localhost));
     }
     
     public function productListAction()

@@ -1,7 +1,7 @@
 services:
     transaction.sale_handler:
         class: TransactionBundle\Service\SaleHandler
-        arguments: ["@doctrine.orm.entity_manager", "@km.stock_handler", "@security.token_storage"]
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]
             
     transaction.admin.product:
         class: TransactionBundle\Admin\ProductAdmin

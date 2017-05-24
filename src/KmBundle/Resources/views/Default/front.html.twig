@@ -38,7 +38,7 @@
                 </div>
               </div>
               </a>
-              <a href="{{ path('transaction_pos2') }}">
+              <a href="{{ path('transaction_pos2') }}" id="pos2">
               <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-8">
                 <div class="tile-stats">
                   <div class="icon"><i class="fa fa-cart-plus"></i></div>
@@ -65,44 +65,7 @@
                 </div>
               </div>
               </a>
-            {% if (is_granted('ROLE_ADMIN')) %}
-              <a href="{{ path('sonata_admin_dashboard') }}">
-              <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="tile-stats">
-                  <div class="icon"><i class="fa fa-bars"></i></div>
-                  <div class="count">D 1</div>
-                 
-                </div>
-              </div>
-              </a>
-              <a href="{{ path('km_dashboard') }}">
-              <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="tile-stats">
-                  <div class="icon"><i class="fa fa-line-chart"></i></div>
-                  <div class="count">D 2</div>
-                 
-                </div>
-              </div>
-              </a>
-              <a href="#">
-              <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="tile-stats">
-                  <div class="icon"><i class="fa fa-bars"></i></div>
-                  <div class="count" style="color: #bab8b8;">SOON</div>
-                 
-                </div>
-              </div>
-              </a>
-              <a href="#">
-              <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="tile-stats">
-                  <div class="icon"><i class="fa fa-bars"></i></div>
-                  <div class="count" style="color: #bab8b8;">SOON</div>
-                 
-                </div>
-              </div>
-              </a>
-            {% endif %} 
+            
             </div>
             <hr>
                 <span style="color: white;">©</span>

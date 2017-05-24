@@ -24,7 +24,6 @@ class ApiController extends Controller
         //Get the STransaction handler service
         $saleHandler = $this->get('transaction.sale_handler');
         //Process the sale transaction
-        
         $saleHandler->processSaleTransaction($data, $branch);
         
         $response = new Response($this->get('translator')->trans('Successfull transaction!'));

@@ -1,22 +1,22 @@
 services:
-    km.barcode_handler:
-        class: KmBundle\Service\BarcodeHandler
-        arguments: ["@doctrine.orm.entity_manager"]
-        
-    km.stock_handler:
-        class: KmBundle\Service\StockHandler
-        arguments: ["@doctrine.orm.entity_manager"]
+#    km.barcode_handler:
+#        class: KmBundle\Service\BarcodeHandler
+#        arguments: ["@doctrine.orm.entity_manager"]
+#        
+#    km.stock_handler:
+#        class: KmBundle\Service\StockHandler
+#        arguments: ["@doctrine.orm.entity_manager"]
 
     km.synchronizer_handler:
             class: KmBundle\Service\SynchronizerHandler
             arguments: ["@guzzle.client.api_crm", "@doctrine.orm.entity_manager"]
         
-    km.statistic_handler:
-        class: KmBundle\Service\StatisticHandler
-        arguments: ["@doctrine.orm.entity_manager"]
+#    km.statistic_handler:
+#        class: KmBundle\Service\StatisticHandler
+#        arguments: ["@doctrine.orm.entity_manager"]
 
-    km.admin.branch:
-        class: KmBundle\Admin\BranchAdmin
-        arguments: [~, KmBundle\Entity\Branch, SonataAdminBundle:CRUD]
-        tags:
-            - { name: sonata.admin, manager_type: orm, group: Admin, label: Branch }
+#    km.admin.branch:
+#        class: KmBundle\Admin\BranchAdmin
+#        arguments: [~, KmBundle\Entity\Branch, SonataAdminBundle:CRUD]
+#        tags:
+#            - { name: sonata.admin, manager_type: orm, group: Admin, label: Branch }

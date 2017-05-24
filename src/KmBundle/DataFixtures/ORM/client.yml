@@ -4,10 +4,6 @@ TransactionBundle\Entity\Category:
         products: ['@product1', '@product2', '@product3']
         displayed: true
 
-    category2:
-        name: Secretariat
-        products: ['@product4', '@product5', '@product6', '@product7', '@product8', '@product9']
-
     category3:
         name: Uncategorized
 
@@ -38,39 +34,11 @@ TransactionBundle\Entity\Product:
         wholeSalePrice: 2000.00
         #categories: '@category1'
     
-    product4:
-        barcode: 2002256910269
-        name: Plastification
-        
-    product5:
-        barcode: 2002256910609
-        name: Scanner
-        
-    product6:
-        barcode: 2002256916209
-        name: Photo44
-        
-    product7:
-        barcode: 2001256910209
-        name: Photocopy
-    
-    product8:
-        barcode: 2002156910209
-        name: Internet
-    
-    product9:
-        barcode: 2002216910209
-        name: Serigraphy
-    
     product10:
         barcode: 2002251910209
         name: Chemise cartonier
         unitPrice: 100
         wholeSalePrice: 60
-        
-    product11:
-        barcode: 2002256110209
-        name: Other1
         
 KmBundle\Entity\Branch:
     branch1:
@@ -136,78 +104,6 @@ TransactionBundle\Entity\Sale:
         quantity: 1
         stransaction: '@stransaction1'
         createdAt: <(new \DateTime('01-01-2011'))>
-        
-    sale5:
-        product: '@product4'
-        quantity: 1
-        amount: 250
-        stransaction: '@stransaction1'
-        createdAt: <(new \DateTime('01-01-2011'))>
-        
-    sale6:
-        product: '@product4'
-        quantity: 1
-        amount: 500
-        stransaction: '@stransaction1'
-        createdAt: <(new \DateTime('01-01-2011'))>
-        
-    sale7:
-        product: '@product5'
-        quantity: 1
-        amount: 500
-        stransaction: '@stransaction2'
-        createdAt: <(new \DateTime('01-01-2011'))>
-        
-    sale8:
-        product: '@product5'
-        quantity: 1
-        amount: 1000
-        stransaction: '@stransaction2'
-        createdAt: <(new \DateTime('01-01-2011'))>
-        
-    sale9:
-        product: '@product5'
-        quantity: 1
-        amount: 2000
-        stransaction: '@stransaction2'
-        createdAt: <(new \DateTime('01-01-2011'))>
-        
-    sale10:
-        product: '@product6'
-        quantity: 1
-        amount: 1000
-        stransaction: '@stransaction3'
-    
-    sale11:
-        product: '@product7'
-        quantity: 1
-        amount: 1500
-        stransaction: '@stransaction4'
-        #createdAt: <(new \DateTime('01-01-2011'))>
-
-    sale12:
-        product: '@product8'
-        quantity: 1
-        amount: 7000
-        stransaction: '@stransaction4'
-
-    sale13:
-        product: '@product9'
-        quantity: 1
-        amount: 100000
-        stransaction: '@stransaction4'
-
-    sale14:
-        product: '@product10'
-        quantity: 8
-        amount: 800
-        stransaction: '@stransaction5'
-
-    sale15:
-        product: '@product10'
-        quantity: 5
-        amount: 400
-        stransaction: '@stransaction5'
         
         
 UserBundle\Entity\User:
