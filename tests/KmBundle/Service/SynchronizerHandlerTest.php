@@ -47,7 +47,7 @@ class SynchronizerHandlerTest extends WebTestCase
      */
     public function testStart()
     {
-        //$this->execute();
+        $this->execute();
         
         $this->assertEquals(true, true);
     }
@@ -55,7 +55,7 @@ class SynchronizerHandlerTest extends WebTestCase
     public function execute()
     {
         $user = $this->em->getRepository('UserBundle:User')->find(1);
-        $branchSynchronID = $user->getBranch()->getIdSynchrone();
+        $branchOnlineID = $user->getBranch()->getOnlineId();
         $userEmail = $user->getEmail();
         
         $id = null;
@@ -78,7 +78,7 @@ class SynchronizerHandlerTest extends WebTestCase
                                  'totalPrice' => $totalPrice);
             }
 
-            $outPutData = array('branch_synchrone_id' => $branchSynchronID,
+            $outPutData = array('branch_online_id' => $branchOnlineID,
                                 'st_synchrone_id' => $st->getIdSynchrone(),
                                 'user_email' => $userEmail,
                                 'order' => $order,
@@ -93,7 +93,7 @@ class SynchronizerHandlerTest extends WebTestCase
             $data = json_decode($response->getBody()->getContents(), true);
             //var_dump($data);exit;
             $this->assertEquals($response->getStatusCode(), 200);
-
+            
             $this->assertEquals($data['st_synchrone_id'], $old);
             //remove the iD from DataBase
             $_ST = $this->em->getRepository('TransactionBundle:STransaction')
@@ -131,7 +131,7 @@ class SynchronizerHandlerTest extends WebTestCase
             $resp = true;
         }
         
-        //Test the downloadCache() methode it self
+        //Test the downloadCache() methode itself
         $r = $this->synchronizerHandler->downloadCache(1);
         $this->assertEquals($r['status'], $resp);
         //In the case request has been sent to the server ($r['status'] == true), then 

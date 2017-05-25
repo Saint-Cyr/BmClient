@@ -62,7 +62,7 @@ app.controller('POSController', function ($scope, $http)
         return Object.keys(obj).length === 0;
     }
     
-  //$scope.barcode = 6588969543172554;
+  
   $scope.$watch("barcode", function(newValue, oldValue) {
     if (newValue)
       addSale(newValue);
@@ -83,7 +83,7 @@ app.controller('POSController', function ($scope, $http)
                     }
                 });
                 
-           }, 120000);
+           }, {{ timeInterval }});
         }else{
             //window.location.reload();
         }
@@ -155,7 +155,6 @@ app.controller('POSController', function ($scope, $http)
     
     $scope.checkout = function(index) {
       //S@int-Cyr edition start here
-      //S@int-Cyr edition start here
       //Data to be sent to the server (order[])
       var order2 = $scope.order.slice(0);
       //Data to be sent to the server (order[])
@@ -169,7 +168,7 @@ app.controller('POSController', function ($scope, $http)
       $scope.order = '';
       $scope.gif = 'gif1.gif';
       //Data containing the response from the server
-      var outPut = $http.post('http://localhost/BeezyManager/web/app_dev.php/sales/transactions', data);
+      var outPut = $http.post("{{ localhost }}"+'/sales/transactions', data);
       //When successfull response comes from the server
       outPut.success(function(data, status, headers, config){
           alert(data);

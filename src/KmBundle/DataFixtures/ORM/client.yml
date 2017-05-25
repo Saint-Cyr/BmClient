@@ -112,7 +112,7 @@ UserBundle\Entity\User:
         name: Saint-Cyr
         branch: "@branch1"
         email: mapoukacyr@yahoo.fr
-        plainPassword: test
+        plainPassword: mapoukacyr@yahoo.fr
         enabled: true
         roles: [ROLE_SUPER_ADMIN]
 

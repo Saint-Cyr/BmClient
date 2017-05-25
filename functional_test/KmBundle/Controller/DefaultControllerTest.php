@@ -67,6 +67,11 @@ class DefaultControllerTest extends WebTestCase
         $crawler = $client1->request('GET', '/admin/transaction/category/list');
         //Make sure that everything is fine after redirecting to the front page (/pos_barcode)
         $this->assertEquals(200, $client1->getResponse()->getStatusCode());
+        
+        //Go to the D1 page (/synchronizer)
+        $crawler = $client1->request('GET', '/synchronizer');
+        //Make sure that everything is fine after redirecting to the front page (/pos_barcode)
+        $this->assertEquals(200, $client1->getResponse()->getStatusCode());
     }
     
     public function login($crawler, $client1)
@@ -74,7 +79,7 @@ class DefaultControllerTest extends WebTestCase
         //Fill the login form with the right credentials from the fixtures
         $form = $crawler->selectButton('btn_create_and_create')->form(array(
                                                             '_username'  => 'super-admin',
-                                                            '_password'  => 'test',
+                                                            '_password'  => 'mapoukacyr@yahoo.fr',
                                                         ));
 
         //Submit the form in order to login

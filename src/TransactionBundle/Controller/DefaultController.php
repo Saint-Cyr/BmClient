@@ -40,13 +40,16 @@ class DefaultController extends Controller
     {
         //get the serverurl
         $localhost = $this->getParameter('localhost');
+        //Get the laps time for synchronizer
+        $timeInterval = $this->getParameter('time_interval');
         //Get the entity manager
         $em = $this->getDoctrine()->getManager();
         //Get the list of all the products
         $products = $em->getRepository('TransactionBundle:Product')->findAll();
         
         return $this->render('TransactionBundle:POS:pos.html.twig', array('products' => $products,
-                                                                          'localhost' => $localhost));
+                                                                          'localhost' => $localhost,
+                                                                           'timeInterval' => $timeInterval));
     }
     
     public function pos2Action()

@@ -65,8 +65,6 @@ class STransactionAdminController extends CRUDController
             // persist if the form was valid and if in preview mode the preview was approved
             if ($isFormValid && (!$this->isInPreviewMode($request) || $this->isPreviewApproved($request))) {
                 //By S@int-Cyr
-                //Get the $stockHandler Service
-                $stockHandler = $this->get('km.stock_handler');
                 //Get the Branch from the User object
                 $branch = $this->getUser()->getBranch();
                 if(!$branch){
@@ -220,7 +218,7 @@ class STransactionAdminController extends CRUDController
         $saleTransactions = $selectedModelQuery->execute();
         
         //Get the stockHandler service
-        $stockHandler = $this->get('km.stock_handler');
+        //$stockHandler = $this->get('km.stock_handler');
         $branch = $this->getUser()->getBranch();
         
         // do the merge work here
@@ -228,7 +226,7 @@ class STransactionAdminController extends CRUDController
                 foreach ($selectedModels as $selectedModel) {
                     //Generate the report
                     foreach ($selectedModel->getSales() as $sale){
-                        $stockHandler->updateStock($branch, $sale->getProduct(), $sale->getQuantity(), false);
+                        //$stockHandler->updateStock($branch, $sale->getProduct(), $sale->getQuantity(), false);
                     }
                     $modelManager->delete($selectedModel);
                     
