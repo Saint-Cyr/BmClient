@@ -124,7 +124,7 @@ class InitCacheCommand extends ContainerAwareCommand
             }
             
                 //Dowload the cache 
-                $r = $synchronizerHandler->downloadCache($branchId);
+                $r = $synchronizerHandler->download($branchId);
                     
                 if(!$r['status']){
                     $output->writeln('');

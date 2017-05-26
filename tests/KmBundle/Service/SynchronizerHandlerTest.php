@@ -47,12 +47,13 @@ class SynchronizerHandlerTest extends WebTestCase
      */
     public function testStart()
     {
-        $this->execute();
-        
-        $this->assertEquals(true, true);
+        //Test the upload
+        $this->upload();
+        //Test the download
+        //$this->download();
     }
     
-    public function execute()
+    public function upload()
     {
         $user = $this->em->getRepository('UserBundle:User')->find(1);
         $branchOnlineID = $user->getBranch()->getOnlineId();
@@ -73,7 +74,7 @@ class SynchronizerHandlerTest extends WebTestCase
             //Prepare order
             foreach ($st->getSales() as $sale){
                 $totalPrice = $sale->getQuantity() * $sale->getProduct()->getUnitPrice();
-                $order[] = array('id' => $sale->getProduct()->getId(),
+                $order[] = array('id' => $sale->getProduct()->getOnlineId(),
                                  'orderedItemCnt' => $sale->getQuantity(),
                                  'totalPrice' => $totalPrice);
             }
@@ -86,14 +87,22 @@ class SynchronizerHandlerTest extends WebTestCase
                                 'date_time' => $dateTime);
                             
             //set_time_limit(30);
-            $response = $this->client->post('http://localhost/BeezyManager2/web/app_dev.php/synchronizers',
+            $response = $this->client->post('http://localhost/BeezyManager2/web/app_dev.php/uploads',
                 ['json' => $outPutData]);
 
             //$this->assertEquals(1222, $response->getBody()->getContents());
             $data = json_decode($response->getBody()->getContents(), true);
             //var_dump($data);exit;
             $this->assertEquals($response->getStatusCode(), 200);
-            
+            //If there is faillure then lets see the message
+            if($data['faild']){
+                $this->assertEquals($data['message'], true);
+            }
+            //Make sure the server has sent data
+            $this->assertNotNull($data);
+            $this->assertArrayHasKey('st_synchrone_id', $data);
+            $this->assertArrayHasKey('faildMessage', $data);
+            $this->assertArrayHasKey('faild', $data);
             $this->assertEquals($data['st_synchrone_id'], $old);
             //remove the iD from DataBase
             $_ST = $this->em->getRepository('TransactionBundle:STransaction')
@@ -101,14 +110,16 @@ class SynchronizerHandlerTest extends WebTestCase
 
             $this->em->remove($_ST);
             $this->em->flush();
+        }else{
+            $this->assertEquals('', 'no stransaction to upload.');
         }
     }
     
-    public function testDownloadCache()
+    public function download()
     {
         //Case of BATA ( branch_id = 1)
-        $response = $this->client->post('http://localhost/BeezyManager2/web/app_dev.php/caches',
-                ['json' => ['branch_id' => 1]]);
+        $response = $this->client->post('http://localhost/BeezyManager2/web/app_dev.php/downloads',
+                ['json' => ['branch_id' => 3]]);
         
         $data = json_decode($response->getBody()->getContents(), true);
         //Make sure the number of the products is right.

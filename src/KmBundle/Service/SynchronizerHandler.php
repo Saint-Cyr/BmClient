@@ -19,14 +19,14 @@ class SynchronizerHandler
         $this->em = $em;
     }
 
-    public function start()
+    /*public function start()
     {
         $response = $this->client->post('http://localhost/BeezyManager2/web/app_dev.php/sales/transactions',
                           ['json' => ['foo' => 'bar']]);
 
         return $response->getBody();
 
-    }
+    }*/
     
     /*
      * @return array('statu' => bool, 'message' => 'string')
@@ -34,13 +34,13 @@ class SynchronizerHandler
      * return false when download does not succeed. In such case cache not empty may be
      * the reason
      */
-    public function downloadCache($branchId)
+    public function download($branchId)
     {
         $_products = $this->em->getRepository('TransactionBundle:Product')->findAll();
         //Make sure current cache is clean
         if(count($_products) == 0 ){
             
-            $response = $this->client->post('http://localhost/BeezyManager2/web/app_dev.php/caches',
+            $response = $this->client->post('http://localhost/BeezyManager2/web/app_dev.php/downloads',
                 ['json' => array('branch_id' => $branchId)]);
         
             $data = json_decode($response->getBody()->getContents(), true);
@@ -56,12 +56,12 @@ class SynchronizerHandler
                 foreach ($data['products'] as $product){
                     //just create and persist new instance for each one
                     $p = new Product();
+                    $p->setOnlineId($product['id']);
                     $p->setBarcode($product['barcode']);
                     $p->setName($product['name']);
                     if(key_exists('unit_price', $product)){
                         $p->setUnitPrice($product['unit_price']);
                     }
-
                     //persist
                     $this->em->persist($p);
                     //$this->em->flush();

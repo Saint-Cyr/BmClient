@@ -11,10 +11,10 @@ class DefaultController extends Controller
 {
     public function synchronizerAction()
     {
-        $client = $this->get('guzzle.client.api_crm');
         $em = $this->getDoctrine()->getManager();
         $synchronizerHandler = $this->get('km.synchronizer_handler');
         $user = $this->getUser();
+        $client = $this->get('guzzle.client.api_crm');
         
         $branchOnlineId = $user->getBranch()->getOnlineId();
         $userEmail = $user->getEmail();
@@ -22,7 +22,8 @@ class DefaultController extends Controller
         $id = null;
         $objects = $em->getRepository('TransactionBundle:STransaction')->findAll();
 	//If there is nothing then sleep
-        
+        //First of all make sure there is at least 1 STransaction
+        //in order to do not call the remote server for nothing
         if(count($objects) == 0){
             return new JsonResponse(array('sleep' => true));
         }
@@ -39,7 +40,7 @@ class DefaultController extends Controller
             //Prepare order
             foreach ($st->getSales() as $sale){
                 $totalPrice = $sale->getQuantity() * $sale->getProduct()->getUnitPrice();
-                $order[] = array('id' => $sale->getProduct()->getId(),
+                $order[] = array('id' => $sale->getProduct()->getOnlineId(),
                                  'orderedItemCnt' => $sale->getQuantity(),
                                  'totalPrice' => $totalPrice);
             }
@@ -52,7 +53,7 @@ class DefaultController extends Controller
                                 'date_time' => $dateTime);
                             
             //set_time_limit(30);
-            $response = $client->post('http://localhost/BeezyManager2/web/app_dev.php/synchronizers',
+            $response = $client->post('http://localhost/BeezyManager2/web/app_dev.php/uploads',
                 ['json' => $outPutData]);
 
             //$this->assertEquals(1222, $response->getBody()->getContents());

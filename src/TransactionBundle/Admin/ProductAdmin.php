@@ -30,6 +30,7 @@ class ProductAdmin extends AbstractAdmin
     {
         $listMapper
             ->add('image', null, array('template' => 'TransactionBundle:Default:list.html.twig'))
+            ->add('idSynchrone')
             ->add('name', null, array('editable' => true))
             ->add('unitPrice', 'decimal', array('editable' => true));
             if($this->isGranted('ROLE_SUPER_ADMIN')){

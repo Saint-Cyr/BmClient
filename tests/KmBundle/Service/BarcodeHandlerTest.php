@@ -27,7 +27,7 @@ class BarcodeHandlerTest extends WebTestCase
         
         $this->application = new Application(static::$kernel);
         $this->em = $this->application->getKernel()->getContainer()->get('doctrine.orm.entity_manager');
-        $this->statisticHandler = $this->application->getKernel()->getContainer()->get('km.statistic_handler');
+        //$this->statisticHandler = $this->application->getKernel()->getContainer()->get('km.statistic_handler');
     }
     
     public function testGenerateBarcode()

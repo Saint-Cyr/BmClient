@@ -27,6 +27,13 @@ class Product
     private $id;
     
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="onlineId", type="integer", nullable=true)
+     */
+    private $onlineId;
+    
+    /**
      * Unmapped property to handle file uploads
      */
     private $file;
@@ -477,5 +484,29 @@ class Product
     public function getCategories()
     {
         return $this->categories;
+    }
+
+    /**
+     * Set onlineId
+     *
+     * @param integer $onlineId
+     *
+     * @return Product
+     */
+    public function setOnlineId($onlineId)
+    {
+        $this->onlineId = $onlineId;
+
+        return $this;
+    }
+
+    /**
+     * Get onlineId
+     *
+     * @return integer
+     */
+    public function getOnlineId()
+    {
+        return $this->onlineId;
     }
 }
