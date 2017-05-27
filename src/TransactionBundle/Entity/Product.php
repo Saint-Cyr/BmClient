@@ -105,6 +105,10 @@ class Product
     private $wholeSalePrice;
     
     public function __toString() {
+        if(!$this->name){
+            return 'New Product';
+        }
+        
         return $this->name;
     }
     

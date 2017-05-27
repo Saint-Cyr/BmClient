@@ -15,6 +15,7 @@ use KmBundle\Entity\Branch;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use TransactionBundle\Entity\Product;
+use TransactionBundle\Entity\Stockg;
 use TransactionBundle\Entity\Sale;
 use TransactionBundle\Entity\STransaction;
 
@@ -47,8 +48,9 @@ class SynchronizerHandlerTest extends WebTestCase
      */
     public function testStart()
     {
+        $this->mergeDataBase();
         //Test the upload
-        $this->upload();
+        //$this->upload();
         //Test the download
         //$this->download();
     }
@@ -148,7 +150,7 @@ class SynchronizerHandlerTest extends WebTestCase
         //In the case request has been sent to the server ($r['status'] == true), then 
         //make sure the server has sent the branch_id back in order for the client to create
         //and persist it in the cache because when creating users, it have to be linked to them
-        //also when a user is creating  STransaction, it also have to be linked to it
+        //also when a user is creati/ng  STransaction, it also have to be linked to it
         
         $this->assertEquals($data['branch']['name'], 'BATA');
         $this->assertEquals($data['branch']['id'], 1);
