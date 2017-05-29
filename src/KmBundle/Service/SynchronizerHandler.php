@@ -10,13 +10,15 @@ class SynchronizerHandler
 {
     //To store the entity manager
     private $client;
+    private $serverhost;
     private $em;
 
 
-    public function __construct($client, $em)
+    public function __construct($client, $em, $host)
     {
         $this->client = $client;
         $this->em = $em;
+        $this->serverhost = $host;
     }
 
     /*public function start()
@@ -40,7 +42,7 @@ class SynchronizerHandler
         //Make sure current cache is clean
         if(count($_products) == 0 ){
             
-            $response = $this->client->post('http://localhost/BeezyManager2/web/app_dev.php/downloads',
+            $response = $this->client->post($this->serverhost.'/downloads',
                 ['json' => array('branch_id' => $branchId)]);
         
             $data = json_decode($response->getBody()->getContents(), true);

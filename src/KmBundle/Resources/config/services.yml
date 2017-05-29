@@ -9,7 +9,7 @@ services:
 
     km.synchronizer_handler:
             class: KmBundle\Service\SynchronizerHandler
-            arguments: ["@guzzle.client.api_crm", "@doctrine.orm.entity_manager"]
+            arguments: ["@guzzle.client.api_crm", "@doctrine.orm.entity_manager", "%serverhost%"]
         
 #    km.statistic_handler:
 #        class: KmBundle\Service\StatisticHandler

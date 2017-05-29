@@ -11,6 +11,7 @@ class DefaultController extends Controller
 {
     public function synchronizerAction()
     {
+        $serverhost = $this->getParameter('serverhost');
         $em = $this->getDoctrine()->getManager();
         $synchronizerHandler = $this->get('km.synchronizer_handler');
         $user = $this->getUser();
@@ -53,7 +54,7 @@ class DefaultController extends Controller
                                 'date_time' => $dateTime);
                             
             //set_time_limit(30);
-            $response = $client->post('http://localhost/BeezyManager2/web/app_dev.php/uploads',
+            $response = $client->post($serverhost.'/uploads',
                 ['json' => $outPutData]);
 
             //$this->assertEquals(1222, $response->getBody()->getContents());
