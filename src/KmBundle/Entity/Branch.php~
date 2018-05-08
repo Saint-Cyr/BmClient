@@ -74,6 +74,13 @@ class Branch
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
+    
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="installed", type="boolean")
+     */
+    private $installed;
 
     /**
      * @var \DateTime
@@ -92,6 +99,10 @@ class Branch
     }
     
     public function __toString() {
+        if(!$this->name){
+            return 'New Branch';
+        }
+        
         return $this->name;
     }
 
@@ -339,5 +350,53 @@ class Branch
     public function getIdSynchrone()
     {
         return $this->idSynchrone;
+    }
+
+    /**
+     * Set onlineId
+     *
+     * @param integer $onlineId
+     *
+     * @return Branch
+     */
+    public function setOnlineId($onlineId)
+    {
+        $this->onlineId = $onlineId;
+
+        return $this;
+    }
+
+    /**
+     * Get onlineId
+     *
+     * @return integer
+     */
+    public function getOnlineId()
+    {
+        return $this->onlineId;
+    }
+
+    /**
+     * Set installed
+     *
+     * @param boolean $installed
+     *
+     * @return Branch
+     */
+    public function setInstalled($installed)
+    {
+        $this->installed = $installed;
+
+        return $this;
+    }
+
+    /**
+     * Get installed
+     *
+     * @return boolean
+     */
+    public function getInstalled()
+    {
+        return $this->installed;
     }
 }

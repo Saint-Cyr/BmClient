@@ -105,6 +105,10 @@ TransactionBundle\Entity\Sale:
         stransaction: '@stransaction1'
         createdAt: <(new \DateTime('01-01-2011'))>
         
+KmBundle\Entity\Setting:
+    setting1:
+        name: bmClient
+        appInstalled: false
         
 UserBundle\Entity\User:
     super-admin:

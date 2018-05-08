@@ -125,9 +125,9 @@ class InitCacheCommand extends ContainerAwareCommand
             
                 //Dowload the cache 
                 $r = $synchronizerHandler->download($branchId);
-                //set the variable installed to true in order to avoid to load the GUI next time
+                //Get the branch name to display it
+                $branch = $em->getRepository('KmBundle:Branch')->findOneBy(array('onlineId' => $branchId));
                 
-                    
                 if(!$r['status']){
                     $output->writeln('');
                     $output->writeln('<error>[Failed]. '.$r['message'].'</error>');
@@ -135,6 +135,17 @@ class InitCacheCommand extends ContainerAwareCommand
                     $output->writeln('');
                     $output->writeln('');
                     $output->writeln('<bg=green>[OK]. '.$r['message'].'</>');
+                    $output->writeln('');
+                    $output->writeln('<fg=yellow><options=bold>Notice</>:Your synchronizer is ready! Just close and re-open the Application in order to start using it. </>');
+                    $output->writeln('');
+                    $output->writeln('<fg=yellow><options=bold>Branch #ID</>:</> '.$branch->getOnlineId());
+                    
+                    $output->writeln('<fg=yellow><options=bold>Branch Name</>:</> '.$branch->getName());
+                    
+                    $output->writeln('');
+                    $output->writeln([
+                '================ <options=bold;fg=magenta>BeezyManager © 2018</></> ==============']);
+                    $output->writeln(['Powered by <fg=yellow><options=bold>iTech CAR.</></> BP:#__ Bangui(RCA) 1er Arrd. Av. des Martyres Immble. MARABENA (1er Etage) Tel: +236 728 030 37 www.beezymanager.com']);
                 }
                 
         }else{

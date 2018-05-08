@@ -1,0 +1,4 @@
+KmBundle\Entity\Setting:
+    setting1:
+        name: bmClient
+        appInstalled: false

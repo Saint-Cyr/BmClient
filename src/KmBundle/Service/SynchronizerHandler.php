@@ -5,6 +5,7 @@ namespace KmBundle\Service;
 use TransactionBundle\Entity\Product;
 use KmBundle\Entity\Branch;
 use UserBundle\Entity\User;
+use KmBundle\Entity\Setting;
 
 class SynchronizerHandler
 {
@@ -95,6 +96,13 @@ class SynchronizerHandler
                     $this->em->persist($p);
                     //$this->em->flush();
                 }
+                
+                //Don't forget the create setting which is used to display(or not) console
+                $setting = new Setting();
+                $setting->setName('bmClient');
+                //set the variable installed to true in order to avoid to load the console next time
+                $setting->setAppInstalled(true);
+                $this->em->persist($setting);
 
                 //$data['users] are set of array() items
                 foreach ($data['users'] as $user){

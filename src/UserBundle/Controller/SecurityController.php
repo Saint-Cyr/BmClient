@@ -76,6 +76,21 @@ class SecurityController extends Controller
      */
     protected function renderLogin(array $data)
     {
+        //In order to display the console interface for setting up the synchronizer,
+        //we need to check from the database if the app (BmClient) has been already 
+        //installed or not.
+        $em = $this->getDoctrine()->getManager();
+        $setting = $em->getRepository('KmBundle:Setting')->findOneBy(array('name' => 'bmClient'));
+        
+        //Make sure $setting is not empty
+        if(!$setting){
+            $this->createNotFoundException('Setting object not found in DB');
+        }
+        
+        if(!$setting->getAppInstalled()){
+            return $this->redirect('_console');
+        }
+        
         return $this->render('FOSUserBundle:Security:login.html.twig', $data);
     }
 
