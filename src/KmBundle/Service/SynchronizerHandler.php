@@ -31,6 +31,25 @@ class SynchronizerHandler
     }*/
     
     /*
+     * check whether the product issue by the stock from the server contained duplicated data, which
+     * case will surely faild the synchronization because of unique constraint on barcode property
+     */
+    public function checkDuplicatedStock(array $arrays)
+    {
+            
+            $iIds = array_map(function ($a) { return $a['name']; }, $arrays);
+            //print_r($array);exit;
+            
+            
+            $counts = array_count_values($iIds);
+            $present_3_times = array();
+            foreach($counts as $v=>$count){
+                if($count >= 2)//Present 2 times
+                    return $v;
+            }
+    }
+    
+    /*
      * @return array('statu' => bool, 'message' => 'string')
      * @description : return true when current cache where clean and download succeed
      * return false when download does not succeed. In such case cache not empty may be
@@ -46,7 +65,8 @@ class SynchronizerHandler
                 ['json' => array('branch_id' => $branchId)]);
         
             $data = json_decode($response->getBody()->getContents(), true);
-            //Check the response of the server in order to undle any error properly.
+            
+            //Check the response of the server in order to handle any error properly.
             if($data['status'] == true){
                 //Create the branch
                 $branch = new Branch();
@@ -54,6 +74,13 @@ class SynchronizerHandler
                 $branch->setOnlineId($data['branch']['id']);
                 $this->em->persist($branch);
                 
+                //update 7 May 2018: Make sure there is not duplicate
+                $outPut = $this->checkDuplicatedStock($data['products']);
+                if($outPut){
+                    return array('status' => false, 'message' => 'Solution: remove all required duplicated stock ('.$outPut.')'
+                        . ' from the Branch:'.$data['branch']['name']);
+                }
+            
                 //$products are set of array() items
                 foreach ($data['products'] as $product){
                     //just create and persist new instance for each one
@@ -93,7 +120,7 @@ class SynchronizerHandler
             
         }else{
             
-            return array('status' => false, 'message' => 'product not synchronized.');;
+            return array('status' => false, 'message' => 'product not synchronized.');
         }
         
     }

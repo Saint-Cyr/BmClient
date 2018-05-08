@@ -46,9 +46,12 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
         //Get the list of all the products
         $products = $em->getRepository('TransactionBundle:Product')->findAll();
+        //Get the total number of all STransaction
+        $nbStransaction = count($em->getRepository('TransactionBundle:STransaction')->findAll());
         
         return $this->render('TransactionBundle:POS:pos.html.twig', array('products' => $products,
                                                                           'localhost' => $localhost,
+                                                                           'nbStransaction' => $nbStransaction,
                                                                            'timeInterval' => $timeInterval));
     }
     

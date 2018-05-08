@@ -127,6 +127,8 @@ twig:
             - 'SonataCoreBundle:Form:datepicker.html.twig'
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+        copyright: © 2018 - iTech CAR.
 
 # Doctrine Configuration
 #doctrine:
