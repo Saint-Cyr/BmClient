@@ -63,7 +63,7 @@ class SynchronizerHandler
         if(count($_products) == 0 ){
             
             $response = $this->client->post($this->serverhost.'/downloads',
-                ['json' => array('branch_id' => $branchId)]);
+                ['version'=>1.0,'json' => array('branch_id' => $branchId)]);
         
             $data = json_decode($response->getBody()->getContents(), true);
             

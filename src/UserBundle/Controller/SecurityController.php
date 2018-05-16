@@ -87,6 +87,8 @@ class SecurityController extends Controller
             $this->createNotFoundException('Setting object not found in DB');
         }
         
+        //Notice that the console is not displaying in production mode when working on Linux (Developement environment)
+        //But it does work properly in BmClient on Windows
         if(!$setting->getAppInstalled()){
             return $this->redirect('_console');
         }

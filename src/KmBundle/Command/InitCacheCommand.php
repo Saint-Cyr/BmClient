@@ -145,7 +145,12 @@ class InitCacheCommand extends ContainerAwareCommand
                     $output->writeln('');
                     $output->writeln([
                 '================ <options=bold;fg=magenta>BeezyManager © 2018</></> ==============']);
-                    $output->writeln(['Powered by <fg=yellow><options=bold>iTech CAR.</></> BP:#__ Bangui(RCA) 1er Arrd. Av. des Martyres Immble. MARABENA (1er Etage) Tel: +236 728 030 37 www.beezymanager.com']);
+                    $output->writeln('');
+                    $output->writeln(['Powered by <fg=yellow><options=bold>iTech CAR.</></> BP:#__ Bangui(RCA) 1er Arrd. Av. des Martyres Immble. MARABENA (1er Etage) Tel: +236 728 030 37']);
+                    $output->writeln('');
+                    $output->writeln([
+                '================ <options=bold;fg=magenta>www.beezymanager.com</></> ==============']);
+                    
                 }
                 
         }else{
