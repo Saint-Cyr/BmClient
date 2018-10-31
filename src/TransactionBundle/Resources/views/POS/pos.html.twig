@@ -22,239 +22,241 @@
   <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}"/>
   <link rel="stylesheet" href="{{ asset('css/AdminLTE.min.css') }}">
   <link rel='shortcut icon' type='image/x-icon' href='{{ asset('images/favicon.ico') }}' />
+  
+  
   <script>
-      // Code goes here
+    // Code goes here
 
-var app = angular.module('myApp', []);
+    var app = angular.module('myApp', []);
 
-app.run(function($window, $rootScope) {
-      $rootScope.online = navigator.onLine;
-      $window.addEventListener("offline", function() {
-        $rootScope.$apply(function() {
-          $rootScope.online = false;
+    app.run(function($window, $rootScope) {
+          $rootScope.online = navigator.onLine;
+          $window.addEventListener("offline", function() {
+            $rootScope.$apply(function() {
+              $rootScope.online = false;
+            });
+          }, false);
+
+          $window.addEventListener("online", function() {
+            $rootScope.$apply(function() {
+              $rootScope.online = true;
+            });
+          }, false);
+    });
+
+    app.controller('POSController', function ($scope, $http)
+    {
+        $scope.fileName = 'KINGMANAGER/web/1.jpg';
+        $scope.focusImage = '';
+        $scope.gif = 'logo.png';
+
+        var data = {
+            {% for p in products %}
+                "{{ p.barcode }}" : {count: 1, detail: "{{ p.name|slice(0, 24)|e('js')|raw }}", id: {{ p.id }}, price: {{ p.unitPrice }} },
+            {% endfor %}
+      };
+
+        $scope.itemsCnt = 1;
+        $scope.order = [];
+        $scope.isDisabled = true;
+
+        function isEmpty(obj) {
+            return Object.keys(obj).length === 0;
+        }
+
+
+      $scope.$watch("barcode", function(newValue, oldValue) {
+        if (newValue)
+          addSale(newValue);
+      });
+
+
+        $scope.$watch('online', function(newStatus) { 
+            if(newStatus){
+               //alert('You are online');
+               //window.location.reload();
+               setInterval(function(){    
+                    var outPut = $http.post("{{ localhost }}"+'/synchronizer');
+                    //When successfull response comes from the server
+                    outPut.success(function(data, status, headers, config){
+                        if(data.sleep){
+                            //alert('response of server is ...');
+                            //requestServer = false;
+                        }
+                    });
+
+               }, {{ timeInterval }});
+            }else{
+                //window.location.reload();
+            }
         });
-      }, false);
 
-      $window.addEventListener("online", function() {
-        $rootScope.$apply(function() {
-          $rootScope.online = true;
-        });
-      }, false);
-});
+      function addSale(barcode) {
+        var item = data[barcode];
 
-app.controller('POSController', function ($scope, $http)
-{
-    $scope.fileName = 'KINGMANAGER/web/1.jpg';
-    $scope.focusImage = '';
-    $scope.gif = 'logo.png';
-    
-    var data = {
-        {% for p in products %}
-            "{{ p.barcode }}" : {count: 1, detail: "{{ p.name|slice(0, 24)|e('js')|raw }}", id: {{ p.id }}, price: {{ p.unitPrice }} },
-        {% endfor %}
-  };
-    
-    $scope.itemsCnt = 1;
-    $scope.order = [];
-    $scope.isDisabled = true;
+        var foodItem = {
+            orderedItemCnt: 1,
+            totalPrice: item.price,
+            detail: item.detail,
+            itemId: item.id,
+            id: $scope.itemsCnt,
+            item: item,
+        };
 
-    function isEmpty(obj) {
-        return Object.keys(obj).length === 0;
-    }
-    
-  
-  $scope.$watch("barcode", function(newValue, oldValue) {
-    if (newValue)
-      addSale(newValue);
-  });
-  
-  
-    $scope.$watch('online', function(newStatus) { 
-        if(newStatus){
-           //alert('You are online');
-           //window.location.reload();
-           setInterval(function(){    
-                var outPut = $http.post("{{ localhost }}"+'/synchronizer');
-                //When successfull response comes from the server
-                outPut.success(function(data, status, headers, config){
-                    if(data.sleep){
-                        //alert('response of server is ...');
-                        //requestServer = false;
-                    }
-                });
-                
-           }, {{ timeInterval }});
-        }else{
-            //window.location.reload();
+        //By S@int-Cyr
+        $scope.fileName = item.fileName;
+        $scope.barcode = '';
+        console.log(foodItem);
+
+
+        // Find if the item is already in Cart
+            var cartItems = $.grep($scope.order, function(e){ return e.itemId == item.id; });
+
+             if(cartItems.length > 0  && !isEmpty($scope.order)){
+                cartItems[0].orderedItemCnt = ++ cartItems[0].orderedItemCnt; 
+                cartItems[0].totalPrice = item.price * cartItems[0].orderedItemCnt;
+             }
+             else{
+                $scope.order.push(foodItem);
+                $scope.itemsCnt = $scope.order.length; 
+             }
+      }
+
+        $scope.getSum = function() {
+          var i = 0,
+            sum = 0;
+
+          for(; i < $scope.order.length; i++) {
+            sum += parseInt($scope.order[i].totalPrice, 10);
+          }
+          return sum;
+        };
+
+        $scope.addItem = function(item, index) {
+              item.orderedItemCnt = ++ item.orderedItemCnt; 
+              item.totalPrice = item.item.price * item.orderedItemCnt;
+        };
+
+
+        $scope.subtractItem = function(item, $index)
+        {
+          if (item.orderedItemCnt > 1) {
+              item.orderedItemCnt = -- item.orderedItemCnt; 
+              item.totalPrice = item.item.price * item.orderedItemCnt;
+          }
+          else{
+              $scope.isDisabled = true;
+              // isDisabled = false;    
+             // $("#SubstractItemBtn").prop("disabled", true);
+          }
+        }
+
+        $scope.deleteItem = function(index) {
+          $scope.order.splice(index, 1);
+        };
+
+        $scope.checkout = function(index) {
+          //S@int-Cyr edition start here
+          //Data to be sent to the server (order[])
+          var order2 = $scope.order.slice(0);
+          //Data to be sent to the server (order[])
+          var data = {"data":{
+              'id': 1,
+              'order': order2,
+              'total': $scope.getSum(),
+        }};
+
+          //Prevent user to send another request
+          $scope.order = '';
+          $scope.gif = 'gif1.gif';
+          //Data containing the response from the server
+          var outPut = $http.post("{{ localhost }}"+'/sales/transactions', data);
+          //When successfull response comes from the server
+          outPut.success(function(data, status, headers, config){
+              alert(data);
+              //alert( "successfull message: " + JSON.stringify({data: data}));
+              //alert("Order total: $" + $scope.getSum() + "\n\nPayment received. Thanks. cache: " + $scope.cacheAmount + "change: " + $scope.getChange());
+              $scope.order = [];
+              $scope.gif = 'logo.png';
+          });
+
+          outPut.error(function(data, status, header, config){
+              alert('an error occur: cannot perform the transaction');
+          });
+          //S@int-Cyr edition end here
+
+          //alert("Order total: $" + $scope.getSum() + "\n\nPayment received. Thanks. cache: " + $scope.cacheAmount + "change: " + $scope.getChange());
+          //$scope.order = [];
+        };
+
+        $scope.clearOrder = function() {
+          $scope.order = [];
+
+        };
+
+        $scope.getChange = function(){
+            if($scope.getSum()){
+                var change = 0;
+                change = $scope.cacheAmount - $scope.getSum();
+                return change;
+            }
+        }
+
+        $scope.focused = function(){
+            $scope.focusImage = 'fa-spin';
+        }
+
+        $scope.blurred = function(){
+            $scope.focusImage = 'no-access.png';
         }
     });
-  
-  function addSale(barcode) {
-    var item = data[barcode];
-    
-    var foodItem = {
-        orderedItemCnt: 1,
-        totalPrice: item.price,
-        detail: item.detail,
-        itemId: item.id,
-        id: $scope.itemsCnt,
-        item: item,
-    };
-    
-    //By S@int-Cyr
-    $scope.fileName = item.fileName;
-    $scope.barcode = '';
-    console.log(foodItem);
-    
-    
-    // Find if the item is already in Cart
-        var cartItems = $.grep($scope.order, function(e){ return e.itemId == item.id; });
 
-         if(cartItems.length > 0  && !isEmpty($scope.order)){
-            cartItems[0].orderedItemCnt = ++ cartItems[0].orderedItemCnt; 
-            cartItems[0].totalPrice = item.price * cartItems[0].orderedItemCnt;
-         }
-         else{
-            $scope.order.push(foodItem);
-            $scope.itemsCnt = $scope.order.length; 
-         }
-  }
-    
-    $scope.getSum = function() {
-      var i = 0,
-        sum = 0;
+    //Script for the alert box
+        var ALERT_TITLE = "Beezy Manager";
+        var ALERT_BUTTON_TEXT = "Ok";
 
-      for(; i < $scope.order.length; i++) {
-        sum += parseInt($scope.order[i].totalPrice, 10);
-      }
-      return sum;
-    };
-
-    $scope.addItem = function(item, index) {
-          item.orderedItemCnt = ++ item.orderedItemCnt; 
-          item.totalPrice = item.item.price * item.orderedItemCnt;
-    };
-
-
-    $scope.subtractItem = function(item, $index)
-    {
-      if (item.orderedItemCnt > 1) {
-          item.orderedItemCnt = -- item.orderedItemCnt; 
-          item.totalPrice = item.item.price * item.orderedItemCnt;
-      }
-      else{
-          $scope.isDisabled = true;
-          // isDisabled = false;    
-         // $("#SubstractItemBtn").prop("disabled", true);
-      }
-    }
-
-    $scope.deleteItem = function(index) {
-      $scope.order.splice(index, 1);
-    };
-    
-    $scope.checkout = function(index) {
-      //S@int-Cyr edition start here
-      //Data to be sent to the server (order[])
-      var order2 = $scope.order.slice(0);
-      //Data to be sent to the server (order[])
-      var data = {"data":{
-          'id': 1,
-          'order': order2,
-          'total': $scope.getSum(),
-    }};
-
-      //Prevent user to send another request
-      $scope.order = '';
-      $scope.gif = 'gif1.gif';
-      //Data containing the response from the server
-      var outPut = $http.post("{{ localhost }}"+'/sales/transactions', data);
-      //When successfull response comes from the server
-      outPut.success(function(data, status, headers, config){
-          alert(data);
-          //alert( "successfull message: " + JSON.stringify({data: data}));
-          //alert("Order total: $" + $scope.getSum() + "\n\nPayment received. Thanks. cache: " + $scope.cacheAmount + "change: " + $scope.getChange());
-          $scope.order = [];
-          $scope.gif = 'logo.png';
-      });
-      
-      outPut.error(function(data, status, header, config){
-          alert('an error occur: cannot perform the transaction');
-      });
-      //S@int-Cyr edition end here
-      
-      //alert("Order total: $" + $scope.getSum() + "\n\nPayment received. Thanks. cache: " + $scope.cacheAmount + "change: " + $scope.getChange());
-      //$scope.order = [];
-    };
-    
-    $scope.clearOrder = function() {
-      $scope.order = [];
-      
-    };
-    
-    $scope.getChange = function(){
-        if($scope.getSum()){
-            var change = 0;
-            change = $scope.cacheAmount - $scope.getSum();
-            return change;
+        if(document.getElementById) {
+            window.alert = function(txt) {
+                createCustomAlert(txt);
+            }
         }
-    }
-    
-    $scope.focused = function(){
-        $scope.focusImage = 'fa-spin';
-    }
-    
-    $scope.blurred = function(){
-        $scope.focusImage = 'no-access.png';
-    }
-});
 
-//Script for the alert box
-    var ALERT_TITLE = "Beezy Manager";
-    var ALERT_BUTTON_TEXT = "Ok";
+        function createCustomAlert(txt) {
+            d = document;
 
-    if(document.getElementById) {
-        window.alert = function(txt) {
-            createCustomAlert(txt);
+            if(d.getElementById("modalContainer")) return;
+
+            mObj = d.getElementsByTagName("body")[0].appendChild(d.createElement("div"));
+            mObj.id = "modalContainer";
+            mObj.style.height = d.documentElement.scrollHeight + "px";
+
+            alertObj = mObj.appendChild(d.createElement("div"));
+            alertObj.id = "alertBox";
+            if(d.all && !window.opera) alertObj.style.top = document.documentElement.scrollTop + "px";
+            alertObj.style.left = (d.documentElement.scrollWidth - alertObj.offsetWidth)/2 + "px";
+            alertObj.style.visiblity="visible";
+
+            h1 = alertObj.appendChild(d.createElement("h1"));
+            h1.appendChild(d.createTextNode(ALERT_TITLE));
+
+            msg = alertObj.appendChild(d.createElement("p"));
+            //msg.appendChild(d.createTextNode(txt));
+            msg.innerHTML = txt;
+
+            btn = alertObj.appendChild(d.createElement("a"));
+            btn.id = "closeBtn";
+            btn.appendChild(d.createTextNode(ALERT_BUTTON_TEXT));
+            btn.href = "#";
+            btn.focus();
+            btn.onclick = function() { removeCustomAlert();return false; }
+
+            alertObj.style.display = "block";
+
         }
-    }
 
-    function createCustomAlert(txt) {
-        d = document;
-
-        if(d.getElementById("modalContainer")) return;
-
-        mObj = d.getElementsByTagName("body")[0].appendChild(d.createElement("div"));
-        mObj.id = "modalContainer";
-        mObj.style.height = d.documentElement.scrollHeight + "px";
-
-        alertObj = mObj.appendChild(d.createElement("div"));
-        alertObj.id = "alertBox";
-        if(d.all && !window.opera) alertObj.style.top = document.documentElement.scrollTop + "px";
-        alertObj.style.left = (d.documentElement.scrollWidth - alertObj.offsetWidth)/2 + "px";
-        alertObj.style.visiblity="visible";
-
-        h1 = alertObj.appendChild(d.createElement("h1"));
-        h1.appendChild(d.createTextNode(ALERT_TITLE));
-
-        msg = alertObj.appendChild(d.createElement("p"));
-        //msg.appendChild(d.createTextNode(txt));
-        msg.innerHTML = txt;
-
-        btn = alertObj.appendChild(d.createElement("a"));
-        btn.id = "closeBtn";
-        btn.appendChild(d.createTextNode(ALERT_BUTTON_TEXT));
-        btn.href = "#";
-        btn.focus();
-        btn.onclick = function() { removeCustomAlert();return false; }
-
-        alertObj.style.display = "block";
-
-    }
-
-    function removeCustomAlert() {
-        document.getElementsByTagName("body")[0].removeChild(document.getElementById("modalContainer"));
-    }
+        function removeCustomAlert() {
+            document.getElementsByTagName("body")[0].removeChild(document.getElementById("modalContainer"));
+        }
   </script>
   
   <style>
@@ -440,7 +442,7 @@ app.controller('POSController', function ($scope, $http)
         </style>
           <div class="panel panel-primary">
             <div class="panel-heading">
-              <h3 class="panel-title">Order Summary</h3>
+              <h3 class="panel-title"><i class="fa fa-bars" aria-hidden="true" style="color: #FFFFFF; margin-left: 6px;"></i></h3>
               
             </div>
             <div class="panel-body" style="max-height:320px; overflow:auto;">
@@ -480,7 +482,6 @@ app.controller('POSController', function ($scope, $http)
             </div>
             <div class="pull-right">
                 <br>
-                
                 <div class="input-group col-md-6">
                     <span class="input-group-addon">
                         <i class="fa fa-dolla" aria-hidden="true"></i>

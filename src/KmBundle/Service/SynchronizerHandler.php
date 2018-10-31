@@ -21,15 +21,6 @@ class SynchronizerHandler
         $this->em = $em;
         $this->serverhost = $host;
     }
-
-    /*public function start()
-    {
-        $response = $this->client->post('http://localhost/BeezyManager2/web/app_dev.php/sales/transactions',
-                          ['json' => ['foo' => 'bar']]);
-
-        return $response->getBody();
-
-    }*/
     
     /*
      * check whether the product issue by the stock from the server contained duplicated data, which
@@ -119,8 +110,8 @@ class SynchronizerHandler
                     $this->em->persist($u);
                     $this->em->flush();
                 }
-                //Case where the branch_id does exist on server
-                return array('status' => $data['status'], 'message' => $data['message']);
+                
+                return array('status' => $data['status'], 'message' => 'Your Data Base has been synchronized successfully! you can now start to sale offline.');
             }else{
                 //Case where the branch_id does not exist on server
                 return array('status' => $data['status'], 'message' => $data['message']);
