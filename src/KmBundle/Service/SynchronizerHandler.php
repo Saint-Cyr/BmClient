@@ -101,6 +101,7 @@ class SynchronizerHandler
                     $u = new User();
                     $u->setUsername($user['username']);
                     $u->setEmail($user['email']);
+                    //To do : Change the parameter email by a randon string and send it by SMS or email
                     $u->setPlainPassword($user['email']);
                     $u->setEnabled(true);
                     $u->setRoles($user['roles']);

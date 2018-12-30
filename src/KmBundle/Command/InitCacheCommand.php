@@ -117,8 +117,8 @@ class InitCacheCommand extends ContainerAwareCommand
                     $input = new ArrayInput(array('command' => 'doctrine:schema:create'));
                     $command->run($input, new NullOutput);
                     $progressBar->finish();
-                    $output->writeln('');
-                    $progressBar->finish();
+                    //$output->writeln('');
+                    //$progressBar->finish();
                     break;
                 }
             }
