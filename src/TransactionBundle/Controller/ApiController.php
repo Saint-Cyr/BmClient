@@ -16,7 +16,7 @@ class ApiController extends Controller
         //Get the branch from the user object
         
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        
+        var_dump($user->getEmail());exit;
         $branch = $user->getBranch();
         
         $data = $inputData['data'];
