@@ -3,27 +3,15 @@
 
 <head>
   <title>POS1</title>
-  <!--<script data-require="jquery@*" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>-->
   <script data-require="jquery@*" data-semver="2.0.3" src="{{ asset('vendor/jquery-3.1.0.min.js') }}"></script>
-
-  <!--<script data-require="angular.js@1.2.13" data-semver="1.2.13" src="http://code.angularjs.org/1.2.13/angular.js"></script>-->
   <script data-require="angular.js@1.2.13" data-semver="1.2.13" src="{{ asset('vendor/angular-1.2.13/angular.js') }}"></script>
-  <!--<script data-require="angular.js@1.2.13" data-semver="1.2.13" src="http://code.angularjs.org/1.2.13/angular-animate.js"></script>-->
   <script data-require="angular.js@1.2.13" data-semver="1.2.13" src="{{ asset('vendor/angular-1.2.13/angular-animate.js') }}"></script>
-
-<!-- Latest compiled and minified CSS -->
-<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">-->
-<link rel="stylesheet" href="{{ asset('vendor/bootstrap.min.css') }}">
-<!-- Latest compiled and minified JavaScript -->
-<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>-->
-<script src="{{ asset('vendor/bootstrap.min.js') }}"></script>
-
+  <script src="{{ asset('vendor/bootstrap.min.js') }}"></script>
+  <link rel="stylesheet" href="{{ asset('vendor/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ asset('style.css') }}" />
   <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}"/>
   <link rel="stylesheet" href="{{ asset('css/AdminLTE.min.css') }}">
   <link rel='shortcut icon' type='image/x-icon' href='{{ asset('images/favicon.ico') }}' />
-  
-  
   <script>
     // Code goes here
 
@@ -210,6 +198,8 @@
             $scope.focusImage = 'no-access.png';
         }
     });
+    
+    
 
     //Script for the alert box
         var ALERT_TITLE = "Beezy Manager";
@@ -528,9 +518,7 @@
                     </a>
                     <i ng-show="online" class="fa fa-refresh fa-spin fa-1x fa-fw"></i>
                     
-                    {% verbatim %}
-                        
-                    {% endverbatim %}
+                    
                 </div>
                 <div style="float:right; font-size: 80%; position: relative; top:-10px">
                     <a href="#" style="color: #320070;">{{ copyright }}</a>

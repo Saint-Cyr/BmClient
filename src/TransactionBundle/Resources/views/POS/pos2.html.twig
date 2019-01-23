@@ -318,10 +318,7 @@ function isEmpty(obj) {
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-6">
-        
-        
-            
+      <div class="col-sm-6">            
                 <div class="box" style="margin-top: 2px;">
                     <div class="text-info">Frequent Asked Products</div>
                     <style>
@@ -331,7 +328,6 @@ function isEmpty(obj) {
                     </style>
                     <hr>
                     {% for p in products %}
-                        
                                 {% if (p.image == "") or (not p.imagePos) %}
                                     <button class="btn btn-primary" ng-click="add(food.{{ p.id }})" style="width: 130px; height: 110px;">
                                         {{ p }}
@@ -343,7 +339,6 @@ function isEmpty(obj) {
                             
                     {% endfor %}
                 </div>
-            
           {% verbatim %}
         
           

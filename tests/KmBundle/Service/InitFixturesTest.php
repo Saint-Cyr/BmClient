@@ -79,7 +79,7 @@ class InitFixturesTest extends WebTestCase
         $executor->execute( 
                             $this->em,
                             $loaderGenerator->generate($loader, $fixtureLoader, $kernel->getBundles(), 'test'),
-                            $fixtureFinder->resolveFixtures($kernel, array('@KmBundle/DataFixtures/ORM/installation.yml')),
+                            $fixtureFinder->resolveFixtures($kernel, array('@KmBundle/DataFixtures/ORM/client.yml')),
                             false,
                             false
                           );
