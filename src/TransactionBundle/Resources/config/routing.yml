@@ -1,6 +1,4 @@
-transaction_pos2:
-    path: /pos2
-    defaults: { _controller: TransactionBundle:Default:pos2 }
+
     
 transaction_pos_barcode:
     path: /pos_barcode

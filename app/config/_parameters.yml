@@ -12,7 +12,7 @@
 #    secret: ThisTokenIsNotSoSecretChangeIt
 #    serverhost: localhost
 #    database_driver: pdo_sqlite
-
+#This section is for use of sqlite
 parameters:
     database_driver: pdo_sqlite
     database_host: localhost
@@ -21,8 +21,8 @@ parameters:
     mailer_host: 127.0.0.1
     mailer_user: null
     mailer_password: null
-    localhost: http://localhost/BeezyManager/web/app_dev.php
-    serverhost: http://bm2.nwt.cm
+    localhost: http://localhost/BmClient/web/app_dev.php
+    serverhost: http://bmtest.itechcar.com
     #Every 10 sec.
     time_interval: 10000
 #    database_path: %kernel.cache_dir%/default.db

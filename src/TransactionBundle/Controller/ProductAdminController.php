@@ -58,16 +58,8 @@ class ProductAdminController extends CRUDController
 
         if ($form->isSubmitted()) {
             //By S@int-Cyr
-            //Get the barcodeHandler service
-            $barcodeHandler = $this->get('km.barcode_handler');
-            //Generate the barcode
-            $code = $barcodeHandler->generateBarcode();
             
-            $object->setBarcode($code);
-            //TODO: remove this check for 4.0
-            if (method_exists($this->admin, 'preValidate')) {
-                $this->admin->preValidate($object);
-            }
+            var_dump($object->getFile()->getName());exit;
             $isFormValid = $form->isValid();
 
             // persist if the form was valid and if in preview mode the preview was approved
@@ -133,75 +125,4 @@ class ProductAdminController extends CRUDController
         ), null);
     }
     
-    public function batchActionGenerate(ProxyQueryInterface $selectedModelQuery, Request $request = null)
-    {
-        if (!$this->admin->isGranted('EDIT') || !$this->admin->isGranted('DELETE')) {
-            throw new AccessDeniedException();
-        }
-
-        
-        $modelManager = $this->admin->getModelManager();
-
-        $selectedModels = $selectedModelQuery->execute();
-        
-        // do the merge work here
-        try {
-            foreach ($selectedModels as $selectedModel) {
-                //Get the barcodeHandler service
-                $barcodeHandler = $this->get('km.barcode_handler');
-                //Generate the barcode
-                $code = $barcodeHandler->generateBarcode();
-
-                $selectedModel->setBarcode($code);
-            }
-            
-            $modelManager->update($selectedModel);
-        } catch (\Exception $e) {
-            $this->addFlash('sonata_flash_error', 'flash_batch_activation_error');
-
-            return new RedirectResponse(
-                $this->admin->generateUrl('list', $this->admin->getFilterParameters())
-            );
-        }
-
-        $this->addFlash('sonata_flash_success', $this->get('translator')->trans(' successful operations !'));
-
-        return new RedirectResponse(
-            $this->admin->generateUrl('list', $this->admin->getFilterParameters())
-        );
-    }
-    
-    public function batchActionLockBarcode(ProxyQueryInterface $selectedModelQuery, Request $request = null)
-    {
-        if (!$this->admin->isGranted('EDIT') || !$this->admin->isGranted('DELETE')) {
-            throw new AccessDeniedException();
-        }
-
-        
-        $modelManager = $this->admin->getModelManager();
-
-        $selectedModels = $selectedModelQuery->execute();
-        
-        
-        try {
-            foreach ($selectedModels as $selectedModel) {
-                //Lock the product barcode
-                $selectedModel->setLocked(true);
-            }
-            
-            $modelManager->update($selectedModel);
-        } catch (\Exception $e) {
-            $this->addFlash('sonata_flash_error', 'flash_batch_activation_error');
-
-            return new RedirectResponse(
-                $this->admin->generateUrl('list', $this->admin->getFilterParameters())
-            );
-        }
-
-        $this->addFlash('sonata_flash_success', $this->get('translator')->trans(' successful operations !'));
-
-        return new RedirectResponse(
-            $this->admin->generateUrl('list', $this->admin->getFilterParameters())
-        );
-    }
 }

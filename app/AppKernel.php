@@ -25,7 +25,6 @@ class AppKernel extends Kernel
             new FOS\RestBundle\FOSRestBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new UserBundle\UserBundle(),
-            new Knp\Bundle\TimeBundle\KnpTimeBundle(),
             new EightPoints\Bundle\GuzzleBundle\GuzzleBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
         ];
@@ -36,7 +35,6 @@ class AppKernel extends Kernel
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
             $bundles[] = new Hautelook\AliceBundle\HautelookAliceBundle();
-            $bundles[] = new CoreSphere\ConsoleBundle\CoreSphereConsoleBundle();
         }
 
         return $bundles;

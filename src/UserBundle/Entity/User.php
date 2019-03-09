@@ -1,12 +1,5 @@
-<?php
+<?php namespace UserBundle\Entity;use Doctrine\ORM\Mapping as ORM;use FOS\UserBundle\Model\User as BaseUser;use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;use Symfony\Component\Validator\Constraints as Assert;use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-namespace UserBundle\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
-use FOS\UserBundle\Model\User as BaseUser;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * User

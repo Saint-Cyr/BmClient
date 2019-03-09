@@ -21,8 +21,8 @@ services:
         tags:
             - { name: sonata.admin, manager_type: orm, group: Transaction, label: STransaction }
 
-    transaction.admin.category:
-        class: TransactionBundle\Admin\CategoryAdmin
-        arguments: [~, TransactionBundle\Entity\Category, SonataAdminBundle:CRUD]
-        tags:
-            - { name: sonata.admin, manager_type: orm, group: Transaction, label: Category }
+    #transaction.admin.category:
+     #   class: TransactionBundle\Admin\CategoryAdmin
+      #  arguments: [~, TransactionBundle\Entity\Category, SonataAdminBundle:CRUD]
+       # tags:
+        #    - { name: sonata.admin, manager_type: orm, group: Transaction, label: Category }

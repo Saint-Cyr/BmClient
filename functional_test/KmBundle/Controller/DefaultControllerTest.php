@@ -13,30 +13,23 @@ class DefaultControllerTest extends WebTestCase
         //Make sure the login page is display correctly
         $crawler = $client1->request('GET', '/login');
         $this->assertEquals(200, $client1->getResponse()->getStatusCode());
-        $this->assertContains('Saint-Cyr', $client1->getResponse()->getContent());
+        $this->assertContains('Sign In', $client1->getResponse()->getContent());
         //Login
         $crawler = $this->login($crawler, $client1);
        
         //Make sure the everything is fine after redirecting to the front page (/)
+        $crawler = $client1->request('GET', '/');
         $this->assertEquals(200, $client1->getResponse()->getStatusCode());
-        $this->assertContains('POS 1', $client1->getResponse()->getContent());
+        $this->assertContains('Documentation', $client1->getResponse()->getContent());
         $this->assertContains('Saint-Cyr', $client1->getResponse()->getContent());
+        $this->assertContains('POS #1', $client1->getResponse()->getContent());
         
         //Go to the POS 1 page (/pos_barcode)
         $crawler = $client1->request('GET', '/pos_barcode');
         //Make sure that everything is fine.
         $this->assertEquals(200, $client1->getResponse()->getStatusCode());
-        $this->assertContains('Order Summary', $client1->getResponse()->getContent());
-        $this->assertContains('© 2017 - Saint-Cyr MAPOUKA', $client1->getResponse()->getContent());
-        
-        //Go to the POS 2 page (/pos2)
-        $crawler = $client1->request('GET', '/pos2');
-        //Make sure that everything is fine.
-        $this->assertEquals(200, $client1->getResponse()->getStatusCode());
-        $this->assertContains('CD Simple', $client1->getResponse()->getContent());
-        $this->assertContains('Frequent Asked Products', $client1->getResponse()->getContent());
-        $this->assertContains('Order Summary', $client1->getResponse()->getContent());
-        $this->assertContains('© 2017 - Saint-Cyr MAPOUKA', $client1->getResponse()->getContent());
+        $this->assertContains('FCFA', $client1->getResponse()->getContent());
+        $this->assertContains('CHECKOUT', $client1->getResponse()->getContent());
         
         //Go to the POS 3 page (/admin/transaction/stransaction/create)
         $crawler = $client1->request('GET', '/admin/transaction/stransaction/create');
@@ -63,13 +56,8 @@ class DefaultControllerTest extends WebTestCase
         //Make sure that everything is fine after redirecting to the front page (/pos_barcode)
         $this->assertEquals(200, $client1->getResponse()->getStatusCode());
         
-        //Go to the D1 page (/transaction/category/list)
-        $crawler = $client1->request('GET', '/admin/transaction/category/list');
-        //Make sure that everything is fine after redirecting to the front page (/pos_barcode)
-        $this->assertEquals(200, $client1->getResponse()->getStatusCode());
-        
         //Go to the D1 page (/synchronizer)
-        $crawler = $client1->request('GET', '/synchronizer');
+        //$crawler = $client1->request('GET', '/synchronizer');
         //Make sure that everything is fine after redirecting to the front page (/pos_barcode)
         //$this->assertEquals(200, $client1->getResponse()->getStatusCode());
     }
@@ -78,8 +66,8 @@ class DefaultControllerTest extends WebTestCase
     {
         //Fill the login form with the right credentials from the fixtures
         $form = $crawler->selectButton('btn_create_and_create')->form(array(
-                                                            '_username'  => 'super-admin',
-                                                            '_password'  => 'mapoukacyr@yahoo.fr',
+                                                            '_username'  => 'admin',
+                                                            '_password'  => 'admin',
                                                         ));
 
         //Submit the form in order to login

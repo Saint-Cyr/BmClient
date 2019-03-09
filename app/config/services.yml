@@ -3,11 +3,6 @@
 parameters:
 #    parameter_name: value
 
-services:
-    twig.extension.sortbyfield:
-        class: Snilius\Twig\SortByFieldExtension
-        tags:
-            - { name: twig.extension }
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]

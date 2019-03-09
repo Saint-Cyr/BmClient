@@ -17,12 +17,10 @@ class DefaultController extends Controller
         $user = $this->getUser();
         $client = $this->get('guzzle.client.api_crm');
         
-        $branchOnlineId = $user->getBranch()->getOnlineId();
         $userEmail = $user->getEmail();
         //We want to send one by one
         $id = null;
         $objects = $em->getRepository('TransactionBundle:STransaction')->findAll();
-	//If there is nothing then sleep
         //First of all make sure there is at least 1 STransaction
         //in order to do not call the remote server for nothing
         if(count($objects) == 0){
@@ -46,24 +44,30 @@ class DefaultController extends Controller
                                  'totalPrice' => $totalPrice);
             }
 
-            $outPutData = array('branch_online_id' => $branchOnlineId,
+            $outPutData = array(
                                 'st_synchrone_id' => $st->getIdSynchrone(),
                                 'user_email' => $userEmail,
                                 'order' => $order,
                                 'total' => $totalPrice,
+                                'sellerUserName' => $st->getUser()->getUserName(),
                                 'date_time' => $dateTime);
+                            
                             
             //set_time_limit(30);
             $response = $client->post($serverhost.'/uploads',
                 ['json' => $outPutData]);
-
-            //$this->assertEquals(1222, $response->getBody()->getContents());
+            //At this stage, make sure the request have got the server
+            //.....
             $data = json_decode($response->getBody()->getContents(), true);
+            //To do : make sure the variable $faild is false before continue
+            var_dump($data['faild']);            var_dump($data['faildMessage']);exit;
             //remove the iD from DataBase
             $_ST = $em->getRepository('TransactionBundle:STransaction')
                 ->findOneBy(array('idSynchrone' => $data['st_synchrone_id']));
-
-            $em->remove($_ST);
+            //Make sure $_ST exist
+            if($_ST){
+                $em->remove($_ST);
+            }
             $em->flush();
             return new JsonResponse('successfull.');
         }
@@ -74,10 +78,16 @@ class DefaultController extends Controller
         //when logout, goes to the login page
         //Get the authorization checker
         $authChecker = $this->get('security.authorization_checker');
+        
         if(!$authChecker->isGranted("ROLE_SELLER")){
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
+        //Get the entity manager
+        $em = $this->getDoctrine()->getManager();
+        //Get the total number of all STransaction
+        $stransactionNb = count($em->getRepository('TransactionBundle:STransaction')->findAll());
         
-        return $this->render('KmBundle:Default:front.html.twig');
+        return $this->render('KmBundle:Default:front.html.twig',
+                             array('stransactionNb' => $stransactionNb));
     }
 }

@@ -1,4 +1,13 @@
-KmBundle\Entity\Setting:
-    setting1:
-        name: bmClient
-        appInstalled: false
+KmBundle\Entity\Branch:
+    branch1:
+        name: BRANCH_1
+        idSynchrone: qwerty1
+        
+UserBundle\Entity\User:
+    super-admin:
+        username: admin
+        branch: "@branch1"
+        email: admin@domain.com
+        plainPassword: admin
+        enabled: true
+        roles: [ROLE_SUPER_ADMIN]

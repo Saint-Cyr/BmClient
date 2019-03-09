@@ -15,7 +15,3 @@ _main:
 
 _main:
     resource: routing.yml
-
-coresphere_console:
-    resource: .
-    type: extra

@@ -1,95 +1,546 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Meta, title, CSS, favicons, etc. -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<html>
+<head>
+  <!--CSS Dependencies -->
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('css/AdminLTE.min.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('css/_all-skins.min.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('css/ionicons.min.css') }}"/>
+  <!-- Select2 -->
+  <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
+  <style>
+    
+    #modalContainer {
+    background-color:rgba(0, 0, 0, 0.3);
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0px;
+    left:0px;
+    z-index:10000;
+    background-image:url(tp.png); /* required by MSIE to prevent actions on lower z-index elements */
+    }
 
-    <title>BeezyManager</title>
+    #alertBox {
+        position:relative;
+        width:350px;
+        min-height:150px;
+        margin-top:50px;
+        border:1px solid #666;
+        background-color:#fff;
+        background-repeat:no-repeat;
+        background-position:20px 30px;
+    }
 
-    <!-- Bootstrap -->
-    <link href="{{ asset('assets/vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="{{ asset('assets/vendors/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+    #modalContainer > #alertBox {
+        position:fixed;
+    }
 
-    <!-- Custom Theme Style -->
-    <link href="{{ asset('assets/css/custom.min.css') }}" rel="stylesheet">
-    <link rel='shortcut icon' type='image/x-icon' href='{{ asset('images/favicon.ico') }}' />
-  </head>
+    #alertBox h1 {
+        margin:0;
+        font:bold 0.9em verdan,arial;
+        background-color:#b7b5b6;
+        color:#FFF;
+        border-bottom:1px solid #000;
+        padding:2px 0 2px 5px;
+    }
 
-  <body class="nav-md">
-    <div class="container body">
-      <div class="main_container">
-        <!-- page content -->
-        <div class="col-md-12">
-          <div class="col-middle">
-            <div class="text-center text-center">
-                <img src="{{ asset('images/logo.png') }}" style="width: 150px; height: 135px; margin-bottom: 23px;" />
-                </br>
-              <div class="row top_tiles">
-              <a href="{{ path('transaction_pos_barcode') }}">
-              <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-8">
-                <div class="tile-stats">
-                  <div class="icon"><i class="fa fa-cart-plus"></i></div>
-                  <div class="count">POS 1</div>
-                  
-                </div>
-              </div>
-              </a>
-              <a href="{{ path('transaction_pos2') }}" id="pos2">
-              <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-8">
-                <div class="tile-stats">
-                  <div class="icon"><i class="fa fa-cart-plus"></i></div>
-                  <div class="count">POS 2</div>
-                  
-                </div>
-              </div>
-              </a>
-              <a href="{{ path('admin_transaction_stransaction_create') }}">
-              <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-8">
-                <div class="tile-stats">
-                  <div class="icon"><i class="fa fa-cart-plus"></i></div>
-                  <div class="count">POS 3</div>
-                  
-                </div>
-              </div>
-              </a>
-              <a href="{{ path('sonata_admin_dashboard') }}">
-              <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-8">
-                <div class="tile-stats">
-                  <div class="icon"><i class="fa fa-bars"></i></div>
-                  <div class="count">D1 </div>
-                  
-                </div>
-              </div>
-              </a>
+    #alertBox p {
+        font:0.7em verdana,arial;
+        height:50px;
+        padding-left:50px;
+        margin-left: auto;
+        margin-right: 8px;
+        margin-top: 20px;
+        font-size: 22px;
+    }
+
+    #alertBox #closeBtn {
+        display:block;
+        position:relative;
+        margin:5px auto;
+        padding:7px;
+        border:0 none;
+        width:70px;
+        font:0.7em verdana,arial;
+        text-transform:uppercase;
+        text-align:center;
+        color:#FFF;
+        background-color:#b7b5b6;
+        border-radius: 3px;
+        text-decoration:none;
+    }
+
+    /* unrelated styles */
+
+    #mContainer {
+        position:relative;
+        width:600px;
+        margin:auto;
+        padding:5px;
+        border-top:2px solid #000;
+        border-bottom:2px solid #000;
+        font:0.7em verdana,arial;
+    }
+
+    h1,h2 {
+        margin:0;
+        padding:4px;
+        font:bold 1.5em verdana;
+        border-bottom:1px solid #000;
+    }
+
+    code {
+        font-size:1.2em;
+        color:#069;
+    }
+
+    #credits {
+        position:relative;
+        margin:25px auto 0px auto;
+        width:350px; 
+        font:0.7em verdana;
+        border-top:1px solid #000;
+        border-bottom:1px solid #000;
+        height:90px;
+        padding-top:4px;
+    }
+
+    #credits img {
+        float:left;
+        margin:5px 10px 5px 0px;
+        border:1px solid #000000;
+        width:80px;
+        height:79px;
+    }
+
+    .important {
+        background-color:#F5FCC8;
+        padding:2px;
+    }
+
+    code span {
+        color:green;
+    }
+  </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="#" class="logo" style="background-color: #bb2d30;">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>BSol</b></span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg">Business <b>Solution</b></span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top" style="background-color: #bb2d30">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <!-- Messages: style can be found in dropdown.less-->
+          
+          <!-- Notifications: style can be found in dropdown.less -->
+          <li class="dropdown notifications-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="glyphicon glyphicon-list"></i>
+              <span class="label label-danger">{{ stransactionNb }}</span>
+            </a>
             
-            </div>
-            <hr>
-                
-              <a href="#" style="color: white;"> {{ copyright }}</a>
-              <div style="float:left; font-size: 120%; position: relative; top:-10px"> 
-                    <a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out" aria-hidden="true" style="color: #ffffff;"></i></a>
+          </li>
+          
+          <!-- User Account: style can be found in dropdown.less -->
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <span class="hidden-xs">About</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- User image -->
+              <li class="user-header" style="background-color: #bb2d30">
+                  <br>
+                <p>
+                    <small><i><i class="fa fa-quote-left"></i>
+                             ...For a king, three (3) values have to be prioritized in life: GODLY Wisdom, Time & Money. 
+                            <i class="fa fa-quote-right"></i></i></small>
+                            <br>
+                    <small>- Saint-Cyr MAPOUKA -</small>
+                </p>
+              </li>
+              <!-- Menu Footer-->
+              <li class="user-footer">
+                <div class="pull-right">
+                  <a href="{{ path('fos_user_security_logout') }}" class="btn btn-default btn-flat">Sign out</a>
                 </div>
+              </li>
+            </ul>
+          </li>
+          
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <aside class="main-sidebar" style="background-color: #bb2d30">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <div class="user-panel">
+        <div class="pull-left image">
+          <img src="{{ asset('images/logo_bsol2.jpg') }}" class="img-rounded" alt="logo Img">
+        </div>
+        <div class="pull-left info" style="color: white;">
+            <span>
+                An <b>iSTech product</b>
+            </span><br><br>
+          <span> &copy; 2019</span>
+        </div>
+      </div>
+      
+        
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+  
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    
+
+    <!-- Main content -->
+    <section class="content">
+    
+    
+    <br>
+      <div class="row">
+        <a href="{{ path('transaction_pos_barcode') }}" style="color: gray">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-red"><i class="fa fa-desktop"></i></span>
+
+                <div class="info-box-content">
+                    <br>
+                  <span class="info-box-number">
+                      POS #1 
+                  </span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
             </div>
+        </a>
+        <a href="{{ path('admin_transaction_stransaction_create') }}" style="color: gray">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-red"><i class="fa fa-keyboard-o"></i></span>
+
+                <div class="info-box-content">
+                    <br>
+                  <span class="info-box-number">
+                      POS #2 
+                  </span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+        </a>
+        <a href="#" style="color: gray">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-red"><i class="fa fa-book"></i></span>
+
+                <div class="info-box-content">
+                    <br>
+                    <span class="info-box-number">
+                        Documentation <div><i  style="color: green; font-size: 12px;">(Soon)</i></div>
+                    </span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+        </a>
+        <a href="{{ path('sonata_admin_dashboard') }}" style="color: gray">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-red"><i class="fa fa-dashboard"></i></span>
+
+                <div class="info-box-content">
+                    <br>
+                  <span class="info-box-number">
+                      D #1 
+                  </span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+        </a>
+        
+      </div>
+      <!-- SELECT2 EXAMPLE -->
+      <div class="box box-danger">
+        
+        <div class="box-header with-border">
+          <h3 class="box-title"><i class="fa fa-gears"></i> </h3>
+
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
           </div>
         </div>
-        <!-- /page content -->
+        <!-- /.box-header -->
+        <div class="box-body">
+          <div class="row">
+            <form id="settingForm">
+            <!-- /.col -->
+            <!-- /.col -->    
+            <div class="col-md-3">
+               <div class="form-group">
+                <label>Data type</label>
+                <div class="input-group">
+                <div class="input-group-addon" style="border-color: #dd4b39;">
+                   <i class="fa fa-list"></i>
+                </div>
+                  <select class="form-control" data-placeholder="Language" name="csv_type"
+                        style="width: 100%; border-color: #dd4b39;">
+                  <option>Products</option>
+                  <option>Users</option>
+                </select>
+                </div>
+                <!-- /.input group -->
+              </div>
+               <div class="form-group">
+                <label>CSV file</label>
+                <div class="input-group">
+                <div class="input-group-addon" style="border-color: #dd4b39;">
+                   <i class="fa fa-file-excel-o"></i>
+                </div>
+                  <input id="product_id" name="product" type="file"  class="form-control" style="width: 100%; border-color: #dd4b39;">
+                </div>
+                <!-- /.input group -->
+              </div>
+            </div>
+            <div class="col-md-3">
+               <div class="form-group">
+                <!--<label>Language</label>
+                <div class="input-group">
+                <div class="input-group-addon" style="border-color: #dd4b39;">
+                   <i class="fa fa-language"></i>
+                </div>
+                  <select class="form-control" data-placeholder="Language" name="language"
+                        style="width: 100%; border-color: #dd4b39;">
+                  <option>English</option>
+                  <option>French</option>
+                  <option>Arabic</option>
+                </select>
+                </div>-->
+                <!-- /.input group -->
+              </div>
+              <div class="form-group">
+                <!--<label>Customer #ID</label>
+                <div class="input-group">
+                <div class="input-group-addon" style="border-color: #dd4b39;">
+                   <i class="fa fa-id-card-o"></i>
+                </div>
+                  <input type="text" class="form-control" data-inputmask="'alias': 'ip'" data-mask style="border-color: #dd4b39;">
+                </div>-->
+                <!-- /.input group -->
+              </div>
+            </div>
+            </form>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+        <button id="upload" class="btn btn-danger pull-left">
+            <i class="fa fa-check"></i> UPDATE
+        </button>
+        
+        <button type="button" class="btn btn-danger pull-right" id="daterange-btn">
+            <span>
+                <i class="fa fa-remove"></i> CANCEL
+            </span>
+        </button>
+        </div>
       </div>
+      
+      <!-- /.box -->
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <footer class="main-footer" style="color: #dd4b39;">
+    <div class="pull-right hidden-xs">
+      <b>Version</b> 2.0
     </div>
+    Powered by <strong>iSTech CAR.</strong> &copy; 2019  All rights
+    reserved.
+  </footer>
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+<!--JS Dependencies -->
+  <script src="{{ asset('js/angular.js') }}"></script>
+  <script src="{{ asset('js/jquery.js') }}"></script>
+  <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('js/jquery.scannerdetection.js') }}"></script>
+  <script src="{{ asset('js/jquery.slimscroll.min.js') }}"></script>
+  <script src="{{ asset('js/fastclick.js') }}"></script>
+  <script src="{{ asset('js/adminlte.min.js') }}"></script>
+  <script src="{{ asset('js/demo.js') }}"></script>
+  <!-- Select2 -->
+  <script src="{{ asset('js/select2.full.min.js') }}"></script>
+  <script>
+  $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
 
-    <!-- jQuery -->
-    <script src="{{ asset('assets/vendors/jquery/dist/jquery.min.js') }}"></script>
-    <!-- Bootstrap -->
-    <script src="{{ asset('assets/vendors/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-    <!-- FastClick -->
-    <script src="{{ asset('assets/vendors/fastclick/lib/fastclick.js') }}"></script>
-    <!-- NProgress -->
-    <script src="{{ asset('assets/vendors/nprogress/nprogress.js') }}"></script>
+    //Datemask dd/mm/yyyy
+    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+    //Datemask2 mm/dd/yyyy
+    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+    //Money Euro
+    $('[data-mask]').inputmask()
 
-    <!-- Custom Theme Scripts -->
-    <script src="{{ asset('assets/js/custom.min.js') }}"></script>
-  </body>
+    //Date range picker
+    $('#reservation').daterangepicker()
+    //Date range picker with time picker
+    $('#reservationtime').daterangepicker({ timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A' })
+    //Date range as a button
+    $('#daterange-btn').daterangepicker(
+      {
+        ranges   : {
+          'Today'       : [moment(), moment()],
+          'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+          'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+          'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+          'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        startDate: moment().subtract(29, 'days'),
+        endDate  : moment()
+      },
+      function (start, end) {
+        $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+      }
+    )
+
+    //Date picker
+    $('#datepicker').datepicker({
+      autoclose: true
+    })
+
+    //iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+      checkboxClass: 'icheckbox_minimal-blue',
+      radioClass   : 'iradio_minimal-blue'
+    })
+    //Red color scheme for iCheck
+    $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+      checkboxClass: 'icheckbox_minimal-red',
+      radioClass   : 'iradio_minimal-red'
+    })
+    //Flat red color scheme for iCheck
+    $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+      checkboxClass: 'icheckbox_flat-green',
+      radioClass   : 'iradio_flat-green'
+    })
+
+    //Colorpicker
+    $('.my-colorpicker1').colorpicker()
+    //color picker with addon
+    $('.my-colorpicker2').colorpicker()
+
+    //Timepicker
+    $('.timepicker').timepicker({
+      showInputs: false
+    })
+  })
+  
+  
+  
+  $('#upload').on('click', function() {
+    var myForm = document.getElementById("settingForm");
+    var form_data = new FormData(myForm);
+    var file_data = $('#product_id').prop('files')[0];
+    form_data.append('file', file_data);
+                                 
+    $.ajax({
+        url: 'http://localhost/BmClient/web/app_dev.php/products', // point to server-side PHP script 
+        dataType: 'text',  // what to expect back from the PHP script, if anything
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,                         
+        type: 'post',
+        success: function(php_script_response){
+            alert(php_script_response); // display response from the PHP script, if any
+        }
+     });
+});
+
+//Script for the alert box
+    var ALERT_TITLE = "BSol";
+    var ALERT_BUTTON_TEXT = "OK";
+
+    if(document.getElementById) {
+        window.alert = function(txt) {
+            createCustomAlert(txt);
+        }
+    }
+
+    function createCustomAlert(txt) {
+        d = document;
+
+        if(d.getElementById("modalContainer")) return;
+
+        mObj = d.getElementsByTagName("body")[0].appendChild(d.createElement("div"));
+        mObj.id = "modalContainer";
+        mObj.style.height = d.documentElement.scrollHeight + "px";
+
+        alertObj = mObj.appendChild(d.createElement("div"));
+        alertObj.id = "alertBox";
+        if(d.all && !window.opera) alertObj.style.top = document.documentElement.scrollTop + "px";
+        alertObj.style.left = (d.documentElement.scrollWidth - alertObj.offsetWidth)/2 + "px";
+        alertObj.style.visiblity="visible";
+
+        h1 = alertObj.appendChild(d.createElement("h1"));
+        h1.appendChild(d.createTextNode(ALERT_TITLE));
+
+        msg = alertObj.appendChild(d.createElement("p"));
+        //msg.appendChild(d.createTextNode(txt));
+        msg.innerHTML = txt;
+
+        btn = alertObj.appendChild(d.createElement("a"));
+        btn.id = "closeBtn";
+        btn.appendChild(d.createTextNode(ALERT_BUTTON_TEXT));
+        btn.href = "#";
+        btn.focus();
+        btn.onclick = function() { removeCustomAlert();return false; }
+
+        alertObj.style.display = "block";
+
+    }
+
+    function removeCustomAlert() {
+        document.getElementsByTagName("body")[0].removeChild(document.getElementById("modalContainer"));
+    }
+</script>
+
+</body>
 </html>

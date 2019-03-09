@@ -15,12 +15,7 @@ class ProductAdmin extends AbstractAdmin
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
-        $datagridMapper
-            ->add('name')
-            ->add('barcode')
-            ->add('categories')
-            
-        ;
+         
     }
 
     /**
@@ -29,27 +24,9 @@ class ProductAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('image', null, array('template' => 'TransactionBundle:Default:list.html.twig'))
-            ->add('idSynchrone')
-            ->add('name', null, array('editable' => true))
-            ->add('unitPrice', 'decimal', array('editable' => true));
-            if($this->isGranted('ROLE_SUPER_ADMIN')){
-                $listMapper->add('wholeSalePrice', 'decimal', array('editable' => true))
-                           ->add('profit');
-            }
+            ->add('name')
+            ->add('imagePos', null, array('editable' => true));
             
-            $listMapper->add('totalStock', null, array('label' => 'Total Stock'))
-            ->add('categories')
-            ->add('imagePos', null, array('editable' => true))
-            ->add('locked', null, array('editable' => true))
-            ->add('_action', null, array(
-                'actions' => array(
-                    'show' => array(),
-                    'edit' => array(),
-                    'delete' => array(),
-                )
-            ))
-        ;
     }
 
     /**
@@ -111,18 +88,6 @@ class ProductAdmin extends AbstractAdmin
           $this->hasRoute('edit') && $this->isGranted('EDIT') &&
           $this->hasRoute('delete') && $this->isGranted('DELETE')
             ) {
-            $actions['generate'] = array(
-                'label' => 'Reg. BC',
-                'translation_domain' => 'SonataAdminBundle',
-                'ask_confirmation' => true
-            );
-            
-            $actions['lockBarcode'] = array(
-                'label' => 'Lock BC',
-                'translation_domain' => 'SonataAdminBundle',
-                'ask_confirmation' => true
-            );
-
         }
 
         return $actions;

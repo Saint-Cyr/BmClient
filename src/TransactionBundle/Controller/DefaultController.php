@@ -38,7 +38,9 @@ class DefaultController extends Controller
     
     public function posAction()
     {
-        //get the serverurl
+        //Get the online server URL
+        $serverUrl = $this->getParameter('serverhost');
+        //get the miniserver URL
         $localhost = $this->getParameter('localhost');
         //Get the laps time for synchronizer
         $timeInterval = $this->getParameter('time_interval');
@@ -50,6 +52,7 @@ class DefaultController extends Controller
         $nbStransaction = count($em->getRepository('TransactionBundle:STransaction')->findAll());
         
         return $this->render('TransactionBundle:POS:pos.html.twig', array('products' => $products,
+                                                                          'serverUrl' => $serverUrl,
                                                                           'localhost' => $localhost,
                                                                            'nbStransaction' => $nbStransaction,
                                                                            'timeInterval' => $timeInterval));

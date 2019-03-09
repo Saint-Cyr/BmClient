@@ -3,253 +3,12 @@
 
 <head>
   <title>POS1</title>
-  <script data-require="jquery@*" data-semver="2.0.3" src="{{ asset('vendor/jquery-3.1.0.min.js') }}"></script>
-  <script data-require="angular.js@1.2.13" data-semver="1.2.13" src="{{ asset('vendor/angular-1.2.13/angular.js') }}"></script>
-  <script data-require="angular.js@1.2.13" data-semver="1.2.13" src="{{ asset('vendor/angular-1.2.13/angular-animate.js') }}"></script>
-  <script src="{{ asset('vendor/bootstrap.min.js') }}"></script>
-  <link rel="stylesheet" href="{{ asset('vendor/bootstrap.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('style.css') }}" />
+  <!--CSS Dependencies -->
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('css/AdminLTE.min.css') }}">
-  <link rel='shortcut icon' type='image/x-icon' href='{{ asset('images/favicon.ico') }}' />
-  <script>
-    // Code goes here
-
-    var app = angular.module('myApp', []);
-
-    app.run(function($window, $rootScope) {
-          $rootScope.online = navigator.onLine;
-          $window.addEventListener("offline", function() {
-            $rootScope.$apply(function() {
-              $rootScope.online = false;
-            });
-          }, false);
-
-          $window.addEventListener("online", function() {
-            $rootScope.$apply(function() {
-              $rootScope.online = true;
-            });
-          }, false);
-    });
-
-    app.controller('POSController', function ($scope, $http)
-    {
-        $scope.fileName = 'KINGMANAGER/web/1.jpg';
-        $scope.focusImage = '';
-        $scope.gif = 'logo.png';
-
-        var data = {
-            {% for p in products %}
-                "{{ p.barcode }}" : {count: 1, detail: "{{ p.name|slice(0, 24)|e('js')|raw }}", id: {{ p.id }}, price: {{ p.unitPrice }} },
-            {% endfor %}
-      };
-
-        $scope.itemsCnt = 1;
-        $scope.order = [];
-        $scope.isDisabled = true;
-
-        function isEmpty(obj) {
-            return Object.keys(obj).length === 0;
-        }
-
-
-      $scope.$watch("barcode", function(newValue, oldValue) {
-        if (newValue)
-          addSale(newValue);
-      });
-
-
-        $scope.$watch('online', function(newStatus) { 
-            if(newStatus){
-               //alert('You are online');
-               //window.location.reload();
-               setInterval(function(){    
-                    var outPut = $http.post("{{ localhost }}"+'/synchronizer');
-                    //When successfull response comes from the server
-                    outPut.success(function(data, status, headers, config){
-                        if(data.sleep){
-                            //alert('response of server is ...');
-                            //requestServer = false;
-                        }
-                    });
-
-               }, {{ timeInterval }});
-            }else{
-                //window.location.reload();
-            }
-        });
-
-      function addSale(barcode) {
-        var item = data[barcode];
-
-        var foodItem = {
-            orderedItemCnt: 1,
-            totalPrice: item.price,
-            detail: item.detail,
-            itemId: item.id,
-            id: $scope.itemsCnt,
-            item: item,
-        };
-
-        //By S@int-Cyr
-        $scope.fileName = item.fileName;
-        $scope.barcode = '';
-        console.log(foodItem);
-
-
-        // Find if the item is already in Cart
-            var cartItems = $.grep($scope.order, function(e){ return e.itemId == item.id; });
-
-             if(cartItems.length > 0  && !isEmpty($scope.order)){
-                cartItems[0].orderedItemCnt = ++ cartItems[0].orderedItemCnt; 
-                cartItems[0].totalPrice = item.price * cartItems[0].orderedItemCnt;
-             }
-             else{
-                $scope.order.push(foodItem);
-                $scope.itemsCnt = $scope.order.length; 
-             }
-      }
-
-        $scope.getSum = function() {
-          var i = 0,
-            sum = 0;
-
-          for(; i < $scope.order.length; i++) {
-            sum += parseInt($scope.order[i].totalPrice, 10);
-          }
-          return sum;
-        };
-
-        $scope.addItem = function(item, index) {
-              item.orderedItemCnt = ++ item.orderedItemCnt; 
-              item.totalPrice = item.item.price * item.orderedItemCnt;
-        };
-
-
-        $scope.subtractItem = function(item, $index)
-        {
-          if (item.orderedItemCnt > 1) {
-              item.orderedItemCnt = -- item.orderedItemCnt; 
-              item.totalPrice = item.item.price * item.orderedItemCnt;
-          }
-          else{
-              $scope.isDisabled = true;
-              // isDisabled = false;    
-             // $("#SubstractItemBtn").prop("disabled", true);
-          }
-        }
-
-        $scope.deleteItem = function(index) {
-          $scope.order.splice(index, 1);
-        };
-
-        $scope.checkout = function(index) {
-          //S@int-Cyr edition start here
-          //Data to be sent to the server (order[])
-          var order2 = $scope.order.slice(0);
-          //Data to be sent to the server (order[])
-          var data = {"data":{
-              'id': 1,
-              'order': order2,
-              'total': $scope.getSum(),
-        }};
-
-          //Prevent user to send another request
-          $scope.order = '';
-          $scope.gif = 'gif1.gif';
-          //Data containing the response from the server
-          var outPut = $http.post("{{ localhost }}"+'/sales/transactions', data);
-          //When successfull response comes from the server
-          outPut.success(function(data, status, headers, config){
-              alert(data);
-              //alert( "successfull message: " + JSON.stringify({data: data}));
-              //alert("Order total: $" + $scope.getSum() + "\n\nPayment received. Thanks. cache: " + $scope.cacheAmount + "change: " + $scope.getChange());
-              $scope.order = [];
-              $scope.gif = 'logo.png';
-          });
-
-          outPut.error(function(data, status, header, config){
-              alert('an error occur: cannot perform the transaction');
-          });
-          //S@int-Cyr edition end here
-
-          //alert("Order total: $" + $scope.getSum() + "\n\nPayment received. Thanks. cache: " + $scope.cacheAmount + "change: " + $scope.getChange());
-          //$scope.order = [];
-        };
-
-        $scope.clearOrder = function() {
-          $scope.order = [];
-
-        };
-
-        $scope.getChange = function(){
-            if($scope.getSum()){
-                var change = 0;
-                change = $scope.cacheAmount - $scope.getSum();
-                return change;
-            }
-        }
-
-        $scope.focused = function(){
-            $scope.focusImage = 'fa-spin';
-        }
-
-        $scope.blurred = function(){
-            $scope.focusImage = 'no-access.png';
-        }
-    });
-    
-    
-
-    //Script for the alert box
-        var ALERT_TITLE = "Beezy Manager";
-        var ALERT_BUTTON_TEXT = "Ok";
-
-        if(document.getElementById) {
-            window.alert = function(txt) {
-                createCustomAlert(txt);
-            }
-        }
-
-        function createCustomAlert(txt) {
-            d = document;
-
-            if(d.getElementById("modalContainer")) return;
-
-            mObj = d.getElementsByTagName("body")[0].appendChild(d.createElement("div"));
-            mObj.id = "modalContainer";
-            mObj.style.height = d.documentElement.scrollHeight + "px";
-
-            alertObj = mObj.appendChild(d.createElement("div"));
-            alertObj.id = "alertBox";
-            if(d.all && !window.opera) alertObj.style.top = document.documentElement.scrollTop + "px";
-            alertObj.style.left = (d.documentElement.scrollWidth - alertObj.offsetWidth)/2 + "px";
-            alertObj.style.visiblity="visible";
-
-            h1 = alertObj.appendChild(d.createElement("h1"));
-            h1.appendChild(d.createTextNode(ALERT_TITLE));
-
-            msg = alertObj.appendChild(d.createElement("p"));
-            //msg.appendChild(d.createTextNode(txt));
-            msg.innerHTML = txt;
-
-            btn = alertObj.appendChild(d.createElement("a"));
-            btn.id = "closeBtn";
-            btn.appendChild(d.createTextNode(ALERT_BUTTON_TEXT));
-            btn.href = "#";
-            btn.focus();
-            btn.onclick = function() { removeCustomAlert();return false; }
-
-            alertObj.style.display = "block";
-
-        }
-
-        function removeCustomAlert() {
-            document.getElementsByTagName("body")[0].removeChild(document.getElementById("modalContainer"));
-        }
-  </script>
-  
   <style>
+    
     #modalContainer {
     background-color:rgba(0, 0, 0, 0.3);
     position:absolute;
@@ -263,8 +22,8 @@
 
     #alertBox {
         position:relative;
-        width:300px;
-        min-height:100px;
+        width:350px;
+        min-height:150px;
         margin-top:50px;
         border:1px solid #666;
         background-color:#fff;
@@ -278,8 +37,8 @@
 
     #alertBox h1 {
         margin:0;
-        font:bold 0.9em verdana,arial;
-        background-color:#5e388f;
+        font:bold 0.9em verdan,arial;
+        background-color:#b7b5b6;
         color:#FFF;
         border-bottom:1px solid #000;
         padding:2px 0 2px 5px;
@@ -290,8 +49,9 @@
         height:50px;
         padding-left:50px;
         margin-left: auto;
+        margin-right: 8px;
         margin-top: 20px;
-        font-size: 18px;
+        font-size: 22px;
     }
 
     #alertBox #closeBtn {
@@ -305,7 +65,7 @@
         text-transform:uppercase;
         text-align:center;
         color:#FFF;
-        background-color:#5e388f;
+        background-color:#b7b5b6;
         border-radius: 3px;
         text-decoration:none;
     }
@@ -362,169 +122,405 @@
         color:green;
     }
   </style>
+  <link rel='shortcut icon' type='image/x-icon' href='{{ asset('images/favicon.ico') }}' />
+  <link rel='shortcut icon' type='image/x-icon' href='{{ asset('images/favicon.ico') }}' />
 </head>
 
 
+<p>loading....</p>
 
-<body data-ng-controller="POSController">
-  <div class="container">
-    <header class="main-header">
-    <nav class="navbar navbar-static-top">
-      <div class="container">
-        <div class="navbar-header">
-          
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
-            <i class="fa fa-bars"></i>
-          </button>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        
-        <!-- /.navbar-collapse -->
-        <!-- Navbar Right Menu -->
-        
-        {#{ render(controller('KmBundle:Default:stockUpdate')) }#}
-        <!-- /.navbar-custom-menu -->
-      </div>
-      <!-- /.container-fluid -->
-    </nav>
-  </header>
-    <br>
-    <div class="row">
-      <div class="col-md-6">
-        {% verbatim %}
-        <hr>
-        <div class="jumbotron" style="margin-top: 21px;">
-            <span style="font-size: 120px; color: red;">{{getSum() | currency:' ':true:'1.2-2'}}</span>
-        </div>
-        <div class="jumboron">
+<body data-ng-controller="PosController"  style="background-color: #eee; display: none;">
+    
+    <div class="col-md-12">
         <div class="row">
-            <form name="itemForm">
-                  <input type="password" name="barcode"  style="opacity: 0;" id="barcodeId"
-                    ng-model="barcode" ng-model-options="{ debounce: 500 }" autofocus="true" ng-focus="focused()" ng-blur="blurred()"/>
-            <br/>
-            </form>
-
-            <div class="col-sm-6" onclick="document.getElementById('barcodeId').focus(); document.getElementById('barcodeId').value = ''; return false;">
-                  <span ng-model="focusImage">
-                      <i class="fa fa-cog {{ focusImage }} fa-3x fa-fw" aria-hidden="true"></i>
-                  </span>
-        {% endverbatim %}
-                <!-- Barcode Scanner 2 icon by Icons8 -->
-<img class="icon icons8-Barcode-Scanner-2" width="80" height="80" 
-     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAEh0lEQVRoQ92Zi3ETMRCGkwqACjgqIFTApQKgAo4KCBVgKiBUgFMBoQJMBUAFOB1ABfB/jJbZW+veduTJzuycJOuk/fd9yenJHaHTO4Lj5LaAnElhT8W1uBIz97TVBIa+i3+lOWu/01qvzg8JBIGfiZuM4HMcAXCA/CC+jgccAshLXfI8sd2HVrkcRssI5AnQMIS17qc5a4wfh/1vNL/0a/sCwuWvk/BcbHTlAARZJk8BhYLei7fiR/sCwsFov0nas3N/JG2hfdxh3/QnHdgywlSLoG3z+9pJeJM0j7nR1iFpEZCc63i/3wm+AyKZBQQLfBJ77X/VfJ0scAjXGdLBLCAITBwYNRp8PpDvDwGw32cBsZfiJZbTSaMwcYGlboNmAUHge+J3YtyMWIFZyxGADBxPkkCsGUvA1nr5i5j49Gl+sEXZ6AVaixdiH9CV5jAHA4xxLFpeYLMaTyrznNiiTq0SAM648BcMpV9efCvGIoyHyCxmIHk+DC9RJJuhg9zvnPFRXKc1rMFaSxlDQKikZC383w6aIMP/rbwLo5QpZ3E/ILwb7ViDW4aAgPxnQv9gDoKg2bFnITgAAAKRKXFd5DkXb6IsQ0DYbwFPb7NdCCabccKZ3gq4USMmPnvfHQOEQ2hLXonXC4EQ7Gg2p1WsQEOI4BAuCCiLhcVAOBgzIwRglqRTU0rMgnW6o9ITK6zEl0Fpi4Fw3kZMGoa2YgQi+0wFhYA+C2IF5pZKsQKK445IewHChVwG+2LIhYAEGEIM1QeExLooYZ3GlZ5dVvBg9gLEH4jfwrU41giAYSVjgFHdWYd4h8rMuqVUvl84z/b4u/yY37nvSTq/tW9MsHcdzPpZEg4B4a7Wpe+MsQVyo0Nw79npt0+I+FuVwAGQMYzmY/uCFdZistTYAsl+OvFsl7HUIlNAxr2A/SbeiqlRQ0R8AjxrwWMAYgCIG4stwDHGcpZAao2JL9aJkxaVAlIla+B2CNvVOQPCt0aWuVhrZcgSQBAezeJaPj4ABzdiYsHIy4g1AB0L6mDTGC24jzlxAQhoLTZ3smJInfHkgVzqB75LdgK+hEW2EiTWn6ggczeeBpo9WAugO5muBBDTKq051qiSsBYnaBuw1gEgvBF7+RSAWrJHIBZMfmNsDcbsiRr281oTYgRh1+KN2LKTVXuLIZpU9ngiyCm8rQpfAghCASK6l6VfXMmymXcrA3OtAZ8VrT9klwKCoFiGHstnKBOWGOC3VopNP670pGNuffKWAmICAwY3soyFBbAWsdNF/h3G/6g0EGTobc8zaLKtTWkgJlROqT1G2QVfEgggcCviJfsnnh4kO1YsBQThqQc8+wK7C8vRAFlLQrJVrNx97mS/VUkJN3oyLhrsWAMhsp+tA2jq5JKtNqWUa1kXey6hNmPM4PasND6aOmLCAAgwucLXhc+651YrX6JpRECCHEvQKE4BY241+f8jE60+aTvpFzA0gIChd+pzM8BbM3kU3yMerbfMWC2Q6bBMyx1LuVYUmphpxH0fXLgTne9FLqaOBchYa3TuuzNA/gLi6ENCbbhYCgAAAABJRU5ErkJggg==">
-               
-            </div>
+            <div>
+                <div class="col-md-6">
                 {% verbatim %}
-            <div class="col-sm-6">
+		<!--<span  style="font-size: 100px; color: #e81e26;">{{getTotal() | currency:" ":0}}</span>-->
+                <span  style="font-size: 100px; color: #e81e26;">
+                    {{getSum() | currency:" ":0}}
+                </span>
+                <span  style="font-size: 20px; color: #e81e26;">
+                    FCFA (TTC)
+                </span>
                 
-                
+                </div>
+		<div class="col-md-6">
+		<span  style="font-size: 80px; color: gray;">
+                    {{ cacheAmount - getSum() | currency:" ":0}}
+                </span>
+                <span  style="font-size: 20px; color: gray;">
+                    FCFA (RELICA)
+                </span>
+                </div>
+                {% endverbatim %}
             </div>
         </div>
-        </div>
-      </div>
-      <br>
-      <div class="col-md-6">
-        <style>
-            .panel > .panel-heading {
-                background-color: #5e388f;
-            }
-        </style>
-          <div class="panel panel-primary">
-            <div class="panel-heading">
-              <h3 class="panel-title"><i class="fa fa-bars" aria-hidden="true" style="color: #FFFFFF; margin-left: 6px;"></i></h3>
-              
-            </div>
-            <div class="panel-body" style="max-height:320px; overflow:auto;">
-              <div class="text-warning" ng-hide="order.length" ng-model="gif">
-                   <img src="/BmClient/web/images/{{ gif }}" style="margin-left:150px;" width="150"/>
-              </div>
-              
-              <ul class="list-group">
-                <li class="list-group-item" ng-repeat="item in order">
-                    <span style="font-size: 23px;">{{item.detail}}</span>
-                  
-                  <div class="btn-group pull-right" role="group" aria-label="...">
-                      <button type="button" class="btn btn-xs " ng-disabled="" ng-click="subtractItem(item, $index)">
-                        <span type="button" class="fa fa-minus"></span>
-                      </button>
-                      <button type="button" class="btn  btn-xs" ng-click="addItem(item, $index)">
-                        <span class="fa fa-plus"></span>
-                      </button>
-                      
-                       <button type="button" class="btn btn-danger btn-xs"  ng-click="deleteItem($index)">
-                        <span class="fa fa-trash-o"></span>
-                      </button>                     
-                  </div>
-                  <div class="label label-success pull-right">{{item.totalPrice | currency:'FCFA ':true:'1.2-2'}}</div>
-                  <div class="label label-default pull-right">{{item.orderedItemCnt}}</div>
-                </li>
-              </ul>
-
-            </div>
-            <div class="panel-footer" ng-show="order.length">
-              <div class="label label-danger ">Total: {{getSum() | currency:'FCFA ':true:'1.2-2'}}</div>
-            </div>
-            <div class="panel-footer" ng-show="order.length">
-              <div class="text-muted">
-                Do not let go of customer without taking payment !
-              </div>
-            </div>
-            <div class="pull-right">
-                <br>
-                <div class="input-group col-md-6">
-                    <span class="input-group-addon">
-                        <i class="fa fa-dolla" aria-hidden="true"></i>
-                    </span>
-                    <input class="form-control" type="text" placeholder="Cache amount (FCFA)" ng-model="cacheAmount" ng-disabled="!order.length">
-                    
-                </div>
-            
-                <div class="inline-group col-md-6">
-                    <span class="btn btn-default" style="color: green;" ng-disabled="!order.length" ng-click="getChange()">{{getChange() | currency:'':true:'1.2-2'}}</span>
-                    <span class="btn btn-default" ng-click="clearOrder()" ng-disabled="!order.length">Clear</span>
-                    <span class="btn btn-danger" ng-click="checkout()" ng-disabled="!order.length">Checkout</span>
-                </div>
-              
-            </div>
-
-          </div>
-        
-      </div>
     </div>
-     {% endverbatim %}
-      <!--<i class="fa fa-wifi fa-2x fa-fw" aria-hidden="true"></i>-->
-      <!--<img src="yellow3.gif" width="20"/>
-      <img src="off.gif" width="20"/>-->
-      <br><br>
-      
-      <!--<img src="green.gif" width="20"/>-->
-      <div class="col-md-12 control">
-            <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
-                <div style="float:left; font-size: 120%; position: relative; top:-10px"> 
-                    <a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out" aria-hidden="true" style="color: #320070;"></i></a>   
-                    <a href="{{ path('km_front') }}"><i class="fa fa-bars" aria-hidden="true" style="color: #320070; margin-left: 6px;"></i></a>  
-                    <a href="#"><i class="fa fa-question-circle" aria-hidden="true" style="color: #320070; margin-left: 6px;"></i></a>
-                    
-                    
-                    
-                    <a href="{{ path('transaction_pos_barcode') }}">
-                        {% if nbStransaction > 0 %}
-                                <span style="margin-left:500px; font-size: 80%;" class="label label-success"> {{ nbStransaction }} </span>
-                            {% else %}
-                                <span style="margin-left:500px; font-size: 80%;" class="label label-success">{{ nbStransaction }}</span>
-                        {% endif %}
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                {% verbatim %}
+                    <div class="panel-body" style="max-height:650px; overflow:auto; min-height:650px;">
+                        <div class="text-warning" ng-hide="order.length" style="margin-top:18%">        
+                            <img src="/BeezyManager/web/images/{{ gif }}" class="center-block" width="220"/>
+                        </div>
                         
-                    </a>
-                    <i ng-show="online" class="fa fa-refresh fa-spin fa-1x fa-fw"></i>
-                    
-                    
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="item in order">
+                                <div class="row"  style="font-size:25px;">
+                                    <div class="col-md-1">
+                                        <span class="badge badge-left" ng-bind="item.orderedItemCnt" style="font-size:25px;"></span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ item.item.detail }}
+                                    </div>
+                                    <div class="col-md-1 col-md-push-1">
+                                        <div class="" style="color: red;">{{item.totalPrice | currency:"":0}}</div>
+                                    </div>
+                                    <div class="col-md-3 col-md-push-3">
+                                        <button class="btn btn-xs" ng-click="addItem(item, $index)">
+                                            <span class="fa fa-plus" style="font-size:25px;"></span>
+                                        </button>
+                                        <button class="btn btn-xs" ng-click="subtractItem(item, $index)">
+                                            <span class="fa fa-minus" style="font-size:25px;"></span>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-1 col-md-push-2">
+                                        <button class="btn btn-xs" ng-click="removeItem($index)">
+                                            <span class="fa fa-trash-o" style="font-size:25px;"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div style="float:right; font-size: 80%; position: relative; top:-10px">
-                    <a href="#" style="color: #320070;">{{ copyright }}</a>
-                </div>
+                {% endverbatim %}
             </div>
+            <div class="col-md-6">
+                <div class="panel panel-primary" style="max-height:650px; overflow:auto; min-height:650px;">
+                <style>
+                    .panel {
+                        border-color : #f00;
+                    }
+                </style>
+                    <div class="panel-body">
+			<div role="tabpanel" class="tab-pane" id="food">
+                            {% for p in products %}
+                                {% if p.imagePos %}
+                                    <button class="btn-huge2" ng-click="addToOrder(food.{{ p.barcode }})">
+                                        {{ p | slice(0, 6) | upper }}
+                                    </button>
+                                {% endif %}
+                            {% endfor %}
+                        </div>    
+                    </div>
+                    </div>
+                </div>
+                </div>
+                <div class="col-md-1 custom-icon">
+                    <span class="fa fa-trash-o" style="margin-left: 23px;" ng-click="clearOrder()"></span>
+                </div>
+                <div class="col-md-5">
+                <span class="btn btn-danger lg btn-checkout" ng-click="checkout()" ng-disabled="!order.length" style="font-size: 32px;">
+                    CHECKOUT
+                </span>
+                </div>
+                <div class="col-md-5">
+                    <form ng-submit="checkout()">
+                        <input type="text"  id="input_left_bottom" value="" data-type="currency" ng-disabled="!order.length"
+			placeholder="CASH (FCFA)" autocomplete="off" ng-model="cacheAmount" class="btn-huge"/>
+                    </form>
+                </div>
+                <div class="col-md-1 custom-icon">
+                    <a href="{{ path('km_front') }}">
+                        <span class="fa fa-bars" style="margin-left: 23px; color: #c4333b;" ng-click=""></span>
+                    </a>
+                </div>
         </div>
     </div>
+
 </body>
+<p>SPLASH Message...</p>
+
+<!--JS Dependencies -->
+  <script src="{{ asset('js/angular.js') }}"></script>
+  <script src="{{ asset('js/jquery.js') }}"></script>
+  <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('js/jquery.scannerdetection.js') }}"></script>
+  <script>
+    // Code goes here
+    var app = angular.module('myApp', []);
+    app.controller('PosController', function ($scope, $http) {
+    $scope.disableIt = false;
+    $scope.gif = 'logo.jpg';
+    
+    $scope.food = {
+    {% for p in products %}                 
+        "{{ p.barcode }}" : {count: 1, id: {{ p.id }}, detail: "{{ p.name|slice(0, 15)|e('js')|raw }}", price: {{ p.unitPrice }} }, 
+    {% endfor %}
+    };
+    
+    $(document).scannerDetection({
+	timeBeforeScanTest: 200, // wait for the next character for upto 200ms
+	startChar: [120], // Prefix character for the cabled scanner (OPL6845R)
+	endChar: [13], // be sure the scan is complete if key 13 (enter) is detected
+	avgTimeByChar: 40, // it's not a barcode if a character takes longer than 40ms
+	onComplete: function(barcode, qty){
+            var item = $scope.food[barcode];
+            //Make sure the barcode is loaded
+            if(!item){
+                var audioElement = document.createElement('audio');
+                audioElement.setAttribute('src', '{{ asset('error.mp3') }}');
+                audioElement.play();
+                alert('Product not found.');
+            }
+            $scope.orderedItemCnt = 1;
+            var foodItem = {
+              orderedItemCnt : 1,
+              totalPrice : item.price,
+              itemId : item.id, 
+              id : $scope.itemsCnt,
+              item : item
+            };
+              // Find if the item is already in Cart
+              var cartItems = $.grep($scope.order, function(e){ return e.itemId == item.id; });
+
+               if(cartItems.length > 0  && !isEmpty($scope.order)){
+                  cartItems[0].orderedItemCnt = ++ cartItems[0].orderedItemCnt; 
+                  cartItems[0].totalPrice = item.price * cartItems[0].orderedItemCnt;
+               }
+               else{
+                  $scope.order.push(foodItem);
+                  $scope.itemsCnt = $scope.order.length; 
+               }
+               
+               $scope.$apply();
+               
+            }        	
+    });
+    
+    $scope.itemsCnt = 1;
+    $scope.order = [];
+    $scope.isDisabled = true;
+
+    function isEmpty(obj) {
+        return Object.keys(obj).length === 0;
+    }
+
+    $scope.addToOrder = function(item) {
+      $scope.orderedItemCnt = 1;
+      var foodItem = {
+        orderedItemCnt : 1,
+        totalPrice : item.price,
+        itemId : item.id, 
+        id : $scope.itemsCnt,
+        item : item
+      };
+
+        // Find if the item is already in Cart
+        var cartItems = $.grep($scope.order, function(e){ return e.itemId == item.id; });
+
+         if(cartItems.length > 0  && !isEmpty($scope.order)){
+            cartItems[0].orderedItemCnt = ++ cartItems[0].orderedItemCnt; 
+            cartItems[0].totalPrice = item.price * cartItems[0].orderedItemCnt;
+         }
+         else{
+            $scope.order.push(foodItem);
+            $scope.itemsCnt = $scope.order.length; 
+         }   
+    };
+    
+    $scope.getSum = function() {
+      var i = 0,
+        sum = 0;
+
+      for(; i < $scope.order.length; i++) {
+        sum += parseInt($scope.order[i].totalPrice, 10);
+      }
+      return sum;
+    };
+
+    $scope.addItem = function(item, index) {         
+          item.orderedItemCnt = ++ item.orderedItemCnt; 
+          item.totalPrice = item.item.price * item.orderedItemCnt;
+    };
+
+
+    $scope.subtractItem = function(item, $index)
+    {
+      if(item.orderedItemCnt > 1) {
+          item.orderedItemCnt = -- item.orderedItemCnt; 
+          item.totalPrice = item.item.price * item.orderedItemCnt;
+      }
+      else{
+        $scope.isDisabled = true;
+        // isDisabled = false;    
+        // $("#SubstractItemBtn").prop("disabled", true);
+      }
+    }
+
+    $scope.removeItem = function(index) {
+        $scope.order.splice(index, 1);
+    
+    };
+    
+    /*$scope.checkout = function(index) {
+      alert("Order total: $" + $scope.getSum() + "\n\nPayment received. Thanks.");
+    };*/
+    
+    $scope.checkout = function(index) {
+       //Prevent user to send a second request
+      
+      //S@int-Cyr edition start here
+      //Data to be sent to the server (order[])
+      var order2 = $scope.order.slice(0);
+      
+      var data = {"data":{
+          'id': 1,
+          'order': order2,
+          'total': $scope.getSum(),
+    }};
+
+    //Prevent user to send another request
+      $scope.order = '';
+      //loading the gif
+      $scope.gif = 'loading.gif';
+      
+      //Data containing the response from the server
+      var outPut = $http.post("{{ localhost }}"+'/sales/transactions', data);
+      //alert( "successfull message: " + JSON.stringify({data: data}));
+      //When successfull response comes from the server
+      outPut.success(function(data, status, headers, config){
+          alert(data);
+          
+          $scope.order = [];
+          $scope.gif = 'logo.jpg';
+      });
+      
+      outPut.error(function(data, status, header, config){
+          var audioElement = document.createElement('audio');
+                audioElement.setAttribute('src', '{{ asset('error.mp3') }}');
+                audioElement.play();
+          alert('[ERROR] cannot perform the transaction');
+        });
+      
+        //Clear the cash amount in order
+        $scope.cacheAmount = null;
+    };
+    
+    $scope.clearOrder = function() {
+      $scope.order = [];
+    };
+    
+    $scope.getChange = function(){
+            var change = 0;
+            if($scope.getSum()){    
+                change = $scope.cacheAmount - $scope.getSum();
+                return change;
+            }
+            
+            return change;
+        }
+});
+
+  </script>
+  <script>
+        $(document).ready(function () {
+            $("#myTab a").click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+        });
+
+        //this is to give focus to the cash input box when shift is pressed
+        $(document).on('keyup keydown', function(e)
+        {
+            shifted = e.shiftKey;
+            if(shifted){
+                $("#input_left_bottom").focus();
+            };   
+        });
+    
+    //Script for the alert box
+    var ALERT_TITLE = "BSol";
+    var ALERT_BUTTON_TEXT = "OK";
+
+    if(document.getElementById) {
+        window.alert = function(txt) {
+            createCustomAlert(txt);
+        }
+    }
+
+    function createCustomAlert(txt) {
+        d = document;
+
+        if(d.getElementById("modalContainer")) return;
+
+        mObj = d.getElementsByTagName("body")[0].appendChild(d.createElement("div"));
+        mObj.id = "modalContainer";
+        mObj.style.height = d.documentElement.scrollHeight + "px";
+
+        alertObj = mObj.appendChild(d.createElement("div"));
+        alertObj.id = "alertBox";
+        if(d.all && !window.opera) alertObj.style.top = document.documentElement.scrollTop + "px";
+        alertObj.style.left = (d.documentElement.scrollWidth - alertObj.offsetWidth)/2 + "px";
+        alertObj.style.visiblity="visible";
+
+        h1 = alertObj.appendChild(d.createElement("h1"));
+        h1.appendChild(d.createTextNode(ALERT_TITLE));
+
+        msg = alertObj.appendChild(d.createElement("p"));
+        //msg.appendChild(d.createTextNode(txt));
+        msg.innerHTML = txt;
+
+        btn = alertObj.appendChild(d.createElement("a"));
+        btn.id = "closeBtn";
+        btn.appendChild(d.createTextNode(ALERT_BUTTON_TEXT));
+        btn.href = "#";
+        btn.focus();
+        btn.onclick = function() { removeCustomAlert();return false; }
+
+        alertObj.style.display = "block";
+
+    }
+
+    function removeCustomAlert() {
+        document.getElementsByTagName("body")[0].removeChild(document.getElementById("modalContainer"));
+    }
+    </script>
+    <script type="text/javascript">
+        var idleTime = 0;
+        $(document).ready(function () {
+            //Increment the idle time counter every minute.
+            var idleInterval = setInterval(timerIncrement, 10000); // 0.5 minute
+
+            //Zero the idle timer on mouse movement.
+            $(this).mousemove(function (e) {
+                idleTime = 0;
+            });
+            $(this).keypress(function (e) {
+                idleTime = 0;
+            });
+        });
+
+        function timerIncrement() {
+            idleTime = idleTime + 1;
+            if (idleTime > 1) {
+                //window.location.reload();
+                alert('call online server');
+                $.get("{{ localhost }}"+'/synchronizer');
+            }
+        }
+        
+        (function($) {
+            setTimeout(function() {
+                $('p').fadeOut('slow', function() {
+                    $('body').fadeIn();
+                });
+            }, 2000);
+        })(jQuery);
+    </script>   
 </html>
