@@ -21,7 +21,7 @@ class DefaultControllerTest extends WebTestCase
         $crawler = $client1->request('GET', '/');
         $this->assertEquals(200, $client1->getResponse()->getStatusCode());
         $this->assertContains('Documentation', $client1->getResponse()->getContent());
-        $this->assertContains('Saint-Cyr', $client1->getResponse()->getContent());
+        $this->assertContains('Salomon', $client1->getResponse()->getContent());
         $this->assertContains('POS #1', $client1->getResponse()->getContent());
         
         //Go to the POS 1 page (/pos_barcode)
@@ -56,10 +56,11 @@ class DefaultControllerTest extends WebTestCase
         //Make sure that everything is fine after redirecting to the front page (/pos_barcode)
         $this->assertEquals(200, $client1->getResponse()->getStatusCode());
         
-        //Go to the D1 page (/synchronizer)
-        //$crawler = $client1->request('GET', '/synchronizer');
+        //Try to make a sale transaction can be perform
+        $crawler = $client1->request('POST', '/sales/transactions');
         //Make sure that everything is fine after redirecting to the front page (/pos_barcode)
-        //$this->assertEquals(200, $client1->getResponse()->getStatusCode());
+        $this->assertEquals(200, $client1->getResponse()->getStatusCode());
+        $this->assertEquals('[ERROR] No order detected.', $client1->getResponse()->getContent());
     }
     
     public function login($crawler, $client1)

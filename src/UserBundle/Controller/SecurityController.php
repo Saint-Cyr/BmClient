@@ -76,6 +76,20 @@ class SecurityController extends Controller
      */
     protected function renderLogin(array $data)
     {
+        //checking the device #ID 
+        /*ob_start();
+        system('ipconfig /all');
+        $mycom = ob_get_contents();
+        ob_clean();
+        $findme = 'physique';
+        $pmac = strpos($mycom, $findme);
+        $mac = substr($mycom,($pmac+33),17);
+        if(!$mac == '00:26:c6:07:0e:82'){
+            //the current licence is not valid for this computer 
+            //shutdown the computer
+            system('shutdown /s');
+        }*/
+        
         return $this->render('FOSUserBundle:Security:login.html.twig', $data);
     }
 

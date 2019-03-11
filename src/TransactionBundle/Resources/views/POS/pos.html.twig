@@ -161,10 +161,10 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="panel panel-primary">
-                {% verbatim %}
+                
                     <div class="panel-body" style="max-height:650px; overflow:auto; min-height:650px;">
                         <div class="text-warning" ng-hide="order.length" style="margin-top:18%">        
-                            <img src="/BeezyManager/web/images/{{ gif }}" class="center-block" width="220"/>
+                            <img src="{{ app.request.basePath }}/images/{% verbatim %}{{ gif }}" class="center-block" width="220"/>
                         </div>
                         
                         <ul class="list-group">
@@ -508,6 +508,7 @@
 
         function timerIncrement() {
             idleTime = idleTime + 1;
+            //Every 10 sec
             if (idleTime > 1) {
                 //window.location.reload();
                 alert('call online server');

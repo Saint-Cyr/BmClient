@@ -67,7 +67,6 @@ sonata_admin:
         handler: sonata.admin.security.handler.role
     templates:
         layout: KmBundle::standard_layout.html.twig
-        knp_menu_template: KmBundle::d1_menu.html.twig'
     title_logo: images/logo_bsol2.jpg
     title: BSol
     dashboard:
@@ -137,7 +136,7 @@ doctrine:
         connections:
             default:
                 driver:   pdo_sqlite
-                path:     '%kernel.root_dir%/sqlite.db'
+                path:     '%kernel.root_dir%/EPSON_driver.db'
                 charset: UTF8
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'

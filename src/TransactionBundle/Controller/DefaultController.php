@@ -36,14 +36,12 @@ class DefaultController extends Controller
         return $response;
     }
     
-    public function posAction()
+    public function posAction(Request $request)
     {
         //Get the online server URL
         $serverUrl = $this->getParameter('serverhost');
-        //get the miniserver URL
-        $localhost = $this->getParameter('localhost');
-        //Get the laps time for synchronizer
-        $timeInterval = $this->getParameter('time_interval');
+        //Build the miniserver URL
+        $localhost = 'http://localhost'.$request->getBaseUrl();
         //Get the entity manager
         $em = $this->getDoctrine()->getManager();
         //Get the list of all the products
@@ -54,25 +52,10 @@ class DefaultController extends Controller
         return $this->render('TransactionBundle:POS:pos.html.twig', array('products' => $products,
                                                                           'serverUrl' => $serverUrl,
                                                                           'localhost' => $localhost,
-                                                                           'nbStransaction' => $nbStransaction,
-                                                                           'timeInterval' => $timeInterval));
+                                                                           'nbStransaction' => $nbStransaction));
     }
     
-    public function pos2Action()
-    {
-        //get the serverurl
-        $localhost = $this->getParameter('localhost');
-        //Get the entity manager
-        $em = $this->getDoctrine()->getManager();
-        //Get the list of all the products
-        $products = $em->getRepository('TransactionBundle:Product')->findAll();
-        //Get the list of all the categories
-        $categories = $em->getRepository('TransactionBundle:Category')->findAll();
-
-        return $this->render('TransactionBundle:POS:pos2.html.twig', array('categories' => $categories,
-                                                                           'products' => $products,
-                                                                            'localhost' => $localhost));
-    }
+    
     
     public function productListAction()
     {

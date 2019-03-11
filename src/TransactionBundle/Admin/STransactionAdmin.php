@@ -89,7 +89,7 @@ class STransactionAdmin extends AbstractAdmin
     public function getBatchActions()
     {
         // retrieve the default batch actions (currently only delete)
-        $actions = parent::getBatchActions();
+        /*$actions = parent::getBatchActions();
 
         if (true
           //$this->hasRoute('edit') && $this->isGranted('EDIT') //&&
@@ -109,7 +109,7 @@ class STransactionAdmin extends AbstractAdmin
 
         }
 
-        return $actions;
+        return $actions;*/
     }
 
     /**

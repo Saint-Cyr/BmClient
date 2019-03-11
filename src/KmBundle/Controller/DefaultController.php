@@ -60,16 +60,20 @@ class DefaultController extends Controller
             //.....
             $data = json_decode($response->getBody()->getContents(), true);
             //To do : make sure the variable $faild is false before continue
-            var_dump($data['faild']);            var_dump($data['faildMessage']);exit;
-            //remove the iD from DataBase
-            $_ST = $em->getRepository('TransactionBundle:STransaction')
-                ->findOneBy(array('idSynchrone' => $data['st_synchrone_id']));
-            //Make sure $_ST exist
-            if($_ST){
-                $em->remove($_ST);
+            //if everything went well
+            if(!$data['faild']){
+                //remove the iD from DataBase
+                $_ST = $em->getRepository('TransactionBundle:STransaction')
+                    ->findOneBy(array('idSynchrone' => $data['st_synchrone_id']));
+                //Make sure $_ST exist
+                if($_ST){
+                    $em->remove($_ST);
+                }
+                $em->flush();
+                return new JsonResponse('successfull.');
+            }else{
+                return new JsonResponse($data['faildMessage']);
             }
-            $em->flush();
-            return new JsonResponse('successfull.');
         }
     }
 

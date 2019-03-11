@@ -21,6 +21,7 @@ parameters:
     mailer_host: 127.0.0.1
     mailer_user: null
     mailer_password: null
+    #deprecated since beta1.1 => will be removed in 2.0
     localhost: http://localhost/BmClient/web/app_dev.php
     serverhost: http://bmtest.itechcar.com
     #Every 10 sec.

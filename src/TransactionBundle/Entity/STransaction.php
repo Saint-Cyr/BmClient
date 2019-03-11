@@ -337,7 +337,7 @@ class STransaction
     public function setIdSynchrone($idSynchrone = null)
     {
 
-        $length = 10;
+        /*$length = 10;
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
@@ -345,7 +345,10 @@ class STransaction
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
 
-        $this->idSynchrone = md5(uniqid(rand(), true));
+        $this->idSynchrone = md5(uniqid(rand(), true));*/
+        
+       // $this->idSynchrone = $uniqueId= time().'-'.mt_rand();
+        $this->idSynchrone = uniqid(time(), true);
 
         return $this;
     }
