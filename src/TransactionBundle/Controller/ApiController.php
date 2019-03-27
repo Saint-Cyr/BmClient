@@ -126,12 +126,14 @@ class ApiController extends Controller
         //Get the input data sent by the front application
         $inputData = json_decode($request->getContent(), true);
         //Get the branch from the user object
-        
         $user = $this->get('security.token_storage')->getToken()->getUser();
+        //Make sure this is not the default user otherwise, denied  transaction
+        if($user->getUserName() == 'admin'){
+            return new Response('[ERROR] Default user not allowed.');
+        }
         
         $branch = $user->getBranch();
         $data = $inputData['data'];
-        
         //Make sure $data is valide(precision: order where not empty)
         if(count($data['order']) == 0){
             $response = new Response($this->get('translator')->trans('[ERROR] No order detected.'));

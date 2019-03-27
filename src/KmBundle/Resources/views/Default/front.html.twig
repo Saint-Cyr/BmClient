@@ -386,7 +386,7 @@
     <div class="pull-right hidden-xs">
       <b>Version</b> 2.0
     </div>
-    Powered by <strong>iSTech CAR.</strong> &copy; 2019  All rights
+    Powered by <strong>iSTech.</strong> &copy; 2019  All rights
     reserved.
   </footer>
   <!-- Add the sidebar's background. This div must be placed
@@ -481,7 +481,8 @@
     form_data.append('file', file_data);
                                  
     $.ajax({
-        url: 'http://localhost{{ app.request.baseUrl }}/products', // point to server-side PHP script 
+        url: "{{ localhost }}"+'/products',
+        //url: 'http://localhost{{ localhost }}/products', // point to server-side PHP script 
         dataType: 'text',  // what to expect back from the PHP script, if anything
         cache: false,
         contentType: false,

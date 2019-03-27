@@ -35,7 +35,7 @@ class STransactionAdmin extends AbstractAdmin
      */
     protected function configureListFields(ListMapper $listMapper)
     {
-        $listMapper
+        /*$listMapper
             ->add('id')
             ->add('branch')
             ->add('idSynchrone')
@@ -54,7 +54,7 @@ class STransactionAdmin extends AbstractAdmin
                     'delete' => array(),
                 )
             ))
-        ;
+        ;*/
     }
 
     /**

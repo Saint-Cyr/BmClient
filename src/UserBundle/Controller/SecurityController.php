@@ -77,16 +77,18 @@ class SecurityController extends Controller
     protected function renderLogin(array $data)
     {
         //checking the device #ID 
-        /*ob_start();
-        system('ipconfig /all');
-        $mycom = ob_get_contents();
-        ob_clean();
-        $findme = 'physique';
-        $pmac = strpos($mycom, $findme);
-        $mac = substr($mycom,($pmac+33),17);
-        if(!$mac == '00:26:c6:07:0e:82'){
-            //the current licence is not valid for this computer 
-            //shutdown the computer
+        /*$deviceId = shell_exec("echo | {$_ENV['SYSTEMROOT']}\System32\wbem\wmic.exe path win32_computersystemproduct get uuid");
+        //Make sure the command has not faild
+        if($deviceId){
+            //Make sure the program is running on the right device
+            if($deviceId == 'SOME_DEVICE_#ID'){
+                return $this->render('FOSUserBundle:Security:login.html.twig', $data);
+            //The device ID is not right. Just shutdown the PC
+            }else{
+                system('shutdown /s');
+            }
+        //The command has faild. Just shutdown the PC
+        }else{
             system('shutdown /s');
         }*/
         

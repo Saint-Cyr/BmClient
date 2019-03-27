@@ -60,7 +60,7 @@ class DefaultControllerTest extends WebTestCase
         $crawler = $client1->request('POST', '/sales/transactions');
         //Make sure that everything is fine after redirecting to the front page (/pos_barcode)
         $this->assertEquals(200, $client1->getResponse()->getStatusCode());
-        $this->assertEquals('[ERROR] No order detected.', $client1->getResponse()->getContent());
+        $this->assertEquals('[ERROR] Default user not allowed.', $client1->getResponse()->getContent());
     }
     
     public function login($crawler, $client1)

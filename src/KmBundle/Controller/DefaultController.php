@@ -3,8 +3,7 @@
 namespace KmBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-use Hackzilla\BarcodeBundle\Utility\Barcode;
+use Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\JsonResponse;
 
 class DefaultController extends Controller
@@ -77,12 +76,14 @@ class DefaultController extends Controller
         }
     }
 
-    public function frontAction()
+    public function frontAction(Request $request)
     {
         //when logout, goes to the login page
         //Get the authorization checker
         $authChecker = $this->get('security.authorization_checker');
-        
+        //this is needed to upload products (.csv) or users to be registered in DB
+        $localhost = 'http://localhost'.$request->getBaseUrl();
+        //$localhost = 'http://127.0.0.1:49160/sales/transactions';
         if(!$authChecker->isGranted("ROLE_SELLER")){
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
@@ -92,6 +93,7 @@ class DefaultController extends Controller
         $stransactionNb = count($em->getRepository('TransactionBundle:STransaction')->findAll());
         
         return $this->render('KmBundle:Default:front.html.twig',
-                             array('stransactionNb' => $stransactionNb));
+                             array('stransactionNb' => $stransactionNb,
+                                   'localhost' => $localhost));
     }
 }
