@@ -83,7 +83,8 @@ class DefaultController extends Controller
         $authChecker = $this->get('security.authorization_checker');
         //this is needed to upload products (.csv) or users to be registered in DB
         $localhost = 'http://localhost'.$request->getBaseUrl();
-        //$localhost = 'http://127.0.0.1:49160/sales/transactions';
+        //Windows environement
+        //$localhost = 'http://127.0.0.1:49160'; 
         if(!$authChecker->isGranted("ROLE_SELLER")){
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }

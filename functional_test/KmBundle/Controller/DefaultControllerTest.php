@@ -31,7 +31,7 @@ class DefaultControllerTest extends WebTestCase
         $this->assertContains('FCFA', $client1->getResponse()->getContent());
         $this->assertContains('CHECKOUT', $client1->getResponse()->getContent());
         
-        //Go to the POS 3 page (/admin/transaction/stransaction/create)
+        //Make sure the default user cannot make a sales transaction from #POS3
         $crawler = $client1->request('GET', '/admin/transaction/stransaction/create');
         //Make sure that everything is fine.
         $this->assertEquals(200, $client1->getResponse()->getStatusCode());

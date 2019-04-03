@@ -67,10 +67,12 @@ class STransactionAdminController extends CRUDController
             if (method_exists($this->admin, 'preValidate')) {
                 $this->admin->preValidate($object);
             }
+            
             $isFormValid = $form->isValid();
-
-            // persist if the form was valid and if in preview mode the preview was approved
-            if ($isFormValid && (!$this->isInPreviewMode($request) || $this->isPreviewApproved($request))) {
+            
+            $username = $this->getUser()->getUserName();
+            // persist if the form was valid and make sure that this is not the default user
+            if ($isFormValid && (!$this->isInPreviewMode($request) || $this->isPreviewApproved($request)) && $username !== 'admin') {
                 //By S@int-Cyr
                 //Get the Branch from the User object
                 $branch = $this->getUser()->getBranch();
