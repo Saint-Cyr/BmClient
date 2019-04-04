@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
   <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>
   <style>
     
     #modalContainer {
@@ -129,7 +130,7 @@
 
 <p>loading....</p>
 
-<body data-ng-controller="PosController"  style="background-color: #eee; display: none;">
+<body data-ng-controller="PosController"  style="background-color: #eee; display: none;" id="PosController">
     
     <div class="col-md-12">
         <div class="row">
@@ -208,13 +209,9 @@
                 </style>
                     <div class="panel-body">
 			<div role="tabpanel" class="tab-pane" id="food">
-                            {% for p in products %}
-                                {% if p.imagePos %}
-                                    <button class="btn-huge2" ng-click="addToOrder(food.{{ p.barcode }})">
-                                        {{ p | slice(0, 6) | upper }}
-                                    </button>
-                                {% endif %}
-                            {% endfor %}
+                            <select data-ng-model="query" data-ng-change="flightSearch()" class="product" style="width:500px;">
+                                
+                            </select>
                         </div>    
                     </div>
                     </div>
@@ -250,6 +247,57 @@
   <script src="{{ asset('js/jquery.js') }}"></script>
   <script src="{{ asset('js/bootstrap.min.js') }}"></script>
   <script src="{{ asset('js/jquery.scannerdetection.js') }}"></script>
+  <script src="{{ asset('js/select2.min.js') }}"></script>
+  <script type="text/javascript">
+    var data = [
+        {% for p in products %}
+                {
+                    id: {{ p.barcode }},
+                    text: '{{ p.name }}'
+                },
+        {% endfor %}
+        ];
+
+    $(document).ready(function () {
+        $(".product").select2({
+            data:data
+        })
+        
+        .on("select2:selecting", function (e) { 
+            var barcode = e.params.args.data.id;
+            $scope = angular.element(document.getElementById("PosController")).scope();
+            var item = $scope.food[barcode];
+            //Make sure the barcode is loaded
+            if(!item){
+                var audioElement = document.createElement('audio');
+                audioElement.setAttribute('src', '{{ asset('error.mp3') }}');
+                audioElement.play();
+                alert('Product not found.');
+            }
+            $scope.orderedItemCnt = 1;
+            var foodItem = {
+              orderedItemCnt : 1,
+              totalPrice : item.price,
+              itemId : item.id, 
+              id : $scope.itemsCnt,
+              item : item
+            };
+              // Find if the item is already in Cart
+              var cartItems = $.grep($scope.order, function(e){ return e.itemId == item.id; });
+
+               if(cartItems.length > 0  && !isEmpty($scope.order)){
+                  cartItems[0].orderedItemCnt = ++ cartItems[0].orderedItemCnt; 
+                  cartItems[0].totalPrice = item.price * cartItems[0].orderedItemCnt;
+               }
+               else{
+                  $scope.order.push(foodItem);
+                  $scope.itemsCnt = $scope.order.length; 
+               }
+               
+               $scope.$apply();
+        });
+    });
+  </script>
   <script>
     // Code goes here
     var app = angular.module('myApp', []);
@@ -367,10 +415,6 @@
     
     };
     
-    /*$scope.checkout = function(index) {
-      alert("Order total: $" + $scope.getSum() + "\n\nPayment received. Thanks.");
-    };*/
-    
     $scope.checkout = function(index) {
        //Prevent user to send a second request
       
@@ -424,73 +468,12 @@
             
             return change;
         }
-});
-
+    });
+    
   </script>
   <script>
-        $(document).ready(function () {
-            $("#myTab a").click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-            });
-        });
-
-        //this is to give focus to the cash input box when shift is pressed
-        $(document).on('keyup keydown', function(e)
-        {
-            shifted = e.shiftKey;
-            if(shifted){
-                $("#input_left_bottom").focus();
-            };   
-        });
-    
-    //Script for the alert box
-    var ALERT_TITLE = "BSol";
-    var ALERT_BUTTON_TEXT = "OK";
-
-    if(document.getElementById) {
-        window.alert = function(txt) {
-            createCustomAlert(txt);
-        }
-    }
-
-    function createCustomAlert(txt) {
-        d = document;
-
-        if(d.getElementById("modalContainer")) return;
-
-        mObj = d.getElementsByTagName("body")[0].appendChild(d.createElement("div"));
-        mObj.id = "modalContainer";
-        mObj.style.height = d.documentElement.scrollHeight + "px";
-
-        alertObj = mObj.appendChild(d.createElement("div"));
-        alertObj.id = "alertBox";
-        if(d.all && !window.opera) alertObj.style.top = document.documentElement.scrollTop + "px";
-        alertObj.style.left = (d.documentElement.scrollWidth - alertObj.offsetWidth)/2 + "px";
-        alertObj.style.visiblity="visible";
-
-        h1 = alertObj.appendChild(d.createElement("h1"));
-        h1.appendChild(d.createTextNode(ALERT_TITLE));
-
-        msg = alertObj.appendChild(d.createElement("p"));
-        //msg.appendChild(d.createTextNode(txt));
-        msg.innerHTML = txt;
-
-        btn = alertObj.appendChild(d.createElement("a"));
-        btn.id = "closeBtn";
-        btn.appendChild(d.createTextNode(ALERT_BUTTON_TEXT));
-        btn.href = "#";
-        btn.focus();
-        btn.onclick = function() { removeCustomAlert();return false; }
-
-        alertObj.style.display = "block";
-
-    }
-
-    function removeCustomAlert() {
-        document.getElementsByTagName("body")[0].removeChild(document.getElementById("modalContainer"));
-    }
-    </script>
+        
+  </script>
     <script type="text/javascript">
         var idleTime = 0;
         $(document).ready(function () {
@@ -511,8 +494,8 @@
             //Every 10 sec
             if (idleTime > 1) {
                 //window.location.reload();
-                alert('call online server');
-                $.get("{{ localhost }}"+'/synchronizer');
+                //alert('call online server');
+                //$.get("{{ localhost }}"+'/synchronizer');
             }
         }
         
@@ -523,5 +506,5 @@
                 });
             }, 2000);
         })(jQuery);
-    </script>   
+    </script>
 </html>
