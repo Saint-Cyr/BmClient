@@ -209,9 +209,14 @@
                 </style>
                     <div class="panel-body">
 			<div role="tabpanel" class="tab-pane" id="food">
-                            <select data-ng-model="query" data-ng-change="flightSearch()" class="product" style="width:500px;">
-                                
-                            </select>
+                            <form>
+                                <div class="form-group">
+                                    <select style= "width: 600px;" id="product">
+                                        
+                                    </select>
+                                </div>
+                            </form>
+ 
                         </div>    
                     </div>
                     </div>
@@ -253,14 +258,25 @@
         {% for p in products %}
                 {
                     id: {{ p.barcode }},
-                    text: '{{ p.name }}'
+                    text: '<span style="font-size: 36px;">{{ p.name }}</span>',
                 },
         {% endfor %}
         ];
+        
+    
 
+    function formatedOutput (item) {
+        return item.text;
+    };
+      
     $(document).ready(function () {
-        $(".product").select2({
-            data:data
+    var select2 = $("#product").select2({
+            data:data,
+           
+            escapeMarkup: function(markup) {
+                return markup;
+            },
+            
         })
         
         .on("select2:selecting", function (e) { 
@@ -296,6 +312,9 @@
                
                $scope.$apply();
         });
+        
+        select2.data('select2').$selection.css('height', '44px');
+        //select2.data('select2').$selection.css('opacity', '0.5');
     });
   </script>
   <script>
@@ -471,10 +490,73 @@
     });
     
   </script>
+  
   <script>
-        
-  </script>
-    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#myTab a").click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+        });
+
+        //this is to give focus to the cash input box when shift is pressed
+        $(document).on('keyup keydown', function(e)
+        {
+            shifted = e.shiftKey;
+            if(shifted){
+                $("#input_left_bottom").focus();
+            };   
+        });
+    
+    //Script for the alert box
+    var ALERT_TITLE = "BSol";
+    var ALERT_BUTTON_TEXT = "OK";
+
+    if(document.getElementById) {
+        window.alert = function(txt) {
+            createCustomAlert(txt);
+        }
+    }
+
+    function createCustomAlert(txt) {
+        d = document;
+
+        if(d.getElementById("modalContainer")) return;
+
+        mObj = d.getElementsByTagName("body")[0].appendChild(d.createElement("div"));
+        mObj.id = "modalContainer";
+        mObj.style.height = d.documentElement.scrollHeight + "px";
+
+        alertObj = mObj.appendChild(d.createElement("div"));
+        alertObj.id = "alertBox";
+        if(d.all && !window.opera) alertObj.style.top = document.documentElement.scrollTop + "px";
+        alertObj.style.left = (d.documentElement.scrollWidth - alertObj.offsetWidth)/2 + "px";
+        alertObj.style.visiblity="visible";
+
+        h1 = alertObj.appendChild(d.createElement("h1"));
+        h1.appendChild(d.createTextNode(ALERT_TITLE));
+
+        msg = alertObj.appendChild(d.createElement("p"));
+        //msg.appendChild(d.createTextNode(txt));
+        msg.innerHTML = txt;
+
+        btn = alertObj.appendChild(d.createElement("a"));
+        btn.id = "closeBtn";
+        btn.appendChild(d.createTextNode(ALERT_BUTTON_TEXT));
+        btn.href = "#";
+        btn.focus();
+        btn.onclick = function() { removeCustomAlert();return false; }
+
+        alertObj.style.display = "block";
+
+    }
+
+    function removeCustomAlert() {
+        document.getElementsByTagName("body")[0].removeChild(document.getElementById("modalContainer"));
+    }
+    </script>
+  
+  <script type="text/javascript">
         var idleTime = 0;
         $(document).ready(function () {
             //Increment the idle time counter every minute.
