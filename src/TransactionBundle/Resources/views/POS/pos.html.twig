@@ -211,12 +211,11 @@
 			<div role="tabpanel" class="tab-pane" id="food">
                             <form>
                                 <div class="form-group">
-                                    <select style= "width: 600px;" id="product">
+                                    <select style= "width: 650px;" id="product">
                                         
                                     </select>
                                 </div>
                             </form>
- 
                         </div>    
                     </div>
                     </div>
@@ -258,7 +257,7 @@
         {% for p in products %}
                 {
                     id: {{ p.barcode }},
-                    text: '<span style="font-size: 36px;">{{ p.name }}</span>',
+                    text: '<span style="font-size: 30px;">{{ p.name }}</span>',
                 },
         {% endfor %}
         ];
@@ -313,8 +312,10 @@
                $scope.$apply();
         });
         
-        select2.data('select2').$selection.css('height', '44px');
-        //select2.data('select2').$selection.css('opacity', '0.5');
+        select2.data('select2').$selection.css('height', '47px');
+        select2.data('select2').$selection.css('text-align-last', 'center');
+        select2.data('select2').$selection.css('padding-top', '7px');
+        
     });
   </script>
   <script>
