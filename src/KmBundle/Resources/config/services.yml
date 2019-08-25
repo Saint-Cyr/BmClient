@@ -15,8 +15,8 @@ services:
 #        class: KmBundle\Service\StatisticHandler
 #        arguments: ["@doctrine.orm.entity_manager"]
 
-    #km.admin.branch:
-     #   class: KmBundle\Admin\BranchAdmin
-      #  arguments: [~, KmBundle\Entity\Branch, SonataAdminBundle:CRUD]
-       # tags:
-        #    - { name: sonata.admin, manager_type: orm, group: Admin, label: Branch }
+    km.admin.branch:
+        class: KmBundle\Admin\BranchAdmin
+        arguments: [~, KmBundle\Entity\Branch, SonataAdminBundle:CRUD]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Admin, label: Branch }

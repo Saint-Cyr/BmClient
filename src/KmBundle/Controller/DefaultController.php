@@ -28,7 +28,35 @@ class DefaultController extends Controller
         
         foreach ($objects as $ob){
             $id = $ob->getId();
-            break;
+            //Make sure $st is valid
+            if($id){
+                $st = $em->getRepository('TransactionBundle:STransaction')->find($id);
+                $old = $st->getIdSynchrone();
+                $dateTime = $st->getCreatedAt()->format('Y-m-d H:i:s');
+                //Prepare order
+                //Definitly, we'll need  this variable
+                $order = array();
+                foreach ($st->getSales() as $sale){
+                    $totalPrice = $sale->getQuantity() * $sale->getProduct()->getUnitPrice();
+                    $order[] = array('id' => $sale->getProduct()->getOnlineId(),
+                                     'orderedItemCnt' => $sale->getQuantity(),
+                                     'totalPrice' => $totalPrice);
+                }
+                //Make sure $order is not empty
+                if(!(count($order) == 0)){
+                    $outPutData = array(
+                                    'st_synchrone_id' => $st->getIdSynchrone(),
+                                    'user_email' => $userEmail,
+                                    'order' => $order,
+                                    'total' => $totalPrice,
+                                    'sellerUserName' => $st->getUser()->getUserName(),
+                                    'date_time' => $dateTime);
+                   break; 
+
+                }else{
+                    //Let's go to the next id
+                }
+            }
         }
         
         if($id){
@@ -36,22 +64,28 @@ class DefaultController extends Controller
         $old = $st->getIdSynchrone();
             $dateTime = $st->getCreatedAt()->format('Y-m-d H:i:s');
             //Prepare order
+            //Definitly, we'll need  this variable
+            $order = array();
             foreach ($st->getSales() as $sale){
                 $totalPrice = $sale->getQuantity() * $sale->getProduct()->getUnitPrice();
                 $order[] = array('id' => $sale->getProduct()->getOnlineId(),
                                  'orderedItemCnt' => $sale->getQuantity(),
                                  'totalPrice' => $totalPrice);
             }
-
-            $outPutData = array(
+            //Make sure $order is not empty
+            if(!(count($order) == 0)){
+                $outPutData = array(
                                 'st_synchrone_id' => $st->getIdSynchrone(),
                                 'user_email' => $userEmail,
                                 'order' => $order,
                                 'total' => $totalPrice,
                                 'sellerUserName' => $st->getUser()->getUserName(),
                                 'date_time' => $dateTime);
-                            
-                            
+                
+            }else{
+                $data['faildMessage'] = 'Empty order';
+                return new JsonResponse($data['faildMessage']);
+            }
             //set_time_limit(30);
             $response = $client->post($serverhost.'/uploads',
                 ['json' => $outPutData]);

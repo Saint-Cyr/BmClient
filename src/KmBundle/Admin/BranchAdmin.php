@@ -26,6 +26,7 @@ class BranchAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
+            ->add('idSynchrone')
             ->add('name')
             ->add('createdAt')
             ->add('_action', null, array(
