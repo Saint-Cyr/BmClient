@@ -24,8 +24,11 @@ class ProductAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('name')
-            ->add('imagePos', null, array('editable' => true));
+            ->add('name', null, array('editable' => true))
+            ->add('unitPrice', 'decimal', array('editable' => true))
+            ->add('imagePos', null, array('editable' => true))
+        ;
+        
             
     }
 

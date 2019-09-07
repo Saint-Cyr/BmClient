@@ -66,6 +66,8 @@ class ApiController extends Controller
                     $dbProduct2 = $em->getRepository('TransactionBundle:Product')
                                     ->findOneBy(array('name' => $product_name));
                     //Make sure the entire product or only his name does not yet exist in DB.
+                    //Update on sunday 25th August 2019: and make sure also any of the comming product 
+                    //editable property has not been edited
                     if($dbProduct1 || $dbProduct2){
                         $unrecorded ++;
                     }else{
