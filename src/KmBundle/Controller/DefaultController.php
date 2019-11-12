@@ -50,6 +50,7 @@ class DefaultController extends Controller
                                     'order' => $order,
                                     'total' => $totalPrice,
                                     'sellerUserName' => $st->getUser()->getUserName(),
+                                    'branch_online_id' => $user->getBranch()->getOnlineId(),
                                     'date_time' => $dateTime);
                    break; 
 
@@ -80,6 +81,7 @@ class DefaultController extends Controller
                                 'order' => $order,
                                 'total' => $totalPrice,
                                 'sellerUserName' => $st->getUser()->getUserName(),
+                                'branch_online_id' => $user->getBranch()->getOnlineId(),
                                 'date_time' => $dateTime);
                 
             }else{
@@ -92,10 +94,12 @@ class DefaultController extends Controller
             //At this stage, make sure the request have got the server
             //.....
             $data = json_decode($response->getBody()->getContents(), true);
+            
+            
             //To do : make sure the variable $faild is false before continue
-            //if everything went well
-            if(!$data['faild']){
-                //remove the iD from DataBase
+            //if everything went welrel
+        if(!$data['faild'] || array_key_exists('remove_st', $data)){
+                //remove the ST from DataBase
                 $_ST = $em->getRepository('TransactionBundle:STransaction')
                     ->findOneBy(array('idSynchrone' => $data['st_synchrone_id']));
                 //Make sure $_ST exist
@@ -105,7 +109,7 @@ class DefaultController extends Controller
                 $em->flush();
                 return new JsonResponse('successfull.');
             }else{
-                return new JsonResponse($data['faildMessage']);
+                return new JsonResponse($data['faild_message']);
             }
         }
     }

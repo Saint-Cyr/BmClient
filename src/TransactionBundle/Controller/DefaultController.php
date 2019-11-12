@@ -38,6 +38,7 @@ class DefaultController extends Controller
     
     public function posAction(Request $request)
     {
+        $products = array();
         //Get the online server URL
         $serverUrl = $this->getParameter('serverhost');
         //Build the miniserver URL
@@ -47,9 +48,17 @@ class DefaultController extends Controller
         //Get the entity manager
         $em = $this->getDoctrine()->getManager();
         //Get the list of all the products
-        $products = $em->getRepository('TransactionBundle:Product')->findAll();
+        $products1 = $em->getRepository('TransactionBundle:Product')->findAll();
         //Get the total number of all STransaction
         $nbStransaction = count($em->getRepository('TransactionBundle:STransaction')->findAll());
+        //Make sure products don't have empty barecode
+        foreach($products1 as $p){
+            if(!$p->getBarcode()){
+                
+            }else{
+                $products[] = $p;
+            }
+        }
         
         return $this->render('TransactionBundle:POS:pos.html.twig', array('products' => $products,
                                                                           'serverUrl' => $serverUrl,

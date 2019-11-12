@@ -28,6 +28,7 @@ class BranchAdmin extends AbstractAdmin
         $listMapper
             ->add('idSynchrone')
             ->add('name')
+            ->add('onlineId', null, array('editable' => true))
             ->add('createdAt')
             ->add('_action', null, array(
                 'actions' => array(
@@ -45,7 +46,7 @@ class BranchAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->add('name')
+            //->add('name')
             ->add('idSynchrone')
              
         ;

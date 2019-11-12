@@ -19,13 +19,19 @@ class ApiController extends Controller
         //Get the input data sent by the front application
         $inputData = json_decode($request->getContent(), true);
         $csvType = $request->get('csv_type');
-        //var_dump($request->get('csv_type'));
-        //var_dump($request->get('language'));exit;
+        //Make sure file have been uploaded
+        if(!isset($request->files->all()["file"])){
+           return 'No file found'; 
+        }
+        //Collect the uploaded file
+        $file = $request->files->all()["file"];
+        if($file->getClientOriginalExtension() != 'csv'){
+            return '[Error]: Wrong file';
+        }
         //We'll surely need to interact with DB
         $em = $this->getDoctrine()->getManager();
         //Read products list from a CSV file and save in DB if aplicable
         if(true){
-             $file = $request->files->all()["file"];
             // If a file was uploaded
             if(!is_null($file)){
                // rename the file but keep the extension
@@ -50,9 +56,26 @@ class ApiController extends Controller
             $unrecorded = 0;
             //Count the number of recorded in order to display it back to the end user
             $recorded = 0;
+            //var_dump($rows[0][4]);exit;
+            //Check the content of the file (Users or Products)by its structure
+            if((count($rows[0]) == 5)&&($rows[0][0] == 'Username')&&($rows[0][1] == 'Em@il')&&
+               ($rows[0][2] == 'Password')&&($rows[0][3] == 'Roles') && ($rows[0][4] == 'Enabled')){
+                
+                $fileContent = 'usersList';
+                
+            }elseif((count($rows[0]) == 5)&&($rows[0][0] == '#ID')&&($rows[0][1] == 'Name')&&
+               ($rows[0][2] == 'Unit Price')&&($rows[0][3] == 'W. Sale Price')&&($rows[0][4] == 'Barecode')){
+                
+                $fileContent = 'productsList';
+            }else{
+                return '[Error]: Wrong file';  
+            }
+            
             //Save in DB
             foreach ($rows as $key => $r){
-                if($key != 0 && $csvType == 'Products'){
+                
+                if($key != 0 && $fileContent == 'productsList'){
+                    $dataType = 'Product';
                     //Save this rows in DB
                     //Make sure it has not yet been input in DB
                     $product_id = $r[0];
@@ -82,21 +105,31 @@ class ApiController extends Controller
                         $em->persist($newProduct);
                         $recorded++;
                     }
-                }elseif($key != 0 && $csvType == 'Users'){
+                 
+                }
+                
+                if($key != 0 && $fileContent == 'usersList'){
+                    $dataType = 'User';
                     //Fetch variables from the income data
                         $username = $r[0];
                         $email = $r[1];
                         $password = $r[2];
+                        $roles = $r[3];
+                        $enabled = $r[4];
                         //Make sure this user does not yet exist in DB before insert it.
                         //Check whether the current product already exist in DB.
                         $dbUser = $em->getRepository('UserBundle:User')
-                                    ->findOneBy(array('email' => $email));
-                        if(!$dbUser)
+                                    ->findOneBy(array('username' => $username));
+                            
+                        if($dbUser)
                         {
+                            $unrecorded++;
+                            
+                        }else{
                             //Get the default Branch from DB. This is necessary to perform sale transaction
                             $branch = $em->getRepository('KmBundle:Branch')
                                     ->findOneBy(array('name' => 'BRANCH_1'));
-                            //create new product object
+                            //create new User object
                             $user = new User();
                             //In order to avoid error when performing STransaction, user must be linked to a branch
                             //this is right to link all the user to the current branch because this is where the App
@@ -106,20 +139,19 @@ class ApiController extends Controller
                             $user->setEmail($email);
                             $user->setPassword($password);
                             $user->setEmailCanonical($email);
-                            $user->setEnabled(true);
+                            $user->setUsernameCanonical($username);
+                            $user->setEnabled($enabled);
+                            //No need of strong secu because it's just the synch.
                             $user->setRoles(array('ROLE_SUPER_ADMIN'));
-
                             $em->persist($user);
                             $recorded++;
-                        }else{
-                            $unrecorded++;
                         }
                 }
             }
             
             $em->flush();
             
-            return array("#Recorded: ".$recorded." #Unrecorded: ".$unrecorded);
+            return array($dataType." recorded: ".$recorded." ".$dataType." unrecorded: ".$unrecorded);
         }
     }
     

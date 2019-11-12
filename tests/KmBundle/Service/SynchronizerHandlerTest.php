@@ -54,49 +54,9 @@ class SynchronizerHandlerTest extends WebTestCase
         //Test the download
         //$this->download();
     }
-    
-    public function testCheckDuplicatedStock()
-    {
-        
-        //Array contening the downloaded stock
-        $products[] = array('name' => 'Agenda grand', 'barcode' => '12345678');
-        $products[] = array('name' => 'Agenda grand', 'barcode' => '12345678');
-        $products[] = array('name' => 'Agenda petit', 'barcode' => '10002323');
-        
-        $response = $this->synchronizerHandler->checkDuplicatedStock($products);
-        $this->assertEquals('Agenda grand', $response);
-        
-        //Case where there is not duplication
-        //Array contening the downloaded stock
-        $products2[] = array('name' => 'Agenda grand', 'barcode' => '12345678');
-        
-        $response = $this->synchronizerHandler->checkDuplicatedStock($products2);
-        $this->assertNotEquals('Agenda grand', $response);
-        
-        //Case where there is not duplication
-        //Array contening the downloaded stock
-        $products3[] = array('name' => 'Agenda grand', 'barcode' => '12345678');
-        $products3[] = array('name' => 'Agenda grand7', 'barcode' => '12345678');
-        
-        $response = $this->synchronizerHandler->checkDuplicatedStock($products3);
-        $this->assertNotEquals('Agenda grand', $response);
-        
-        //Case where there is a long list of duplication
-        //Array contening the downloaded stock
-        $products4[] = array('name' => 'Agenda grand', 'barcode' => '2005390332005');
-        $products4[] = array('name' => 'Agenda grand', 'barcode' => '2005390332005');
-        $products4[] = array('name' => 'Agenda grand', 'barcode' => '2005390332005');
-        $products4[] = array('name' => 'Agenda grand', 'barcode' => '2005390332005');
-        $products4[] = array('name' => 'Agenda grand', 'barcode' => '2005390332005');
-        $products4[] = array('name' => 'Agenda grand', 'barcode' => '2005390332005');
-        
-        
-        $response = $this->synchronizerHandler->checkDuplicatedStock($products4);
-        $this->assertEquals('Agenda grand', $response);
-    }
 
 
-    public function upload()
+    public function testUpload()
     {
         $user = $this->em->getRepository('UserBundle:User')->find(1);
         $branchOnlineID = $user->getBranch()->getOnlineId();

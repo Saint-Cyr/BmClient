@@ -1,7 +1,7 @@
-﻿#ID,Name,"Unit Price","W. Sale Price",Barcode
+﻿#ID,Name,"Unit Price","W. Sale Price",Barecode
 12,"Belbake Backpulver",150,,2009778088300
 13,"Vanilla zucker 8g",150,,2009690896106
-14,"Dolac carton de 150 pcs",15000,,2004281310702
+14,"Dolac carton de 150 pcs",15000,14000,2004281310702
 15,"Diesel Only the Brave 100ml",7000,,2006480401205
 16,"Boss Hugo Boss for men 100ml",7000,,2007267846400
 17,"Black & White 200ml",1500,,2007924922102
@@ -108,7 +108,7 @@
 118,"La vie 1.5 L",500,,6692141211090
 119,"La vie 0.5L",350,,6698141877076
 120,"Energy saving",5000,,6901069047897
-121,"Essential BALM",0,,6905218880021
+121,"Essential BALM 12 pcs",750,,6905218880021
 122,"Hot & Cold Vacuum flask 3L",20000,,6913008831085
 123,"Aluminium  foil 30 m",2000,,6916893654302
 124,"Staples 24/6",2000,,6920496500010
@@ -222,11 +222,11 @@
 232,"Staywell Garniture 8h 10pads",1000,,9789982094218
 233,"Kuber Sel de Table lode",500,,9870287007891
 234,Vanilla,4000,,2001215475001
-235,"Tenu de travail blue",0,,2004518316606
-236,Mouchoire,0,,2005984653301
-237,Beetroot,0,,2002316174909
-238,"Ver de te PM",0,,2007358582200
-239,"Ver de te Moyen",0,,2005125015401
+235,"Tenu de travail blue",20000,,2004518316606
+236,"Mouchoire de table",2000,,2005984653301
+237,Beetroot,2000,,2002316174909
+238,"Ver de te PM",400,,2007358582200
+239,"Ver de te Moyen",400,,2005125015401
 240,"riz parfunme 5kg",7500,,2009004055502
 241,"Epe FP Radio",12000,,2007848206302
 242,"Lampe a petrole GM",3000,,2002244151706
@@ -241,7 +241,7 @@
 251,"Atlanta 125g",500,,2008094393501
 252,"Gino 70g",200,,2008799835702
 253,"Gino 400g",1000,,2001118849206
-254,"Vinaigre victoire 1L",0,,2003451391305
+254,"Vinaigre victoire 1L",2000,,2003451391305
 255,"Chicoree Grains 100g",500,,2002672675607
 256,"Top Gatex Huile Moteur 5L",8000,,2004450555200
 257,"Gear Oil Huile de Pont 4L",15000,,2002007342402
@@ -280,7 +280,7 @@
 290,"Jiger Plazio 3pcs Set glacier",22500,,2001805619402
 291,"Outlandisk 13 pcs glacier",22500,,2006795141902
 292,"Vivanta Family Set 14 PCS glacier",22500,,2008097092203
-293,"Singer  machine a coudre",0,,2003020632709
+293,"Singer  machine a coudre",120000,,2003020632709
 294,"Rouleau Cable VGV",70000,,2004595093209
 295,"Savon Savex 200g",150,,2000950400002
 296,"Savon Azure 200g",200,,2005096210805
@@ -343,7 +343,7 @@
 353,"Atlanta  Carton 50 pcs Sardine 125g",21000,,2008807209105
 354,"Omega carton 50 pcs sardine 125 g",21000,,2003579316006
 355,"Biggum Carton 28 pcs",15000,,2009826424500
-356,"Barka Spagetie carton 10 kg",10000,,2009799507705
+356,"Barka Spagetie carton 10 kg",12000,,2009799507705
 357,"Café star 100 g",300,,2009727899100
 358,"Café star Sachet 50 pcs x 100 g",12500,,2007241433701
 359,"Tartina Carton chocola 198",55000,,2000500128202
@@ -422,20 +422,132 @@
 432,"Fauteuil roulante PM",45000,,2009031124608
 433,"Tablette en vitre PM ",45000,,2004756927206
 434,"Milk Plus Biscuits sachet 12pcs",1000,,2003244111905
-435,"Singer  machine a coudre complet",0,,2002669984309
-436,"LANA Hydrat 1000 cream",0,,813911020094
-437,"Lait NIDO 400gramme",0,,8717896007168
-438,"Natte en plastic soudane",0,,2006309675701
-439,"cache Nez boite",0,,2005175166801
-440,mousticaire,0,,2005287338400
-441,"couverture double  gm",0,,2009722344506
-442,"penture a huile natinale gm ",0,,2009874409801
-443,"Sardine Omega125g",0,,2009205437206
-444,"Tuyeaux PVC 100",0,,2000728942307
-445,"oran assiette a jette",0,,2006575467802
-446,"Azawad the vert 250gramme",0,,2009515485102
-447,"Azawad the vert 125gramme",0,,2000275825306
-448,"scenaris Lotion eau de colone 400 ml",0,,2009106265601
-449,"Azawad the vert cts de 20boites 5kgs",0,,2001863527008
-450,"Azawad the vert cts de 50boites 5kgs",0,,2007023261805
-451,"one new product",0,0,2000054877908
+436,"LANA Hydrat 1000 cream",2000,,813911020094
+437,"Lait NIDO 400 g",3500,,8717896007168
+438,"Natte en plastic soudane",14000,,2006309675701
+439,"cache Nez boite",4000,,2005175166801
+440,mousticaire,1000,,2005287338400
+441,"couverture double GM",20000,,2009722344506
+442,"Peinture a huile Natinale 25kg",75000,,2009874409801
+443,"Sardine Omega 125g",500,,2009205437206
+444,"Tuyeaux PVC 100",15000,,2000728942307
+445,"Oran assiette a jette",3000,,2006575467802
+446,"Azawad the vert 250g",3000,,2009515485102
+447,"Azawad the vert 100g",1250,,2000275825306
+448,"scenaris Lotion eau de colone 400 ml",2000,,2009106265601
+449,"Azawad carton 20 pcs",50000,,2001863527008
+450,"Azawad carton 50 pcs",50000,,2007023261805
+452,"Pure Bliss",150,0,2001431834705
+453,"Chocolat Blanc",2000,0,2004742226207
+454,"Chocolat Blanc Jaune",2000,0,2008471022802
+455,"Chocolat au lait",2000,0,2005058782005
+456,"Poivre noir",2000,0,2005857657108
+457,"Lait coco Coconut Milk",2000,0,2000641576900
+458,"Mahi Champignon",1500,0,2007725560206
+459,"Te victoria citron",1500,0,2008221828609
+460,"Te victoria Gingembre",1500,0,2005055581205
+461,"Lipton The Citron noir",2500,0,2000701340106
+462,"The aux fruits rouges",2000,0,2009516896808
+463,"Corn flakes cereal",2500,0,2006213901002
+464,"Galaxy Beignets de crevettes",1000,0,2003572167803
+465,"Biscuit Gouters vieruurtjes",2000,0,2003802593204
+466,"Waferz Biscuit rouge",600,0,2009042047606
+467,"Biscuit Waferz vert",600,0,2007511473406
+468,"Nutro Biscuit",500,0,2008720539709
+469,"Biscuit Trop top",1000,0,2009544431606
+470,"Biscuit Chabrior",1000,0,2009744894003
+471,"Biscuit Eco Gouters Ronds",2000,0,2009852203001
+472,"Biscuit Gullon mega Duo",2000,0,2009115023704
+473,"Biscuit Gold Ringe",2000,0,2002202827902
+474,"Biscuit Delicious Cookies",2000,0,2006477821108
+475,"Biscuit ulker Cikolatali",1250,0,2009040554304
+476,"Biscuit Creamz",1000,0,2000241869501
+477,"Biscuit pineapple",1000,0,2003598898507
+478,"Biscuit Butter cookies",4000,0,2000695937702
+479,"Phosphatine lactee fruits",2000,0,2001921102307
+480,"Phosphatine multicereals",2000,0,2007623924506
+481,"The AZAWAD",3000,0,2005397777304
+482,"Nido Sachet 365g",2500,0,2002089284201
+483,"Nido 365g",2500,0,2004447892004
+484,"Sirop de menthe",3000,0,2000108313000
+485,"Huile total 1L",5000,0,2008094858406
+486,"Jus Naranja 1L",1000,0,8410810268255
+487,"Nescafe Nestle 50g",1000,0,2006926421903
+488,"Nescafe Nestle 200g",5000,0,2000088700609
+489,"Biscuit Gouter vieruurtjes",2000,0,2008376021603
+490,"Glaciaire rond 2 troues",30000,0,2000218986606
+491,"Glaciaire 2 troues jaune",30000,0,2009194411300
+492,"Gobele a jetter Jaune 50 Unites",3000,0,2005529895609
+493,"Assiette a jetter 3 troues",4000,0,2006392236209
+494,"Papier film diamono",2500,0,2001768684608
+495,"Perfun original smart",7000,0,2005179718204
+496,"Deodoran smart",3000,0,2001819273409
+497,"Blocs WC",2500,0,2005646171907
+498,"Blocs WC violet",2500,0,2007306479903
+499,"Pif Paf electric mosquito",2000,0,2000115315301
+500,"Par Par liquid mosquito killer",2500,0,2004466932606
+501,"Dallas pomade 650g",3000,0,2000426586506
+502,"Cahier mon afrique 50 pages",150,0,2003719888004
+503,"Cahier mondial africain",300,0,2008253707200
+504,"Biscuit clucose 400 pcs",7500,0,2001499688906
+505,"Biscuit glucose 300 pcs",5500,0,2006269455900
+506,"Buiscuit glucoses GM 100 pcs",8500,0,2003852883201
+507,"Carton allumette Jaune",22000,0,2006919806106
+508,"Cefetiere PM",15000,0,2009291793002
+509,"Cafetiere GM",22000,0,2003172114207
+510,"Thermous en fer 3L",22500,0,2008171111707
+511,"Thermous en fer 2.5 L",17500,0,2003115926300
+512,"Scarlette Jus",20000,0,2003957006505
+513,"Machine a gateaux",11000,0,2006544817201
+514,"Machine viande hachee",11000,0,2008338032609
+515,"Cuillere a couleur",6000,0,2009138746109
+516,"Fourchette a jetter PM",2000,0,2003642644609
+517,"Fourchette a jetter couleur",2000,0,2008019272409
+518,"Cuiller 12 pcs",1250,0,2006814944705
+519,"Scoch carton",1000,0,2007107225501
+520,"Mekako 100g",500,0,2005121210404
+521,"Savon dudu - Osun",1000,0,6156000043708
+522,"Savon protex 150g",1000,0,8693495044998
+523,"Recheaux Moyen",9000,0,2001330847509
+524,"Recheaux a petrol GM",13000,0,2002401405307
+525,"Ajax poudre GM 750g",4000,0,2001162863302
+526,"Ajax poudre PM 350g",2500,0,2006611434805
+527,"Nettoyant menager",4000,0,2006141630302
+528,"Colacao energy 450g",3500,0,2008235144702
+529,"Savon liquide jini",2500,0,2005229360001
+530,"Champo Homme Gel douche",3000,0,2000949968100
+531,"Lave WC Javel 750ml",4000,0,2003994686203
+532,"Panneau solaire 100W",75000,0,2007623598806
+533,"Panneau 165W",150000,0,2000287221509
+534,"Thermous en plastique 3L",15000,0,2005513506108
+535,"Thermous pompe 3L",20000,0,2003076607805
+536,"Thermous 2L",11000,0,2009721516904
+537,"Thermous 1.5L",8000,0,2009742445702
+538,"Thermous 0.5",3000,0,2001881781000
+539,"Tasse a cafe GM 12 pcs",9000,0,2000690174607
+540,"Tasse a cafe PM 12 pcs",7500,0,2001505613700
+541,"Ver a jus",5500,0,2003456409104
+542,"Ver a eau 6 pcs",5500,0,2009430876306
+543,"Vinegrette 1L",3000,0,2000218386307
+544,"Filtre a eau en fer",22000,0,2000185188706
+545,"Pointe 1kg",2000,0,2004299124605
+546,"Colgate GM",1000,0,2007538359509
+547,"Colgate PM",500,0,2009599259606
+548,"Controleur Panneau 40 W",40000,0,2004131920204
+549,"Poile GM",2500,0,2003784574307
+550,"Poile PM",2000,0,2001129249309
+551,"Carton lait poudre 24 pcs",62000,0,2006040245102
+552,"Carton Santex 72 pcs",21000,0,2001880253201
+553,Santex,400,0,2005660243703
+554,"Papier hygienique",400,0,2007896627906
+555,"Papier Hygienique 10 pcs",3500,0,2002182865307
+556,Horloge,12000,0,2001743055201
+557,"Grece top Gatex 1.5 kg",2000,0,2002022447106
+558,"Spagueti 250g",350,0,2006284958202
+559,"Spagueti 500 g",600,0,2009360292801
+560,"Macaronie 250g",350,0,2004502102604
+561,"Macaronie 500 g",700,0,2008220562603
+562,"Cle cadenat top security GM",7500,0,2008848189107
+563,"Cle vachette PM",1000,0,2001948875604
+564,"Cle Vachette Moyen",1500,0,2004553595608
+565,"Cle Vachette GM",2500,0,2003852016906
