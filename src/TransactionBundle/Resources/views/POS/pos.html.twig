@@ -207,12 +207,14 @@
                         </ul>
                     </div>
                 </div>
-                {% endverbatim %}
+                
             </div>
             <div class="col-md-6">
+            {% endverbatim %}
                 <!--For HAMADJODA Machine -->
                 <!--<div class="panel panel-primary" style="max-height:500px; overflow:auto; min-height:500px;">-->
                 <div class="panel panel-primary" style="max-height:650px; overflow:auto; min-height:650px;">
+                
                 <style>
                     .panel {
                         border-color : #f00;
@@ -222,7 +224,7 @@
 			<div role="tabpanel" class="tab-pane" id="food">
                             <form>
                                 <div class="form-group">
-                                    <select style= "width: 650px;" id="product">
+                                    <select style= "width: 900px;" id="product">
                                         
                                     </select>
                                 </div>
@@ -424,6 +426,7 @@
             $scope.itemsCnt = $scope.order.length; 
          }   
     };
+    
     
     $scope.getSum = function() {
       var i = 0,
