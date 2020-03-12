@@ -13,8 +13,16 @@ class DefaultController extends Controller
         $serverhost = $this->getParameter('serverhost');
         $em = $this->getDoctrine()->getManager();
         $synchronizerHandler = $this->get('km.synchronizer_handler');
-        $user = $this->getUser();
         $client = $this->get('guzzle.client.api_crm');
+        $user = $this->getUser();
+        //Make sure $user is not empty
+        if(!$user){
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        }
+        //Check it againt
+        if(!$user){
+            return new JsonResponse('Could not find user from local DB');
+        }
         
         $userEmail = $user->getEmail();
         //We want to send one by one

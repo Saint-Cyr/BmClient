@@ -17,7 +17,7 @@ class DefaultControllerTest extends WebTestCase
         //Login
         $crawler = $this->login($crawler, $client1);
        
-        //Make sure the everything is fine after redirecting to the front page (/)
+        //Make sure that everything is fine after redirecting to the front page (/)
         $crawler = $client1->request('GET', '/');
         $this->assertEquals(200, $client1->getResponse()->getStatusCode());
         $this->assertContains('Documentation', $client1->getResponse()->getContent());

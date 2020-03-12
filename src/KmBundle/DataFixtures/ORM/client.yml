@@ -105,18 +105,13 @@ TransactionBundle\Entity\Sale:
         stransaction: '@stransaction1'
         createdAt: <(new \DateTime('01-01-2011'))>
         
-KmBundle\Entity\Setting:
-    setting1:
-        name: bmClient
-        appInstalled: false
-        
 UserBundle\Entity\User:
     super-admin:
         username: super-admin
         name: Saint-Cyr
         branch: "@branch1"
         email: mapoukacyr@yahoo.fr
-        plainPassword: mapoukacyr@yahoo.fr
+        plainPassword: test
         enabled: true
         roles: [ROLE_SUPER_ADMIN]
 

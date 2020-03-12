@@ -3,7 +3,7 @@
 /*
  * This file is part of Components of BeezyManager project
  * By contributor S@int-Cyr MAPOUKA
- * (c) TinzapaTech <mapoukacyr@yahoo.fr>
+ * (c) iSTech <ceo.itechcar.com>
  * For the full copyrght and license information, please view the LICENSE
  * file that was distributed with this source code
  */
@@ -121,7 +121,7 @@ class SynchronizerHandlerTest extends WebTestCase
     public function download()
     {
         //Case of BATA ( branch_id = 1)
-        $response = $this->client->post('http://localhost/BeezyManager/web/app_dev.php/downloads',
+        /*$response = $this->client->post('http://localhost/BeezyManager/web/app_dev.php/downloads',
                 ['json' => ['branch_id' => 3]]);
         
         $data = json_decode($response->getBody()->getContents(), true);
@@ -181,6 +181,6 @@ class SynchronizerHandlerTest extends WebTestCase
         //Test the download method
         $data = $this->synchronizerHandler->downloadCache(20);
         //When sending wrong branch_id, the server responde ['status'] => false
-        $this->assertFalse($data['status']);
+        $this->assertFalse($data['status']);*/
     }
 }

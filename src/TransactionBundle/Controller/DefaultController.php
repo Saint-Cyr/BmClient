@@ -45,6 +45,8 @@ class DefaultController extends Controller
         $localhost = 'http://localhost'.$request->getBaseUrl();
         //In Windows environment
         //$localhost = 'http://127.0.0.1:49160';
+        //In linux deployement environment
+        //$localhost = 'http://127.0.0.1:3330';
         //Get the entity manager
         $em = $this->getDoctrine()->getManager();
         //Get the list of all the products

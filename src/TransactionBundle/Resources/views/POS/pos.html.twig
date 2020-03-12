@@ -9,6 +9,13 @@
   <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}"/>
   <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>
   <style>
+      [title2]:hover:after{
+        content: attr(title2);
+        color: #a22a1a;
+        font-weight: bold;
+      }
+  </style>
+  <style>
     
     #modalContainer {
     background-color:rgba(0, 0, 0, 0.3);
@@ -175,9 +182,10 @@
                                     <div class="col-md-1">
                                         <span class="badge badge-left" ng-bind="item.orderedItemCnt" style="font-size:25px;"></span>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-4" title2="-{{ item.item.full_name }}">
                                         {{ item.item.detail }}
                                     </div>
+                                    
                                     <div class="col-md-1 col-md-push-1">
                                         <div class="" style="color: red;">{{item.totalPrice | currency:"":0}}</div>
                                     </div>
@@ -199,12 +207,14 @@
                         </ul>
                     </div>
                 </div>
-                {% endverbatim %}
+                
             </div>
             <div class="col-md-6">
+            {% endverbatim %}
                 <!--For HAMADJODA Machine -->
                 <!--<div class="panel panel-primary" style="max-height:500px; overflow:auto; min-height:500px;">-->
                 <div class="panel panel-primary" style="max-height:650px; overflow:auto; min-height:650px;">
+                
                 <style>
                     .panel {
                         border-color : #f00;
@@ -214,7 +224,7 @@
 			<div role="tabpanel" class="tab-pane" id="food">
                             <form>
                                 <div class="form-group">
-                                    <select style= "width: 650px;" id="product">
+                                    <select style= "width: 900px;" id="product">
                                         
                                     </select>
                                 </div>
@@ -273,6 +283,7 @@
                 {
                     id: {{ p.barcode }},
                     text: '<span style="font-size: 30px;">{{ p.name }}</span>',
+                    title: '{{ p.name }}',
                 },
         {% endfor %}
         ];
@@ -342,7 +353,7 @@
     
     $scope.food = {
     {% for p in products %}                 
-        "{{ p.barcode }}" : {count: 1, id: {{ p.id }}, detail: "{{ p.name|slice(0, 15)|e('js')|raw }}", price: {{ p.unitPrice }} }, 
+        "{{ p.barcode }}" : {count: 1, id: {{ p.id }}, detail: "{{ p.name|slice(0, 15)|e('js')|raw }}", price: {{ p.unitPrice }}, full_name:"{{ p.name }}" }, 
     {% endfor %}
     };
     
@@ -415,6 +426,7 @@
             $scope.itemsCnt = $scope.order.length; 
          }   
     };
+    
     
     $scope.getSum = function() {
       var i = 0,
