@@ -42,11 +42,11 @@ class DefaultController extends Controller
         //Get the online server URL
         $serverUrl = $this->getParameter('serverhost');
         //Build the miniserver URL
-        //$localhost = 'http://localhost'.$request->getBaseUrl();
+        $localhost = 'http://localhost'.$request->getBaseUrl();
         //In Windows environment
         //$localhost = 'http://127.0.0.1:49160';
         //In linux deployement environment
-        $localhost = 'http://127.0.0.1:3330';
+        //$localhost = 'http://127.0.0.1:3330';
         //Get the entity manager
         $em = $this->getDoctrine()->getManager();
         //Get the list of all the products
