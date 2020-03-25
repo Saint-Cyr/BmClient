@@ -121,6 +121,8 @@ class DefaultController extends Controller
             }
         }
     }
+    
+    
 
     public function frontAction(Request $request)
     {
@@ -142,5 +144,15 @@ class DefaultController extends Controller
         return $this->render('KmBundle:Default:front.html.twig',
                              array('stransactionNb' => $stransactionNb,
                                    'localhost' => $localhost));
+    }
+    
+    /*
+     * This method aims to send the ST locale Data to the Server in order for it to save it
+     * and give back a reponse. If saving the data to the online server Data Base succed, then
+     * the local copy must be removed automatically.
+     */
+    public function sendDataToServerAction()
+    {
+        
     }
 }

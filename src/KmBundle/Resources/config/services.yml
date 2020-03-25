@@ -1,19 +1,7 @@
 services:
-#    km.barcode_handler:
-#        class: KmBundle\Service\BarcodeHandler
-#        arguments: ["@doctrine.orm.entity_manager"]
-#        
-#    km.stock_handler:
-#        class: KmBundle\Service\StockHandler
-#        arguments: ["@doctrine.orm.entity_manager"]
-
     km.synchronizer_handler:
             class: KmBundle\Service\SynchronizerHandler
             arguments: ["@guzzle.client.api_crm", "@doctrine.orm.entity_manager", "%serverhost%"]
-        
-#    km.statistic_handler:
-#        class: KmBundle\Service\StatisticHandler
-#        arguments: ["@doctrine.orm.entity_manager"]
 
     km.admin.branch:
         class: KmBundle\Admin\BranchAdmin

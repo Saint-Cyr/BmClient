@@ -47,9 +47,7 @@ class STransactionRepositoryTest extends KernelTestCase
 
         $stransactions2 = $em->getRepository('TransactionBundle:STransaction')
                              ->getForTodayByBranch($branch2);
-
         //$this->assertCount()
-
     }
 
     /**

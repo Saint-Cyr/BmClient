@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Components of BeezyManager project
  * By contributor S@int-Cyr MAPOUKA
@@ -7,7 +6,6 @@
  * For the full copyrght and license information, please view the LICENSE
  * file that was distributed with this source code
  */
-
 namespace Tests\KmBundle\Service;
 
 use FOS\RestBundle\Serializer\JMSSerializerAdapter;
@@ -19,6 +17,9 @@ use TransactionBundle\Entity\Stockg;
 use TransactionBundle\Entity\Sale;
 use TransactionBundle\Entity\STransaction;
 
+/*
+ * this class is compatible with client.yml fixture
+ */
 class SynchronizerHandlerTest extends WebTestCase
 {
     private $em;
@@ -40,28 +41,33 @@ class SynchronizerHandlerTest extends WebTestCase
             ->getContainer()->get('guzzle.client.api_crm');
         $this->serializer = $this->application->getKernel()
             ->getContainer()->get('jms_serializer');
-
     }
+
 
     /*
-     * this test can disturb other that is why it is commented. You just need to uncomment it
+     * This method aims to test the endpoint API (BSol Server). Thus, make sure the Server
+     * is up, running and does have the right fixtures data (check the table of fixtures compatibily in 
+     * MED Data Base )
      */
-    public function testStart()
+    public function testSendDataToServer()
     {
-        //$this->mergeDataBase();
-        //Test the upload
-        //$this->upload();
-        //Test the download
-        //$this->download();
-    }
-
-
-    public function testUpload()
-    {
+        //The connected user from the BSol Client App
         $user = $this->em->getRepository('UserBundle:User')->find(1);
-        $branchOnlineID = $user->getBranch()->getOnlineId();
+        $currentBranch = $this->em->getRepository('KmBundle:Branch')->findOneBy(array('name' => 'BRANCH_1'));
+        $branchOnlineID = $currentBranch->getOnlineId();
         $userEmail = $user->getEmail();
+        //Make to use the right variables for the test. Notice some of them have to be compatible with
+        // the Server's one (branchOnlineId, ..)
+        $this->assertEquals($branchOnlineID, 1);
+        $this->assertEquals($userEmail, 'mapoukacyr@yahoo.fr');
         
+        
+        /*
+         * SENARIO #1: SUCCESSFUL Synchronization: send data to the server, exepect the server to give back a response (which means 
+         * it have save the data in its DB successfully) and finally, compare the stransaction id, sent back by to the server to the one in the 
+         * BmClient Data Base in order to notice that they are the same. End of Senario
+         * Notice that as this is only a test there is no need to to remove the stransaction in the BmClient DB.
+         */
         $id = null;
         
         $objects = $this->em->getRepository('TransactionBundle:STransaction')->findAll();
@@ -72,7 +78,7 @@ class SynchronizerHandlerTest extends WebTestCase
         
         if($id){
         $st = $this->em->getRepository('TransactionBundle:STransaction')->find($id);
-        $old = $st->getIdSynchrone();
+        $stId = $st->getIdSynchrone();
             $dateTime = $st->getCreatedAt()->format('Y-m-d H:i:s');
             //Prepare order
             foreach ($st->getSales() as $sale){
@@ -90,97 +96,28 @@ class SynchronizerHandlerTest extends WebTestCase
                                 'date_time' => $dateTime);
                             
             //set_time_limit(30);
-            $response = $this->client->post('http://localhost/BeezyManager/web/app_dev.php/uploads',
-                ['json' => $outPutData]);
+            $response = $this->client->post('http://localhost/BeezyManager/web/upload2s', ['json' => $outPutData]);
 
-            //$this->assertEquals(1222, $response->getBody()->getContents());
             $data = json_decode($response->getBody()->getContents(), true);
-            //var_dump($data);exit;
             $this->assertEquals($response->getStatusCode(), 200);
             //If there is faillure then lets see the message
             if($data['faild']){
-                $this->assertEquals($data['message'], true);
+                $this->assertEquals($data['faild'], true);
             }
-            //Make sure the server has sent data
+            //Make sure the server has sent back the right Data structure
             $this->assertNotNull($data);
             $this->assertArrayHasKey('st_synchrone_id', $data);
             $this->assertArrayHasKey('faildMessage', $data);
             $this->assertArrayHasKey('faild', $data);
-            $this->assertEquals($data['st_synchrone_id'], $old);
-            //remove the iD from DataBase
+            $this->assertEquals($data['st_synchrone_id'], $stId);
+            
             $_ST = $this->em->getRepository('TransactionBundle:STransaction')
-                ->findOneBy(array('idSynchrone' => $data['st_synchrone_id']));
-
-            $this->em->remove($_ST);
-            $this->em->flush();
+                        ->findOneBy(array('idSynchrone' => $data['st_synchrone_id']));
+            //As this is a test, we don't need to remove the ST from the Data Base but just need to check 
+            //its presence in the locale Data Base
+            $this->assertEquals($_ST->getId(), $stId);
         }else{
             $this->assertEquals('', 'no stransaction to upload.');
         }
-    }
-    
-    public function download()
-    {
-        //Case of BATA ( branch_id = 1)
-        /*$response = $this->client->post('http://localhost/BeezyManager/web/app_dev.php/downloads',
-                ['json' => ['branch_id' => 3]]);
-        
-        $data = json_decode($response->getBody()->getContents(), true);
-        //Make sure the number of the products is right.
-        $this->assertEquals(count($data['products']), 4);
-        //Test the presence of the each product with theire respective properties
-        $this->assertEquals($data['products'][0]['name'], 'CD Simple');
-        $this->assertEquals($data['products'][0]['barcode'], '2002256910205');
-        $this->assertEquals($data['products'][0]['unit_price'], 150);
-        //just make a custom request in server side to ensure loading of only locked products
-        //$this->assertEquals($data['products'][0]['locked'], true);
-        $this->assertEquals($data['products'][0]['id'], 1);
-        //Make sure all the product has been loaded.
-        $this->assertEquals($data['products'][1]['name'], 'DVD');
-        //Check whether there products in DB in order to prapare response accordintly
-        $products = $this->em->getRepository('TransactionBundle:Product')->findAll();
-        
-        if(count($products) > 0){
-            $resp = false;
-        }else{
-            $resp = true;
-        }
-        
-        //Test the downloadCache() methode itself
-        $r = $this->synchronizerHandler->downloadCache(1);
-        $this->assertEquals($r['status'], $resp);
-        //In the case request has been sent to the server ($r['status'] == true), then 
-        //make sure the server has sent the branch_id back in order for the client to create
-        //and persist it in the cache because when creating users, it have to be linked to them
-        //also when a user is creati/ng  STransaction, it also have to be linked to it
-        
-        $this->assertEquals($data['branch']['name'], 'BATA');
-        $this->assertEquals($data['branch']['id'], 1);
-        
-         
-        //Test users
-        $this->assertCount(3, $data['users']);
-        //Test the presence of the each user with theire respective properties
-        $this->assertEquals($data['users'][0]['username'], 'super-admin');
-        $this->assertEquals($data['users'][1]['email'], 'admin@domain.com');
-        $this->assertEquals($data['users'][1]['roles'], array('ROLE_ADMIN'));
-        //Make sure the API work in branch context (Case of VALLEY)
-        $response = $this->client->post('http://localhost/BeezyManager2/web/app_dev.php/caches',
-                ['json' => ['branch_id' => 2]]);
-        
-        $data = json_decode($response->getBody()->getContents(), true);
-        //Only one user at VALLEY according to the fixture
-        $this->assertCount(1, $data['users']);
-        //Make sure the error message is right when sending a wrong branchId via the API
-        $response = $this->client->post('http://localhost/BeezyManager2/web/app_dev.php/caches',
-                ['json' => ['branch_id' => 3]]);
-        
-        $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertFalse($data['status']);
-        $this->assertEquals($data['message'], 'branch not found');
-        
-        //Test the download method
-        $data = $this->synchronizerHandler->downloadCache(20);
-        //When sending wrong branch_id, the server responde ['status'] => false
-        $this->assertFalse($data['status']);*/
     }
 }
