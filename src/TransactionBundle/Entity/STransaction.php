@@ -245,6 +245,8 @@ class STransaction
      */
     public function getProfit()
     {
+        return $this->profit;
+        
         $profit = null;
         
         foreach ($this->getSales() as $sale){

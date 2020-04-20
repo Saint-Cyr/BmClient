@@ -27,7 +27,7 @@ class SaleAdmin extends AbstractAdmin
      */
     protected function configureListFields(ListMapper $listMapper)
     {
-        /*$listMapper
+        $listMapper
             ->add('id')
             //->add('stransaction')
             ->add('product')
@@ -42,7 +42,7 @@ class SaleAdmin extends AbstractAdmin
                     'delete' => array(),
                 )
             ))
-        ;*/
+        ;
     }
 
     /**

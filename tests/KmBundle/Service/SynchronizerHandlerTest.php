@@ -53,8 +53,11 @@ class SynchronizerHandlerTest extends WebTestCase
     {
         //The connected user from the BSol Client App
         $user = $this->em->getRepository('UserBundle:User')->find(1);
+        //The branch where BSol Client App is installed
         $currentBranch = $this->em->getRepository('KmBundle:Branch')->findOneBy(array('name' => 'BRANCH_1'));
+        //Notice that this branch have to have it online #ID. The technician have to make sure during installation that the branch #ID is right
         $branchOnlineID = $currentBranch->getOnlineId();
+        //We'll need to send the email to the server in order for it to check the identity of the BSol Client user that have made the STransaction
         $userEmail = $user->getEmail();
         //Make to use the right variables for the test. Notice some of them have to be compatible with
         // the Server's one (branchOnlineId, ..)
@@ -65,8 +68,8 @@ class SynchronizerHandlerTest extends WebTestCase
         /*
          * SENARIO #1: SUCCESSFUL Synchronization: send data to the server, exepect the server to give back a response (which means 
          * it have save the data in its DB successfully) and finally, compare the stransaction id, sent back by to the server to the one in the 
-         * BmClient Data Base in order to notice that they are the same. End of Senario
-         * Notice that as this is only a test there is no need to to remove the stransaction in the BmClient DB.
+         * BSolClient Data Base in order to realise theire equality. End of Senario
+         * Notice that as this is only a test there is no need to to remove the stransaction from the BSolClient DB.
          */
         $id = null;
         
@@ -89,7 +92,7 @@ class SynchronizerHandlerTest extends WebTestCase
             }
 
             $outPutData = array('branch_online_id' => $branchOnlineID,
-                                'st_synchrone_id' => $st->getIdSynchrone(),
+                                'st_synchrone_id' => $stId,
                                 'user_email' => $userEmail,
                                 'order' => $order,
                                 'total' => $totalPrice,
@@ -115,9 +118,83 @@ class SynchronizerHandlerTest extends WebTestCase
                         ->findOneBy(array('idSynchrone' => $data['st_synchrone_id']));
             //As this is a test, we don't need to remove the ST from the Data Base but just need to check 
             //its presence in the locale Data Base
-            $this->assertEquals($_ST->getId(), $stId);
+            $this->assertEquals($_ST->getIdSynchrone(), $stId);
         }else{
             $this->assertEquals('', 'no stransaction to upload.');
         }
+        
+        /*
+         * SENARIO #2: FAILD Synchronization: send wrong data structure (user_email key does not exist) to the server, 
+         * exepect the server to give back a response with the error description
+         */
+        $outPutData = array('branch_online_id' => $branchOnlineID,
+                            'st_synchrone_id' => $stId,
+                            'user_EMAILLL' => $userEmail,
+                            'order' => $order,
+                            'total' => $totalPrice,
+                            'date_time' => $dateTime);
+
+        //set_time_limit(30);
+        $response = $this->client->post('http://localhost/BeezyManager/web/upload2s', ['json' => $outPutData]);
+
+        $data = json_decode($response->getBody()->getContents(), true);
+        $this->assertEquals($response->getStatusCode(), 200);
+        //See the error desctiption
+        $this->assertEquals($data['faildMessage'], 'email key does not exist in the Data Structure');
+        
+        /*
+         * SENARIO #3: FAILD Synchronization: send wrong branch_online_id value (unexisted one) 
+         * exepect the server to give back a response with the corresponding error description as follow
+         */
+        $outPutData = array('branch_online_id' => 100,
+                                'st_synchrone_id' => $stId,
+                                'user_email' => $userEmail,
+                                'order' => $order,
+                                'total' => $totalPrice,
+                                'date_time' => $dateTime);
+                            
+        //set_time_limit(30);
+        $response = $this->client->post('http://localhost/BeezyManager/web/upload2s', ['json' => $outPutData]);
+
+        $data = json_decode($response->getBody()->getContents(), true);
+        $this->assertEquals($response->getStatusCode(), 200);
+        //See the error desctiption
+        $this->assertEquals($data['faildMessage'], 'branch related to the #ID 100 not found from the server DB');
+        
+        /*
+         * SENARIO #4: FAILD Synchronization: send invalid user_email value (unexisted email or desabled account) 
+         * exepect the server to give back a response with the corresponding error description as follow
+         */
+        $userEmail = 'unexistingEmail@domaine.com';
+        $outPutData = array('branch_online_id' => 1,
+                                'st_synchrone_id' => $stId,
+                                'user_email' => $userEmail,
+                                'order' => $order,
+                                'total' => $totalPrice,
+                                'date_time' => $dateTime);
+                            
+        
+        $response4 = $this->client->post('http://localhost/BeezyManager/web/upload2s', ['json' => $outPutData]);
+
+        $data4 = json_decode($response4->getBody()->getContents(), true);
+        $this->assertEquals($response4->getStatusCode(), 200);
+        //See the error desctiption
+        $this->assertEquals($data4['faildMessage'], 'the user related to the email: unexistingEmail@domaine.com does not exist');
+        //Choose the seller account which one is locked from the fixture km2.yml
+        $userEmail = 'seller@domain.com';
+        $outPutData = array('branch_online_id' => 1,
+                                'st_synchrone_id' => $stId,
+                                'user_email' => $userEmail,
+                                'order' => $order,
+                                'total' => $totalPrice,
+                                'date_time' => $dateTime);
+                            
+        
+        $response5 = $this->client->post('http://localhost/BeezyManager/web/upload2s', ['json' => $outPutData]);
+
+        $data5 = json_decode($response5->getBody()->getContents(), true);
+        $this->assertEquals($response5->getStatusCode(), 200);
+        //See the error desctiption
+        $this->assertEquals($data5['faildMessage'], 'User Account related to the email seller@domain.com is locked or Desabled');
     }
 }

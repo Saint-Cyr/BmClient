@@ -159,7 +159,8 @@ class Sale
      */
     public function getProfit()
     {
-        return (($this->getProduct()->getUnitPrice() - $this->getProduct()->getWholeSalePrice()) * $this->getQuantity());
+        return $this->profit * $this->getQuantity();
+        //return (($this->getProduct()->getUnitPrice() - $this->getProduct()->getWholeSalePrice()) * $this->getQuantity());
     }
 
     /**

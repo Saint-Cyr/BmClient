@@ -53,10 +53,7 @@ class SaleHandler
             $sale->setAmount($s['totalPrice']);
             $sale->setStransaction($stransaction);
             $this->em->persist($sale);
-			
-			$items [] = new item($product->getName()." #".$sale->getQuantity(),
-									 $sale->getQuantity()*$product->getUnitPrice()
-										 );
+            $items [] = new item($product->getName()." #".$sale->getQuantity(), $sale->getQuantity()*$product->getUnitPrice());
         }
 		
         $subtotal = new item('Subtotal (No Tax)', $inputData['total'] - (($inputData['total']/100)*19));

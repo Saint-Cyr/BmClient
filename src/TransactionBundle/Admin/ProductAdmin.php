@@ -26,8 +26,14 @@ class ProductAdmin extends AbstractAdmin
         $listMapper
             ->add('name', null, array('editable' => true))
             ->add('unitPrice', 'decimal', array('editable' => true))
-            ->add('imagePos', null, array('editable' => true))
-        ;
+            ->add('wholeSalePrice', 'decimal', array('editable' => true));    
+        
+        if($this->isGranted('ROLE_SUPER_ADMIN')){
+                $listMapper->add('profit');
+        };
+        
+        $listMapper
+            ->add('imagePos', null, array('editable' => true));
         
             
     }

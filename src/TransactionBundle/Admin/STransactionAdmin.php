@@ -26,7 +26,7 @@ class STransactionAdmin extends AbstractAdmin
             'format' => 'yyyy-MM-dd'
         ]
     ]
-])*/
+    ])*/
         ;
     }
 

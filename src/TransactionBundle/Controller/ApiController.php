@@ -100,7 +100,7 @@ class ApiController extends Controller
                         $newProduct->setOnlineId($product_id);
                         $newProduct->setName($product_name);
                         $newProduct->setUnitPrice($product_uniprice);
-                        $newProduct->setWholeSalePrice($wholeSalePrice = null);
+                        $newProduct->setWholeSalePrice($product_whole_sale_price);
                         $newProduct->setBarcode($product_barcode);
                         $em->persist($newProduct);
                         $recorded++;
