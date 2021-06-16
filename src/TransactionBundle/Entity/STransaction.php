@@ -245,7 +245,7 @@ class STransaction
      */
     public function getProfit()
     {
-        return $this->profit;
+        //return $this->profit;
         
         $profit = null;
         

@@ -118,6 +118,7 @@ security:
                 # csrf_provider: form.csrf_provider
             logout:       true
             anonymous:    true
+            logout_on_user_change: true
             # activate different ways to authenticate
 
             # http_basic: ~

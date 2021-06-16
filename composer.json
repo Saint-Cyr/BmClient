@@ -18,9 +18,9 @@
     },
     "require": {
         "php": ">=5.5.9",
-        "symfony/symfony": "v3.2.7",
+        "symfony/symfony": "v3.4.47",
         "doctrine/orm": "^2.5",
-        "doctrine/doctrine-bundle": "^1.6",
+        "doctrine/doctrine-bundle": "^1",
         "doctrine/doctrine-cache-bundle": "^1.2",
         "symfony/swiftmailer-bundle": "^2.3",
         "symfony/monolog-bundle": "^2.8",
@@ -31,16 +31,17 @@
         "sonata-project/admin-bundle": "^3.4",
         "sonata-project/doctrine-orm-admin-bundle": "^3.0",
         "friendsofsymfony/rest-bundle": "^2.1",
-        "friendsofsymfony/user-bundle": "2.0.x-dev",
+        "friendsofsymfony/user-bundle": "^2.1",
         "symfony/assetic-bundle": "^2.8",
         "qandidate/symfony-json-request-transformer": "^1.2",
         "eightpoints/guzzle-bundle": "v6.1.2",
         "phpdocumentor/reflection-docblock": "3.3.2",
-        "twig/twig": "v1.35.0",
+        "twig/twig": "^1.41",
         "phpunit/php-token-stream": "1.4.12",
         "jms/serializer-bundle": "2.3.1",
         "mike42/escpos-php": "^2.0",
-        "yectep/phpspreadsheet-bundle": "^0.0.4"
+        "yectep/phpspreadsheet-bundle": "^0.0.4",
+        "hautelook/alice-bundle": "v1.4.1"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

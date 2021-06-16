@@ -67,6 +67,7 @@ sonata_admin:
         handler: sonata.admin.security.handler.role
     templates:
         layout: KmBundle::standard_layout.html.twig
+        #layout: SonataAdminBundle::standard_layout.html.twig
     title_logo: images/logo_bsol2.jpg
     title: BSol
     dashboard:
@@ -112,7 +113,7 @@ framework:
         engines: ['twig']
     default_locale:  "%locale%"
     trusted_hosts:   ~
-    trusted_proxies: ~
+    #trusted_proxies: ~
     session:
         # http://symfony.com/doc/current/reference/configuration/framework.html#handler-id
         handler_id:  session.handler.native_file

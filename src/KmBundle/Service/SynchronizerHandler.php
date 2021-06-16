@@ -14,7 +14,6 @@ class SynchronizerHandler
     private $serverhost;
     private $em;
 
-
     public function __construct($client, $em, $host)
     {
         $this->client = $client;
