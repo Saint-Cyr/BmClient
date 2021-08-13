@@ -45,10 +45,13 @@ class DefaultController extends Controller
                 //Definitly, we'll need  this variable
                 $order = array();
                 foreach ($st->getSales() as $sale){
+                    //Set sale profit
+                    $saleProfit = $sale->setProfit();
                     $totalPrice = $sale->getQuantity() * $sale->getProduct()->getUnitPrice();
                     $order[] = array('id' => $sale->getProduct()->getOnlineId(),
                                      'orderedItemCnt' => $sale->getQuantity(),
-                                     'totalPrice' => $totalPrice);
+                                     'totalPrice' => $totalPrice,
+                                     'saleProfit' => $saleProfit);
                 }
                 //Make sure $order is not empty
                 if(!(count($order) == 0)){
@@ -57,67 +60,34 @@ class DefaultController extends Controller
                                     'user_email' => $userEmail,
                                     'order' => $order,
                                     'total' => $totalPrice,
-                                    'sellerUserName' => $st->getUser()->getUserName(),
                                     'branch_online_id' => $user->getBranch()->getOnlineId(),
                                     'date_time' => $dateTime);
-                   break; 
+                    
 
                 }else{
                     //Let's go to the next id
+                    $data['faildMessage'] = 'Empty order';
+                    return new JsonResponse($data['faildMessage']);
                 }
-            }
-        }
-        
-        if($id){
-        $st = $em->getRepository('TransactionBundle:STransaction')->find($id);
-        $old = $st->getIdSynchrone();
-            $dateTime = $st->getCreatedAt()->format('Y-m-d H:i:s');
-            //Prepare order
-            //Definitly, we'll need  this variable
-            $order = array();
-            foreach ($st->getSales() as $sale){
-                $totalPrice = $sale->getQuantity() * $sale->getProduct()->getUnitPrice();
-                $order[] = array('id' => $sale->getProduct()->getOnlineId(),
-                                 'orderedItemCnt' => $sale->getQuantity(),
-                                 'totalPrice' => $totalPrice);
-            }
-            //Make sure $order is not empty
-            if(!(count($order) == 0)){
-                $outPutData = array(
-                                'st_synchrone_id' => $st->getIdSynchrone(),
-                                'user_email' => $userEmail,
-                                'order' => $order,
-                                'total' => $totalPrice,
-                                'sellerUserName' => $st->getUser()->getUserName(),
-                                'branch_online_id' => $user->getBranch()->getOnlineId(),
-                                'date_time' => $dateTime);
-                
-            }else{
-                $data['faildMessage'] = 'Empty order';
-                return new JsonResponse($data['faildMessage']);
-            }
-            //set_time_limit(30);
-            $response = $client->post($serverhost.'/uploads',
+
+                $response = $client->post($serverhost.'/upload2s',
                 ['json' => $outPutData]);
-            //At this stage, make sure the request have got the server
-            //.....
-            $data = json_decode($response->getBody()->getContents(), true);
-            
-            
-            //To do : make sure the variable $faild is false before continue
-            //if everything went welrel
-        if(!$data['faild'] || array_key_exists('remove_st', $data)){
-                //remove the ST from DataBase
-                $_ST = $em->getRepository('TransactionBundle:STransaction')
-                    ->findOneBy(array('idSynchrone' => $data['st_synchrone_id']));
-                //Make sure $_ST exist
-                if($_ST){
-                    $em->remove($_ST);
+                //At this stage, make sure the request have got the server
+                //.....
+                $data = json_decode($response->getBody()->getContents(), true);
+                if(!$data['faild']){
+                    //remove the ST from DataBase
+                    $_ST = $em->getRepository('TransactionBundle:STransaction')
+                        ->findOneBy(array('idSynchrone' => $data['st_synchrone_id']));
+                    //Make sure $_ST exist
+                    if($_ST){
+                        $em->remove($_ST);
+                    }
+                    $em->flush();
+                    return new JsonResponse('successfull.');
+                }else{
+                    return new JsonResponse($data['faildMessage']);
                 }
-                $em->flush();
-                return new JsonResponse('successfull.');
-            }else{
-                return new JsonResponse($data['faild_message']);
             }
         }
     }

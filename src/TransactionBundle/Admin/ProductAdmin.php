@@ -25,6 +25,7 @@ class ProductAdmin extends AbstractAdmin
     {
         $listMapper
             ->add('name', null, array('editable' => true))
+            ->add('onlineId')
             ->add('unitPrice', 'decimal', array('editable' => true))
             ->add('wholeSalePrice', 'decimal', array('editable' => true));    
         

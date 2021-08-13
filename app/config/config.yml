@@ -66,8 +66,8 @@ sonata_admin:
     security:
         handler: sonata.admin.security.handler.role
     templates:
-        layout: KmBundle::standard_layout.html.twig
-        #layout: SonataAdminBundle::standard_layout.html.twig
+        #layout: KmBundle::standard_layout.html.twig
+        layout: SonataAdminBundle::standard_layout.html.twig
     title_logo: images/logo_bsol2.jpg
     title: BSol
     dashboard:
@@ -75,8 +75,7 @@ sonata_admin:
             - { position: left, type: sonata.admin.block.admin_list, settings: {groups: [Transaction]} }
             - { position: right, type: sonata.admin.block.admin_list, settings: {groups: [Admin]} }
             - { position: right, type: sonata.admin.block.admin_list, settings: {groups: [Security]} }
-            
-            
+               
 sonata_block:
     default_contexts: [cms]
     blocks:

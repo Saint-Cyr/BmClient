@@ -51,6 +51,8 @@ class SynchronizerHandlerTest extends WebTestCase
      */
     public function testSendDataToServer()
     {
+        //End point URL
+        $endPointUrl = 'http://localhost/BeezyManager/web/app_dev.php/upload2s';
         //The connected user from the BSol Client App
         $user = $this->em->getRepository('UserBundle:User')->find(1);
         //The branch where BSol Client App is installed
@@ -66,9 +68,9 @@ class SynchronizerHandlerTest extends WebTestCase
         
         
         /*
-         * SENARIO #1: SUCCESSFUL Synchronization: send data to the server, exepect the server to give back a response (which means 
+         * SENARIO #1: SUCCESSFUL Synchronization: send data to the server, expect the server to give back a response (which means 
          * it have save the data in its DB successfully) and finally, compare the stransaction id, sent back by to the server to the one in the 
-         * BSolClient Data Base in order to realise theire equality. End of Senario
+         * BSolClient Data Base in order to realize theire equality. End of Senario
          * Notice that as this is only a test there is no need to to remove the stransaction from the BSolClient DB.
          */
         $id = null;
@@ -85,21 +87,21 @@ class SynchronizerHandlerTest extends WebTestCase
             $dateTime = $st->getCreatedAt()->format('Y-m-d H:i:s');
             //Prepare order
             foreach ($st->getSales() as $sale){
-                $totalPrice = $sale->getQuantity() * $sale->getProduct()->getUnitPrice();
-                $order[] = array('id' => $sale->getProduct()->getOnlineId(),
-                                 'orderedItemCnt' => $sale->getQuantity(),
-                                 'totalPrice' => $totalPrice);
+                $order[] = array('id' => 4,
+                                 'orderedItemCnt' => 1,
+                                 'totalPrice' => 500,
+                                 'saleProfit' => 40);
             }
 
-            $outPutData = array('branch_online_id' => $branchOnlineID,
+            $outPutData = array('branch_online_id' => 100,
                                 'st_synchrone_id' => $stId,
                                 'user_email' => $userEmail,
                                 'order' => $order,
-                                'total' => $totalPrice,
+                                'total' => 500,
                                 'date_time' => $dateTime);
                             
             //set_time_limit(30);
-            $response = $this->client->post('http://localhost/BeezyManager/web/upload2s', ['json' => $outPutData]);
+            $response = $this->client->post($endPointUrl, ['json' => $outPutData]);
 
             $data = json_decode($response->getBody()->getContents(), true);
             $this->assertEquals($response->getStatusCode(), 200);
@@ -131,11 +133,11 @@ class SynchronizerHandlerTest extends WebTestCase
                             'st_synchrone_id' => $stId,
                             'user_EMAILLL' => $userEmail,
                             'order' => $order,
-                            'total' => $totalPrice,
+                            'total' => 500,
                             'date_time' => $dateTime);
 
         //set_time_limit(30);
-        $response = $this->client->post('http://localhost/BeezyManager/web/upload2s', ['json' => $outPutData]);
+        $response = $this->client->post($endPointUrl, ['json' => $outPutData]);
 
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertEquals($response->getStatusCode(), 200);
@@ -150,11 +152,11 @@ class SynchronizerHandlerTest extends WebTestCase
                                 'st_synchrone_id' => $stId,
                                 'user_email' => $userEmail,
                                 'order' => $order,
-                                'total' => $totalPrice,
+                                'total' => 500,
                                 'date_time' => $dateTime);
                             
         //set_time_limit(30);
-        $response = $this->client->post('http://localhost/BeezyManager/web/upload2s', ['json' => $outPutData]);
+        $response = $this->client->post($endPointUrl, ['json' => $outPutData]);
 
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertEquals($response->getStatusCode(), 200);
@@ -170,11 +172,11 @@ class SynchronizerHandlerTest extends WebTestCase
                                 'st_synchrone_id' => $stId,
                                 'user_email' => $userEmail,
                                 'order' => $order,
-                                'total' => $totalPrice,
+                                'total' => 500,
                                 'date_time' => $dateTime);
                             
         
-        $response4 = $this->client->post('http://localhost/BeezyManager/web/upload2s', ['json' => $outPutData]);
+        $response4 = $this->client->post($endPointUrl, ['json' => $outPutData]);
 
         $data4 = json_decode($response4->getBody()->getContents(), true);
         $this->assertEquals($response4->getStatusCode(), 200);
@@ -186,11 +188,11 @@ class SynchronizerHandlerTest extends WebTestCase
                                 'st_synchrone_id' => $stId,
                                 'user_email' => $userEmail,
                                 'order' => $order,
-                                'total' => $totalPrice,
+                                'total' => 500,
                                 'date_time' => $dateTime);
                             
         
-        $response5 = $this->client->post('http://localhost/BeezyManager/web/upload2s', ['json' => $outPutData]);
+        $response5 = $this->client->post($endPointUrl, ['json' => $outPutData]);
 
         $data5 = json_decode($response5->getBody()->getContents(), true);
         $this->assertEquals($response5->getStatusCode(), 200);

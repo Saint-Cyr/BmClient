@@ -26,12 +26,10 @@ class SynchronizerHandler
      * case will surely faild the synchronization because of unique constraint on barcode property
      */
     public function checkDuplicatedStock(array $arrays)
-    {
-            
+    {       
             $iIds = array_map(function ($a) { return $a['name']; }, $arrays);
             //print_r($array);exit;
-            
-            
+                   
             $counts = array_count_values($iIds);
             $present_3_times = array();
             foreach($counts as $v=>$count){
